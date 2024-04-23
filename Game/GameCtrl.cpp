@@ -56,10 +56,7 @@ void GameCtrl::OnRcvMsg(OTHELLO_MSG_ID msg, WORD param1, DWORD param2)
 		StartGame_Internal();
 		break;
 	case OTHELLO_MSG_ID::GAME_QUIT:
-		break;
-	case OTHELLO_MSG_ID::GAME_END:
-		break;
-	case OTHELLO_MSG_ID::PASS_TURN:
+		QuitGame_Internal();
 		break;
 	case OTHELLO_MSG_ID::PUT_DISC:
 		PutDisc_Internal(
@@ -101,29 +98,6 @@ void GameCtrl::StartGame_Internal(void)
 	}
 
 	m_enState = GAME_CTRL_STATE::IDLE;
-
-
-	/* TBD for unit test */
-#if 0
-	BOARD_INFO enBoard_test;
-	DISC enDiscs_test[6][6] = {
-		{DISC::NONE, DISC::WHITE, DISC::WHITE, DISC::WHITE, DISC::BLACK, DISC::NONE},
-		{DISC::WHITE, DISC::WHITE, DISC::WHITE, DISC::WHITE, DISC::NONE, DISC::NONE},
-		{DISC::WHITE, DISC::WHITE, DISC::WHITE, DISC::WHITE, DISC::NONE, DISC::NONE},
-		{DISC::NONE, DISC::WHITE, DISC::WHITE, DISC::BLACK, DISC::BLACK, DISC::NONE},
-		{DISC::NONE, DISC::WHITE, DISC::WHITE, DISC::WHITE, DISC::NONE, DISC::NONE},
-		{DISC::NONE, DISC::BLACK, DISC::WHITE, DISC::WHITE, DISC::NONE, DISC::NONE}
-	};
-	DISC_MOVE enDiscMove_test;
-
-	enBoard_test.enSize = { 6,6 };
-	enBoard_test.penDiscs = &enDiscs_test[0][0];
-
-	enDiscMove_test.enColor = DISC::BLACK;
-	enDiscMove_test.enPos = { 0,0 };
-	GameRule::FlipDiscs(enDiscMove_test, enBoard_test);
-#endif
-
 }
 
 void GameCtrl::QuitGame_Internal(void)
