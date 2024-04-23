@@ -61,8 +61,8 @@ void GameCtrl::OnRcvMsg(OTHELLO_MSG_ID msg, WORD param1, DWORD param2)
 	case OTHELLO_MSG_ID::PUT_DISC:
 		PutDisc_Internal(
 			static_cast<DISC>(param1),
-			static_cast<char>((param2 >> 8) & 0x00ff),
-			static_cast<char>(param2 & 0x00ff)
+			static_cast<unsigned char>((param2 >> 8) & 0x00ff),
+			static_cast<unsigned char>(param2 & 0x00ff)
 		);
 		break;
 	default:
@@ -90,12 +90,18 @@ void GameCtrl::StartGame_Internal(void)
 
 	if ((GAME_SETTING::HUMAN_HUMAN == m_enSetting) || (GAME_SETTING::HUMAN_CPU == m_enSetting))
 	{
-		m_pcPlayerBlack = new GamePlayerHuman(DISC::BLACK);
+		m_pcPlayerBlack = new GamePlayerHuman(DISC::BLACK,
+			std::bind(&GameCtrl::PutDisc, this, std::placeholders::_1));
+		m_pcCom->SetUiListener(dynamic_cast<GamePlayerHuman*>(m_pcPlayerBlack));
 	}
 	else if ((GAME_SETTING::HUMAN_HUMAN == m_enSetting) || (GAME_SETTING::CPU_HUMAN == m_enSetting))
 	{
-		m_pcPlayerWhite = new GamePlayerHuman(DISC::WHITE);
+		m_pcPlayerWhite = new GamePlayerHuman(DISC::WHITE,
+			std::bind(&GameCtrl::PutDisc, this, std::placeholders::_1));
+		m_pcCom->SetUiListener(dynamic_cast<GamePlayerHuman*>(m_pcPlayerWhite));
 	}
+
+	m_pcPlayerBlack->PlayNextTurn(enBoard);
 
 	m_enState = GAME_CTRL_STATE::IDLE;
 }
@@ -118,8 +124,26 @@ void GameCtrl::PutDisc_Internal(DISC enDiscCol, unsigned char ucRow, unsigned ch
 	enBoard.enSize.ucRow = m_unRowNum;
 	enBoard.enSize.ucCol = m_unColNum;
 
-	GameRule::FlipDiscs(enDiscMove, enBoard);
-	m_pcCom->UpdateBoard(enBoard);
+	if (GameRule::FlipDiscs(enDiscMove, enBoard))
+	{
+		m_pcCom->UpdateBoard(enBoard);
+	}
+	else
+	{
+		if (DISC::BLACK == enDiscCol)
+		{
+			m_pcPlayerBlack->PlayNextTurn(enBoard);
+		}
+		else if (DISC::WHITE == enDiscCol)
+		{
+			m_pcPlayerWhite->PlayNextTurn(enBoard);
+		}
+		else
+		{
+			/* エラーログ残す */
+		}
+	}
+	
 }
 
 void GameCtrl::StartGame(BOARD_SIZE enBoardSize, GAME_SETTING enSetting)

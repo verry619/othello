@@ -69,6 +69,7 @@ void GameCom::RcvMsg(const char* pcBuf, unsigned int unBufLen)
 		break;
 
 	case OTHELLO_MSG_ID::PUT_DISC:
+#if 0 /* GameCom -> GameCtrl For Debug */
 		if (NULL != m_callbacks.funcPutDisc)
 		{
 			DISC_MOVE enDiscMove;
@@ -77,6 +78,25 @@ void GameCom::RcvMsg(const char* pcBuf, unsigned int unBufLen)
 			enDiscMove.enPos.ucCol = static_cast<unsigned char>(enMsg.p3);
 			m_callbacks.funcPutDisc(enDiscMove);
 		}
+#endif
+		DISC_MOVE enDiscMove;
+		enDiscMove.enColor = static_cast<DISC>(enMsg.p1);
+		enDiscMove.enPos.ucRow = static_cast<unsigned char>(enMsg.p2);
+		enDiscMove.enPos.ucCol = static_cast<unsigned char>(enMsg.p3);
+
+		if (DISC::BLACK == enDiscMove.enColor)
+		{
+			m_pcUiListenerBlack->ListenHumanInput(enDiscMove);
+		}
+		else if (DISC::WHITE == enDiscMove.enColor)
+		{
+			m_pcUiListenerWhite->ListenHumanInput(enDiscMove);
+		}
+		else
+		{
+			/* エラーログ残す */
+		}
+
 		break;
 
 	default:
