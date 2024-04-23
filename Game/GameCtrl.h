@@ -32,8 +32,7 @@ private:
 
 public:
     GameCtrl(void);
-    void StartGame(unsigned int unRowNum, unsigned int unColNum, GAME_SETTING enSetting);
+    void StartGame(BOARD_SIZE enBoardSize, GAME_SETTING enSetting);
     void QuitGame(void);
-    void PutDisc(DISC enDiscCol, unsigned char ucRow, unsigned char ucCol);
+    void PutDisc(DISC_MOVE enDiscMove);
 };
-

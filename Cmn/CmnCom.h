@@ -38,10 +38,10 @@ private:
 public:
 	typedef struct ShmData_
 	{
-		unsigned int unRowNum;
-		unsigned int unColNum;
+		BOARD_SIZE enBoardSize;
 		DISC enBoard[DEF_ROW_MAX * DEF_COL_MAX];
-		DISC_MOVE enHist;
+		DISC_MOVE enHist[DEF_HIST_MAX];
+		unsigned int idHistCurrent;
 	}ShmData;
 
 	static BOOL Initialize(CallbackFunc clbFunc_rcvMsg);
@@ -50,5 +50,8 @@ public:
 	static void ReadShm(ShmData* penShmDst);
 	static void WriteShm(const ShmData* penShmSrc);
 	static void SendMsg(const char* cBuf, unsigned int unLen);
+
+	static void ConvMsgToCbuf(const OTHELLO_MSG* enMsg, char* pcBuf);
+	static void ConvCbufToMsg(const char* pcBuf, OTHELLO_MSG* enMsg);
 };
 

@@ -36,7 +36,7 @@ int main()
 	std::cin >> msg.p4;
 
 	char cBuf[64];
-	CmnConvMsgToCbuf(&msg, cBuf);
+	CmnCom::ConvMsgToCbuf(&msg, cBuf);
 	pcComCom->SendMsg(cBuf, sizeof(cBuf));
 
 	std::cout << "pause:\n";
@@ -62,7 +62,7 @@ int main()
 		msg.p2 = cRow;
 		msg.p3 = cCol;
 
-		CmnConvMsgToCbuf(&msg, cBuf);
+		CmnCom::ConvMsgToCbuf(&msg, cBuf);
 		pcComCom->SendMsg(cBuf, sizeof(cBuf));
 
 		std::cout << "ReadBoard:\n";
@@ -80,7 +80,7 @@ int main()
 		msg.p2 = cRow;
 		msg.p3 = cCol;
 
-		CmnConvMsgToCbuf(&msg, cBuf);
+		CmnCom::ConvMsgToCbuf(&msg, cBuf);
 		pcComCom->SendMsg(cBuf, sizeof(cBuf));
 
 		std::cout << "ReadBoard:\n";

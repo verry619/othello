@@ -11,7 +11,7 @@ void GamePlayerHuman::PlayNextTurn(const DISC* penBoard)
 
 }
 
-void GamePlayerHuman::ListenHumanInput(DISC enDiscCol, char cRow, char cCol)
+void GamePlayerHuman::ListenHumanInput(DISC_MOVE enDiscMove)
 {
 
 }

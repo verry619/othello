@@ -6,14 +6,12 @@
 
 class CallbackFuncs
 {
-    using FuncGameStart = std::function<void(unsigned int unRowNum, unsigned int unColNum, GAME_SETTING enSetting)>;
+    using FuncGameStart = std::function<void(BOARD_SIZE enBoardSize, GAME_SETTING enSetting)>;
     using FuncGameQuit = std::function<void(void)>;
-    using FuncPutDisc = std::function<void(DISC enDiscCol, char cRow, char cCol)>;
+    using FuncPutDisc = std::function<void(DISC_MOVE enDiscMove)>;
 public:
     FuncGameStart funcGameStart;
     FuncGameQuit funcGameQuit;
-    void* funcGameEnd;
-    void* funcPassTurn;
     FuncPutDisc funcPutDisc;
 };
 
@@ -27,8 +25,8 @@ private:
 public:
     GameCom(CallbackFuncs funcs);
     void SetUiListener(GamePlayerHuman* pcHuman);
-    void SendMsg(OTHELLO_THREAD_ID enDst, OTHELLO_MSG enMsg);
-    void RcvMsg(char* pcBuf, unsigned int unBufLen);
-    void UpdateBoard(DISC* m_penBoard, unsigned int unSize);
+    void SendMsg(OTHELLO_PROCESS_ID enDst, OTHELLO_MSG enMsg);
+    void RcvMsg(const char* pcBuf, unsigned int unBufLen);
+    void UpdateBoard(BOARD_INFO enBoardInfo);
 };
 

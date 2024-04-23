@@ -14,11 +14,9 @@ GameCtrl::GameCtrl(void)
 {
 	CallbackFuncs* funcs;
 	funcs = new CallbackFuncs();
-	funcs->funcGameStart = std::bind(&GameCtrl::StartGame, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+	funcs->funcGameStart = std::bind(&GameCtrl::StartGame, this, std::placeholders::_1, std::placeholders::_2);
 	funcs->funcGameQuit = std::bind(&GameCtrl::QuitGame, this);
-	funcs->funcGameEnd = NULL;
-	funcs->funcPassTurn = NULL;
-	funcs->funcPutDisc = std::bind(&GameCtrl::PutDisc, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+	funcs->funcPutDisc = std::bind(&GameCtrl::PutDisc, this, std::placeholders::_1);
 
 	m_pcCom = new GameCom(*funcs);
 
@@ -91,7 +89,7 @@ void GameCtrl::StartGame_Internal(void)
 	enBoard.enSize.ucCol = m_unColNum;
 
 	GameRule::InitializeBoard(enBoard);
-	m_pcCom->UpdateBoard(m_penBoard, unBoardSize);
+	m_pcCom->UpdateBoard(enBoard);
 
 	if ((GAME_SETTING::HUMAN_HUMAN == m_enSetting) || (GAME_SETTING::HUMAN_CPU == m_enSetting))
 	{
@@ -147,11 +145,10 @@ void GameCtrl::PutDisc_Internal(DISC enDiscCol, unsigned char ucRow, unsigned ch
 	enBoard.enSize.ucCol = m_unColNum;
 
 	GameRule::FlipDiscs(enDiscMove, enBoard);
-	m_pcCom->UpdateBoard(m_penBoard,
-		sizeof(DISC)*static_cast<unsigned int>(m_unRowNum) * static_cast<unsigned int>(m_unColNum));
+	m_pcCom->UpdateBoard(enBoard);
 }
 
-void GameCtrl::StartGame(unsigned int unRowNum, unsigned int unColNum, GAME_SETTING enSetting)
+void GameCtrl::StartGame(BOARD_SIZE enBoardSize, GAME_SETTING enSetting)
 {
 	if (GAME_CTRL_STATE::IDLE != m_enState)
 	{
@@ -159,8 +156,8 @@ void GameCtrl::StartGame(unsigned int unRowNum, unsigned int unColNum, GAME_SETT
 		return;
 	}
 
-	m_unRowNum = unRowNum;
-	m_unColNum = unColNum;
+	m_unRowNum = enBoardSize.ucRow;
+	m_unColNum = enBoardSize.ucCol;
 	m_enSetting = enSetting;
 
 	PostThreadMessage(m_unThreadId,
@@ -179,12 +176,12 @@ void GameCtrl::QuitGame(void)
 		0);
 }
 
-void GameCtrl::PutDisc(DISC enDiscCol, unsigned char ucRow, unsigned char ucCol)
+void GameCtrl::PutDisc(DISC_MOVE enDiscMove)
 {
-	WPARAM wParam = static_cast<WPARAM>(enDiscCol);
+	WPARAM wParam = static_cast<WPARAM>(enDiscMove.enColor);
 	LPARAM lParam =
-		((static_cast<LPARAM>(ucRow) << 8) & 0xff00) |
-		(static_cast<LPARAM>(ucCol) & 0x00ff);
+		((static_cast<LPARAM>(enDiscMove.enPos.ucRow) << 8) & 0xff00) |
+		(static_cast<LPARAM>(enDiscMove.enPos.ucCol) & 0x00ff);
 
 	PostThreadMessage(m_unThreadId,
 		static_cast<DWORD>(OTHELLO_MSG_ID::PUT_DISC),

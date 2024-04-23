@@ -7,6 +7,6 @@ public:
     GamePlayerHuman(DISC enDiscCol);
     void PlayNextTurn(const DISC* penBoard) override;
 
-    void ListenHumanInput(DISC enDiscCol, char cRow, char cCol);
+    void ListenHumanInput(DISC_MOVE enDiscMove);
 };
 

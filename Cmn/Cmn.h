@@ -4,6 +4,7 @@
 
 #define DEF_ROW_MAX 16
 #define DEF_COL_MAX 16
+#define DEF_HIST_MAX 512
 
 enum class DISC : unsigned char
 {
@@ -29,11 +30,12 @@ enum class GAME_RESULT : unsigned char
 	NO_CONTEST
 };
 
-enum class OTHELLO_THREAD_ID : unsigned char
+enum class OTHELLO_PROCESS_ID : unsigned char
 {
 	GUI,
-	GAME_CTRL,
-	GAME_PLAYER,
+	GAME,
+	GUI_DUMMY,
+	GAME_DUMMY,
 	ID_NUM
 };
 
@@ -79,6 +81,3 @@ typedef struct DISC_MOVE_
 	DISC enColor;
 	DISC_POS enPos;
 }DISC_MOVE;
-
-void CmnConvMsgToCbuf(const OTHELLO_MSG* enMsg, char* pcBuf);
-void CmnConvCbufToMsg(const char* pcBuf, OTHELLO_MSG* enMsg);

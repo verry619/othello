@@ -36,39 +36,46 @@ void GameCom::SetUiListener(GamePlayerHuman* pcHuman)
 
 }
 
-void GameCom::SendMsg(OTHELLO_THREAD_ID enDst, OTHELLO_MSG enMsg)
+void GameCom::SendMsg(OTHELLO_PROCESS_ID enDst, OTHELLO_MSG enMsg)
 {
 	char* pcBuf = NULL;
-	if (OTHELLO_THREAD_ID::GUI == enDst)
+	if (OTHELLO_PROCESS_ID::GUI == enDst)
 	{
 		pcBuf = (char*)malloc(sizeof(OTHELLO_MSG));
 		if (NULL != pcBuf)
 		{
-			CmnConvMsgToCbuf(&enMsg, pcBuf);
+			CmnCom::ConvMsgToCbuf(&enMsg, pcBuf);
 			CmnCom::SendMsg(pcBuf, sizeof(OTHELLO_MSG));
 			free(pcBuf);
 		}
 	}
 }
 
-void GameCom::RcvMsg(char* pcBuf, unsigned int unBufLen)
+void GameCom::RcvMsg(const char* pcBuf, unsigned int unBufLen)
 {
 	OTHELLO_MSG enMsg;
-	CmnConvCbufToMsg(pcBuf, &enMsg);
+	CmnCom::ConvCbufToMsg(pcBuf, &enMsg);
 
 	switch (enMsg.enId)
 	{
 	case OTHELLO_MSG_ID::GAME_START:
 		if (NULL != m_callbacks.funcGameStart)
 		{
-			m_callbacks.funcGameStart(enMsg.p1, enMsg.p2, static_cast<GAME_SETTING>(enMsg.p3));
+			BOARD_SIZE enBoardSize;
+			enBoardSize.ucRow = static_cast<unsigned char>(enMsg.p1);
+			enBoardSize.ucCol = static_cast<unsigned char>(enMsg.p2);
+			m_callbacks.funcGameStart(enBoardSize, static_cast<GAME_SETTING>(enMsg.p3));
 		}
 		break;
 
 	case OTHELLO_MSG_ID::PUT_DISC:
 		if (NULL != m_callbacks.funcPutDisc)
 		{
-			m_callbacks.funcPutDisc(static_cast<DISC>(enMsg.p1), enMsg.p2, enMsg.p3);
+			DISC_MOVE enDiscMove;
+			enDiscMove.enColor = static_cast<DISC>(enMsg.p1);
+			enDiscMove.enPos.ucRow = static_cast<unsigned char>(enMsg.p2);
+			enDiscMove.enPos.ucCol = static_cast<unsigned char>(enMsg.p3);
+			m_callbacks.funcPutDisc(enDiscMove);
 		}
 		break;
 
@@ -77,7 +84,7 @@ void GameCom::RcvMsg(char* pcBuf, unsigned int unBufLen)
 	}
 }
 
-void GameCom::UpdateBoard(DISC* penBoard, unsigned int unSize)
+void GameCom::UpdateBoard(BOARD_INFO enBoardInfo)
 {
 	CmnCom::ShmData* penShm;
 	penShm = (CmnCom::ShmData*)malloc(sizeof(CmnCom::ShmData));
@@ -89,7 +96,8 @@ void GameCom::UpdateBoard(DISC* penBoard, unsigned int unSize)
 	}
 
 	CmnCom::ReadShm(penShm);
-	memcpy(penShm->enBoard, penBoard, unSize);
+	memcpy(penShm->enBoard, enBoardInfo.penDiscs,
+		sizeof(DISC) * enBoardInfo.enSize.ucRow * enBoardInfo.enSize.ucCol);
 	CmnCom::WriteShm(penShm);
 
 	free(penShm);
