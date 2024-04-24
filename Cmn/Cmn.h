@@ -8,6 +8,9 @@
 #define DEF_COL_MAX 16
 #define DEF_HIST_MAX 512
 
+#define O_FAILURE 0
+#define O_SUCCESS 1
+
 enum class DISC : unsigned char
 {
 	NONE,

@@ -250,7 +250,8 @@ void CmnCom::ReceiveMsg(void)
 		int n = recv(m_socket, recvbuf, sizeof(recvbuf), 0);
 		if (n > 0)
 		{
-			std::cout << "CmnCom::ReceiveMsg():" << recvbuf << "\n";
+			std::cout << "CmnCom::ReceiveMsg()\n";
+			
 			if (NULL == m_clbFunc_rcvMsg)
 			{
 				/* エラーログ残す */

@@ -17,6 +17,9 @@ static void RcvMsg(const char* pcBuf, unsigned int unBufLen);
 
 static bool bComStartWaiting = true;
 static bool bGameStartWaiting = true;
+static bool bBlackWaiting = true;
+static bool bWhiteWaiting = true;
+static bool bValidDisc = false;
 
 int main()
 {
@@ -60,45 +63,75 @@ int main()
 	{
 		unsigned int cRow, cCol;
 
-		std::cout << "BLACK:\nROW:";
-		std::cin >> cRow;
-		std::cout << "COL:";
-		std::cin >> cCol;
+		do
+		{
+			std::cout << "BLACK:\nROW:";
+			std::cin >> cRow;
+			std::cout << "COL:";
+			std::cin >> cCol;
 
-		msg.p1 = static_cast<unsigned int>(DISC::BLACK);;
-		msg.p2 = cRow;
-		msg.p3 = cCol;
+			msg.p1 = static_cast<unsigned int>(DISC::BLACK);;
+			msg.p2 = cRow;
+			msg.p3 = cCol;
 
-		CmnCom::ConvMsgToCbuf(&msg, cBuf);
-		pcComCom->SendMsg(cBuf, sizeof(cBuf));
+			CmnCom::ConvMsgToCbuf(&msg, cBuf);
 
-		std::cout << "ReadBoard:\n";
-		std::cin >> msg.p4;
+			bBlackWaiting = true;
+			bValidDisc = false;
 
-		pcComCom->ReadShm(&penShm);
-		PrintBoard(penShm.enBoard, BOARD_ROW_LEN, BOARD_COL_LEN);
+			pcComCom->SendMsg(cBuf, sizeof(cBuf));
 
-		std::cout << "WHITE:\nROW:";
-		std::cin >> cRow;
-		std::cout << "COL:";
-		std::cin >> cCol;
+			while (bBlackWaiting)
+			{
+				NOP_FUNCTION;
+			}
 
-		msg.p1 = static_cast<unsigned int>(DISC::WHITE);;
-		msg.p2 = cRow;
-		msg.p3 = cCol;
+			pcComCom->ReadShm(&penShm);
+			PrintBoard(penShm.enBoard, BOARD_ROW_LEN, BOARD_COL_LEN);
 
-		CmnCom::ConvMsgToCbuf(&msg, cBuf);
-		pcComCom->SendMsg(cBuf, sizeof(cBuf));
+			if (bValidDisc)
+			{
+				break;
+			}
 
-		std::cout << "ReadBoard:\n";
-		std::cin >> msg.p4;
+		} while (1);
 
-		pcComCom->ReadShm(&penShm);
-		PrintBoard(penShm.enBoard, BOARD_ROW_LEN, BOARD_COL_LEN);
+		do
+		{
+			std::cout << "WHITE:\nROW:";
+			std::cin >> cRow;
+			std::cout << "COL:";
+			std::cin >> cCol;
+
+			msg.p1 = static_cast<unsigned int>(DISC::WHITE);;
+			msg.p2 = cRow;
+			msg.p3 = cCol;
+
+			CmnCom::ConvMsgToCbuf(&msg, cBuf);
+
+			bBlackWaiting = true;
+			bValidDisc = false;
+
+			pcComCom->SendMsg(cBuf, sizeof(cBuf));
+
+			while (bBlackWaiting)
+			{
+				NOP_FUNCTION;
+			}
+
+			pcComCom->ReadShm(&penShm);
+			PrintBoard(penShm.enBoard, BOARD_ROW_LEN, BOARD_COL_LEN);
+
+			if (bValidDisc)
+			{
+				break;
+			}
+
+		} while (1);
 	}
 }
 
-static void PrintBoard(DISC *punBoard, int unRowMax, int unColMax)
+static void PrintBoard(DISC* punBoard, int unRowMax, int unColMax)
 {
 	std::cout << "###################\n";
 	std::cout << "  ";
@@ -148,6 +181,21 @@ static void RcvMsg(const char* pcBuf, unsigned int unBufLen)
 		std::cout << "GAME_START\n";
 		bGameStartWaiting = false;
 		break;
+	case OTHELLO_MSG_ID::PUT_DISC:
+		std::cout << "PUT_DISC\n";
+		bBlackWaiting = false;
+		if (O_SUCCESS == enMsg.p1)
+		{
+			bValidDisc = true;
+		}
+		else
+		{
+			bValidDisc = false;
+		}
+		break;
+
+
+		
 	default:
 		break;
 	}

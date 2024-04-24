@@ -133,9 +133,28 @@ void GameCtrl::PutDisc_Internal(DISC enDiscCol, unsigned char ucRow, unsigned ch
 	if (GameRule::FlipDiscs(enDiscMove, enBoard))
 	{
 		m_pcCom->UpdateBoard(enBoard);
+
+		if (DISC::BLACK == enDiscCol)
+		{
+			m_pcPlayerWhite->PlayNextTurn(enBoard);
+		}
+		else if (DISC::WHITE == enDiscCol)
+		{
+			m_pcPlayerBlack->PlayNextTurn(enBoard);
+		}
+		else
+		{
+			/* エラーログ残す */
+		}
+
+		OTHELLO_MSG msg;
+		msg.enId = OTHELLO_MSG_ID::PUT_DISC;
+		msg.p1 = O_SUCCESS;
+		m_pcCom->SendMsg(OTHELLO_PROCESS_ID::GUI, msg);
 	}
 	else
 	{
+		/* Invalid position to put disc */
 		if (DISC::BLACK == enDiscCol)
 		{
 			m_pcPlayerBlack->PlayNextTurn(enBoard);
@@ -148,8 +167,14 @@ void GameCtrl::PutDisc_Internal(DISC enDiscCol, unsigned char ucRow, unsigned ch
 		{
 			/* エラーログ残す */
 		}
+
+		OTHELLO_MSG msg;
+		msg.enId = OTHELLO_MSG_ID::PUT_DISC;
+		msg.p1 = O_FAILURE;
+		m_pcCom->SendMsg(OTHELLO_PROCESS_ID::GUI, msg);
 	}
-	
+
+	m_enState = GAME_CTRL_STATE::IDLE;
 }
 
 void GameCtrl::StartGame(BOARD_SIZE enBoardSize, GAME_SETTING enSetting)
@@ -164,15 +189,10 @@ void GameCtrl::StartGame(BOARD_SIZE enBoardSize, GAME_SETTING enSetting)
 	m_unColNum = enBoardSize.ucCol;
 	m_enSetting = enSetting;
 
-	bool bRet = PostThreadMessage(m_unThreadId,
+	PostThreadMessage(m_unThreadId,
 		static_cast<DWORD>(OTHELLO_MSG_ID::GAME_START),
 		0,
 		0);
-	int iErr;
-	if (!bRet)
-	{
-		iErr = GetLastError();
-	}
 
 	m_enState = GAME_CTRL_STATE::WAITING;
 }
@@ -196,4 +216,5 @@ void GameCtrl::PutDisc(DISC_MOVE enDiscMove)
 		static_cast<DWORD>(OTHELLO_MSG_ID::PUT_DISC),
 		wParam,
 		lParam);
+	m_enState = GAME_CTRL_STATE::WAITING;
 }
