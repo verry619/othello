@@ -1,5 +1,7 @@
 #pragma once
 
+#define _WINSOCKAPI_
+#include <windows.h>
 #include <process.h> 
 
 #define DEF_ROW_MAX 16
@@ -39,8 +41,9 @@ enum class OTHELLO_PROCESS_ID : unsigned char
 	ID_NUM
 };
 
-enum class OTHELLO_MSG_ID : unsigned char
+enum class OTHELLO_MSG_ID : unsigned short
 {
+	COM_START = WM_USER,
 	GAME_START,
 	GAME_QUIT,
 	GAME_END,

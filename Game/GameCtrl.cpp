@@ -12,14 +12,6 @@ GameCtrl::GameCtrl(void)
 	m_pcPlayerWhite(nullptr),
 	m_unThreadId(0)
 {
-	CallbackFuncs* funcs;
-	funcs = new CallbackFuncs();
-	funcs->funcGameStart = std::bind(&GameCtrl::StartGame, this, std::placeholders::_1, std::placeholders::_2);
-	funcs->funcGameQuit = std::bind(&GameCtrl::QuitGame, this);
-	funcs->funcPutDisc = std::bind(&GameCtrl::PutDisc, this, std::placeholders::_1);
-
-	m_pcCom = new GameCom(*funcs);
-
 	(void)_beginthreadex(NULL, 0, &GameCtrl::executeLauncher, this, 0, &m_unThreadId);
 }
 
@@ -31,6 +23,14 @@ unsigned int __stdcall GameCtrl::executeLauncher(void* args)
 
 void GameCtrl::ThreadProc(void)
 {
+	CallbackFuncs* funcs;
+	funcs = new CallbackFuncs();
+	funcs->funcGameStart = std::bind(&GameCtrl::StartGame, this, std::placeholders::_1, std::placeholders::_2);
+	funcs->funcGameQuit = std::bind(&GameCtrl::QuitGame, this);
+	funcs->funcPutDisc = std::bind(&GameCtrl::PutDisc, this, std::placeholders::_1);
+
+	m_pcCom = new GameCom(*funcs);
+
 	MSG msg;
 
 	while (1)
@@ -94,7 +94,8 @@ void GameCtrl::StartGame_Internal(void)
 			std::bind(&GameCtrl::PutDisc, this, std::placeholders::_1));
 		m_pcCom->SetUiListener(dynamic_cast<GamePlayerHuman*>(m_pcPlayerBlack));
 	}
-	else if ((GAME_SETTING::HUMAN_HUMAN == m_enSetting) || (GAME_SETTING::CPU_HUMAN == m_enSetting))
+
+	if ((GAME_SETTING::HUMAN_HUMAN == m_enSetting) || (GAME_SETTING::CPU_HUMAN == m_enSetting))
 	{
 		m_pcPlayerWhite = new GamePlayerHuman(DISC::WHITE,
 			std::bind(&GameCtrl::PutDisc, this, std::placeholders::_1));
@@ -102,6 +103,11 @@ void GameCtrl::StartGame_Internal(void)
 	}
 
 	m_pcPlayerBlack->PlayNextTurn(enBoard);
+
+	OTHELLO_MSG msg;
+	msg.enId = OTHELLO_MSG_ID::GAME_START;
+
+	m_pcCom->SendMsg(OTHELLO_PROCESS_ID::GUI, msg);
 
 	m_enState = GAME_CTRL_STATE::IDLE;
 }
@@ -158,10 +164,15 @@ void GameCtrl::StartGame(BOARD_SIZE enBoardSize, GAME_SETTING enSetting)
 	m_unColNum = enBoardSize.ucCol;
 	m_enSetting = enSetting;
 
-	PostThreadMessage(m_unThreadId,
+	bool bRet = PostThreadMessage(m_unThreadId,
 		static_cast<DWORD>(OTHELLO_MSG_ID::GAME_START),
 		0,
 		0);
+	int iErr;
+	if (!bRet)
+	{
+		iErr = GetLastError();
+	}
 
 	m_enState = GAME_CTRL_STATE::WAITING;
 }

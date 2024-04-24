@@ -13,7 +13,10 @@
 #define BOARD_COL_LEN 6
 
 static void PrintBoard(DISC* punBoard, int unRowMax, int unColMax);
-static void RcvMsg(void);
+static void RcvMsg(const char* pcBuf, unsigned int unBufLen);
+
+static bool bComStartWaiting = true;
+static bool bGameStartWaiting = true;
 
 int main()
 {
@@ -22,8 +25,13 @@ int main()
 	CmnCom* pcComCom;
 	pcComCom = new CmnCom();
 
-	pcComCom->Initialize(std::bind(RcvMsg));
-	pcComCom->StartCom(EN_SOCKET_ROLE::CLIENT);
+	pcComCom->Initialize(std::bind(RcvMsg, std::placeholders::_1, std::placeholders::_2));
+	pcComCom->StartCom(SOCKET_ROLE::CLIENT);
+
+	while (bComStartWaiting)
+	{
+		NOP_FUNCTION;
+	}
 
 	OTHELLO_MSG msg;
 	msg.enId = OTHELLO_MSG_ID::GAME_START;
@@ -32,15 +40,14 @@ int main()
 	msg.p3 = static_cast<unsigned int>(GAME_SETTING::HUMAN_HUMAN);
 	msg.p4 = 0;
 
-	std::cout << "pause:\n";
-	std::cin >> msg.p4;
-
-	char cBuf[64];
+	char cBuf[sizeof(OTHELLO_MSG)];
 	CmnCom::ConvMsgToCbuf(&msg, cBuf);
 	pcComCom->SendMsg(cBuf, sizeof(cBuf));
 
-	std::cout << "pause:\n";
-	std::cin >> msg.p4;
+	while (bGameStartWaiting)
+	{
+		NOP_FUNCTION;
+	}
 
 	CmnCom::ShmData penShm;
 
@@ -121,9 +128,29 @@ static void PrintBoard(DISC *punBoard, int unRowMax, int unColMax)
 	std::cout << "###################\n";
 }
 
-static void RcvMsg(void)
+static void RcvMsg(const char* pcBuf, unsigned int unBufLen)
 {
-	std::cout << "GuiDummy RcvMsg()\n";
+	std::cout << "RcvMsg()\n";
+
+	OTHELLO_MSG enMsg;
+	CmnCom::ConvCbufToMsg(pcBuf, &enMsg);
+
+	switch (enMsg.enId)
+	{
+	case OTHELLO_MSG_ID::COM_START:
+		if (SOCKET_ROLE::SERVER == static_cast<SOCKET_ROLE>(enMsg.p1))
+		{
+			std::cout << "COM_START\n";
+			bComStartWaiting = false;
+		}
+		break;
+	case OTHELLO_MSG_ID::GAME_START:
+		std::cout << "GAME_START\n";
+		bGameStartWaiting = false;
+		break;
+	default:
+		break;
+	}
 }
 
 // プログラムの実行: Ctrl + F5 または [デバッグ] > [デバッグなしで開始] メニュー

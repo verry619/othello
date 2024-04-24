@@ -11,7 +11,7 @@ GameCom::GameCom(CallbackFuncs funcs)
 		/* エラーログを残す */
 		return;
 	}
-	if (!CmnCom::StartCom(EN_SOCKET_ROLE::SERVER))
+	if (!CmnCom::StartCom(SOCKET_ROLE::SERVER))
 	{
 		/* エラーログを残す */
 		return;
