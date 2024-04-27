@@ -225,7 +225,7 @@ void CmnCom::NotifyComStartComp(SOCKET_ROLE enRole)
 
 	if (NULL == m_clbFunc_rcvMsg)
 	{
-		/* エラーログ残す */
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::NONE);
 		return;
 	}
 

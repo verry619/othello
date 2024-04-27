@@ -27,6 +27,9 @@
     <ClInclude Include="Cmn.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="CmnLog.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Cmn.cpp">
@@ -36,6 +39,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="CmnCom.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CmnLog.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

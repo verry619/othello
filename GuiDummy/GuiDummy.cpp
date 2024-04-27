@@ -9,6 +9,8 @@
 #include "Cmn.h"
 #include "CmnCom.h"
 
+#include "CmnLog.h"
+
 #define BOARD_ROW_LEN 6
 #define BOARD_COL_LEN 6
 
@@ -24,6 +26,12 @@ static bool bValidDisc = false;
 int main()
 {
 	std::cout << "Hello World!\n";
+
+	OTHELLO_LOG_PARAM p = { 1 };
+	WRITE_DEV_LOG(OTHELLO_LOG_ID::GAME_START, p);
+	WRITE_DEV_LOG(OTHELLO_LOG_ID::GAME_START, p, "Hello World!");
+	WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_QUIT);
+	WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_QUIT, "Hello World!");
 
 	CmnCom* pcComCom;
 	pcComCom = new CmnCom();
@@ -195,7 +203,7 @@ static void RcvMsg(const char* pcBuf, unsigned int unBufLen)
 		break;
 
 
-		
+
 	default:
 		break;
 	}

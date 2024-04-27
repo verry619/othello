@@ -16,6 +16,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Gui", "Gui\Gui.vcxproj", "{
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuiDummy", "GuiDummy\GuiDummy.vcxproj", "{DE087986-B9FD-4E2E-B12A-73465CF8BB96}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DC169339-93AC-4D0E-8713-9EC617FB69E6} = {DC169339-93AC-4D0E-8713-9EC617FB69E6}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game_Test", "Game_Test\Game_Test.vcxproj", "{1827996E-FBFF-49AC-816B-A5D249CA9CC8}"
 EndProject
