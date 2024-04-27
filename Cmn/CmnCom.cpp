@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "CmnLog.h"
 #include "CmnCom.h"
 
 #include <iostream>

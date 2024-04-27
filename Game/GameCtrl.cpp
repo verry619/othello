@@ -1,6 +1,8 @@
 #include "GameCtrl.h"
 #include "GameRule.h"
 
+#include "CmnLog.h"
+
 GameCtrl::GameCtrl(void)
 	:m_enState(GAME_CTRL_STATE::IDLE),
 	m_unRowNum(0),
@@ -173,6 +175,8 @@ void GameCtrl::PutDisc_Internal(DISC enDiscCol, unsigned char ucRow, unsigned ch
 		msg.p1 = O_FAILURE;
 		m_pcCom->SendMsg(OTHELLO_PROCESS_ID::GUI, msg);
 	}
+
+	CmnLog::getInstance().WriteGameLog(enDiscMove, enBoard);
 
 	m_enState = GAME_CTRL_STATE::IDLE;
 }

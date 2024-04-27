@@ -4,8 +4,6 @@
 #include <windows.h>
 #include <process.h> 
 
-#include "CmnLog.h"
-
 #define DEF_ROW_MAX 16
 #define DEF_COL_MAX 16
 #define DEF_HIST_MAX 512
