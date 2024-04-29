@@ -42,6 +42,7 @@ bool GameRule::FlipDiscs(const DISC_MOVE enMove, BOARD_INFO enBoard)
 	if (NULL == tmpDiscs)
 	{
 		/* エラーログ残す */
+		free(tmpDiscs);
 		return false;
 	}
 	memcpy(tmpDiscs, enBoard.penDiscs, unBoardByte);
@@ -61,12 +62,14 @@ bool GameRule::FlipDiscs(const DISC_MOVE enMove, BOARD_INFO enBoard)
 
 	if (0 == unFlipTotal)
 	{
+		free(tmpDiscs);
 		return false;
 	}
 
 	tmpDiscs[iMovePos] = enMove.enColor;
 	memcpy(enBoard.penDiscs, tmpDiscs, unBoardByte);
 
+	free(tmpDiscs);
 	return true;
 }
 
