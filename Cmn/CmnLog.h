@@ -7,7 +7,6 @@
 
 #define WRITE_DEV_LOG(enId,enParam,...) CmnLog::getInstance().WriteDevLog(enId,enParam,__FILE__,__LINE__,__func__,##__VA_ARGS__)
 #define WRITE_DEV_LOG_NOPARAM(enId,...) CmnLog::getInstance().WriteDevLog(enId,__FILE__,__LINE__,__func__,##__VA_ARGS__)
-#define WRITE_GAME_LOG(enId,enParam) CmnLog::getInstance().WriteGameLog(enId,enParam,__FILE__,__LINE__,__func__)
 
 enum class OTHELLO_LOG_ID {
 	NONE,

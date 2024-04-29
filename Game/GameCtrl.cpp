@@ -78,7 +78,7 @@ void GameCtrl::StartGame_Internal(void)
 	m_penBoard = static_cast<DISC*>(malloc(sizeof(DISC) * unBoardSize));
 	if (NULL == m_penBoard)
 	{
-		/* エラーログ残す */
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_START, "BOARD INIT ERROR!");
 		return;
 	}
 
@@ -146,7 +146,7 @@ void GameCtrl::PutDisc_Internal(DISC enDiscCol, unsigned char ucRow, unsigned ch
 		}
 		else
 		{
-			/* エラーログ残す */
+			WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::PUT_DISC, "PARAM ERROR!");
 		}
 
 		OTHELLO_MSG msg;
@@ -167,7 +167,7 @@ void GameCtrl::PutDisc_Internal(DISC enDiscCol, unsigned char ucRow, unsigned ch
 		}
 		else
 		{
-			/* エラーログ残す */
+			WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::PUT_DISC, "PARAM ERROR!");
 		}
 
 		OTHELLO_MSG msg;
@@ -185,7 +185,7 @@ void GameCtrl::StartGame(BOARD_SIZE enBoardSize, GAME_SETTING enSetting)
 {
 	if (GAME_CTRL_STATE::IDLE != m_enState)
 	{
-		/* エラーログ残す */
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_START, "GAME CTRL STATE BUSY!");
 		return;
 	}
 

@@ -27,12 +27,6 @@ int main()
 {
 	std::cout << "Hello World!\n";
 
-	OTHELLO_LOG_PARAM p = { 1 };
-	WRITE_DEV_LOG(OTHELLO_LOG_ID::GAME_START, p);
-	WRITE_DEV_LOG(OTHELLO_LOG_ID::GAME_START, p, "Hello World!");
-	WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_QUIT);
-	WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_QUIT, "Hello World!");
-
 	CmnCom* pcComCom;
 	pcComCom = new CmnCom();
 
@@ -147,7 +141,7 @@ static void PrintBoard(DISC* punBoard, int unRowMax, int unColMax)
 	{
 		std::cout << col << " ";
 	}
-	std::cout << " <-COL\n";
+	std::cout << " <COL\n";
 
 	std::cout << "  ";
 	for (int col = 0;col < unColMax;col++)
@@ -165,14 +159,12 @@ static void PrintBoard(DISC* punBoard, int unRowMax, int unColMax)
 		}
 		std::cout << "\n";
 	}
-	std::cout << "^\n|\nROW\n";
+	std::cout << "^\nROW\n";
 	std::cout << "###################\n";
 }
 
 static void RcvMsg(const char* pcBuf, unsigned int unBufLen)
 {
-	std::cout << "RcvMsg()\n";
-
 	OTHELLO_MSG enMsg;
 	CmnCom::ConvCbufToMsg(pcBuf, &enMsg);
 
@@ -181,16 +173,16 @@ static void RcvMsg(const char* pcBuf, unsigned int unBufLen)
 	case OTHELLO_MSG_ID::COM_START:
 		if (SOCKET_ROLE::SERVER == static_cast<SOCKET_ROLE>(enMsg.p1))
 		{
-			std::cout << "COM_START\n";
+			//WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::NONE,"COM START");
 			bComStartWaiting = false;
 		}
 		break;
 	case OTHELLO_MSG_ID::GAME_START:
-		std::cout << "GAME_START\n";
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_START);
 		bGameStartWaiting = false;
 		break;
 	case OTHELLO_MSG_ID::PUT_DISC:
-		std::cout << "PUT_DISC\n";
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::PUT_DISC);
 		bBlackWaiting = false;
 		if (O_SUCCESS == enMsg.p1)
 		{

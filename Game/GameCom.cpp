@@ -1,5 +1,6 @@
 #include "GameCom.h"
 #include "CmnCom.h"
+#include "CmnLog.h"
 
 GameCom::GameCom(CallbackFuncs funcs)
 	:m_pcUiListenerBlack(NULL),
@@ -8,12 +9,12 @@ GameCom::GameCom(CallbackFuncs funcs)
 {
 	if (!CmnCom::Initialize(std::bind(&GameCom::RcvMsg, this, std::placeholders::_1, std::placeholders::_2)))
 	{
-		/* エラーログを残す */
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::NONE, "INITIALIZE ERROR!");
 		return;
 	}
 	if (!CmnCom::StartCom(SOCKET_ROLE::SERVER))
 	{
-		/* エラーログを残す */
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::NONE, "START COM ERROR!");
 		return;
 	}
 }
@@ -30,7 +31,7 @@ void GameCom::SetUiListener(GamePlayerHuman* pcHuman)
 	}
 	else
 	{
-		/* エラーログを残す */
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_START, "PARAM ERROR!");
 		return;
 	}
 
@@ -69,16 +70,6 @@ void GameCom::RcvMsg(const char* pcBuf, unsigned int unBufLen)
 		break;
 
 	case OTHELLO_MSG_ID::PUT_DISC:
-#if 0 /* GameCom -> GameCtrl For Debug */
-		if (NULL != m_callbacks.funcPutDisc)
-		{
-			DISC_MOVE enDiscMove;
-			enDiscMove.enColor = static_cast<DISC>(enMsg.p1);
-			enDiscMove.enPos.ucRow = static_cast<unsigned char>(enMsg.p2);
-			enDiscMove.enPos.ucCol = static_cast<unsigned char>(enMsg.p3);
-			m_callbacks.funcPutDisc(enDiscMove);
-		}
-#endif
 		DISC_MOVE enDiscMove;
 		enDiscMove.enColor = static_cast<DISC>(enMsg.p1);
 		enDiscMove.enPos.ucRow = static_cast<unsigned char>(enMsg.p2);
@@ -94,7 +85,7 @@ void GameCom::RcvMsg(const char* pcBuf, unsigned int unBufLen)
 		}
 		else
 		{
-			/* エラーログ残す */
+			WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::PUT_DISC, "PARAM ERROR!");
 		}
 
 		break;
@@ -111,7 +102,7 @@ void GameCom::UpdateBoard(BOARD_INFO enBoardInfo)
 
 	if (NULL == penShm)
 	{
-		/* エラーログ残す */
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::NONE, "SHM ERROR!");
 		return;
 	}
 

@@ -1,4 +1,5 @@
 #include "GameRule.h"
+#include "CmnLog.h"
 
 #include <windows.h>
 #include <stdlib.h>
@@ -22,7 +23,7 @@ bool GameRule::FlipDiscs(const DISC_MOVE enMove, BOARD_INFO enBoard)
 	if ((enMove.enPos.ucRow > enBoard.enSize.ucRow) ||
 		(enMove.enPos.ucCol > enBoard.enSize.ucCol))
 	{
-		/* エラーログ残す */
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::PUT_DISC, "PARAM ERROR!");
 		return false;
 	}
 
@@ -30,7 +31,7 @@ bool GameRule::FlipDiscs(const DISC_MOVE enMove, BOARD_INFO enBoard)
 
 	if (DISC::NONE != enBoard.penDiscs[iMovePos])
 	{
-		/* エラーログ残す */
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::PUT_DISC, "INVALID MOVE POS ERROR!");
 		return false;
 	}
 
@@ -41,7 +42,7 @@ bool GameRule::FlipDiscs(const DISC_MOVE enMove, BOARD_INFO enBoard)
 	tmpDiscs = static_cast<DISC*>(malloc(unBoardByte));
 	if (NULL == tmpDiscs)
 	{
-		/* エラーログ残す */
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::PUT_DISC, "HEAP MEMORY ERROR!");
 		free(tmpDiscs);
 		return false;
 	}
@@ -62,6 +63,7 @@ bool GameRule::FlipDiscs(const DISC_MOVE enMove, BOARD_INFO enBoard)
 
 	if (0 == unFlipTotal)
 	{
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::PUT_DISC, "INVALID MOVE POS ERROR!");
 		free(tmpDiscs);
 		return false;
 	}

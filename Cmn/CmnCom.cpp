@@ -251,11 +251,9 @@ void CmnCom::ReceiveMsg(void)
 		int n = recv(m_socket, recvbuf, sizeof(recvbuf), 0);
 		if (n > 0)
 		{
-			std::cout << "CmnCom::ReceiveMsg()\n";
-			
 			if (NULL == m_clbFunc_rcvMsg)
 			{
-				/* エラーログ残す */
+				WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::NONE, "INITIALIZE ERROR!");
 				continue;
 			}
 			m_clbFunc_rcvMsg(recvbuf, n);
@@ -312,7 +310,7 @@ void CmnCom::SendMsg(const char* cBuf, unsigned int unLen)
 void CmnCom::ConvMsgToCbuf(const OTHELLO_MSG* enMsg, char* pcBuf)
 {
 	pcBuf[0] = static_cast<char>((static_cast<unsigned short>(enMsg->enId) & 0x00ff));
-	pcBuf[1] = static_cast<char>(((static_cast<unsigned short>(enMsg->enId)>>8) & 0x00ff));
+	pcBuf[1] = static_cast<char>(((static_cast<unsigned short>(enMsg->enId) >> 8) & 0x00ff));
 	pcBuf[2] = static_cast<char>(enMsg->p1 & 0x00ff);
 	pcBuf[3] = static_cast<char>((enMsg->p1 >> 8) & 0x00ff);
 	pcBuf[4] = static_cast<char>(enMsg->p2 & 0x00ff);
