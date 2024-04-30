@@ -21,6 +21,7 @@ static bool bComStartWaiting = true;
 static bool bGameStartWaiting = true;
 static bool bBlackWaiting = true;
 static bool bWhiteWaiting = true;
+static bool bGameQuitWaiting = true;
 static bool bValidDisc = false;
 
 int main()
@@ -59,8 +60,6 @@ int main()
 	pcComCom->ReadShm(&penShm);
 	PrintBoard(penShm.enBoard, BOARD_ROW_LEN, BOARD_COL_LEN);
 
-	msg.enId = OTHELLO_MSG_ID::PUT_DISC;
-
 	while (1)
 	{
 		unsigned int cRow, cCol;
@@ -72,7 +71,8 @@ int main()
 			std::cout << "COL:";
 			std::cin >> cCol;
 
-			msg.p1 = static_cast<unsigned int>(DISC::BLACK);;
+			msg.enId = OTHELLO_MSG_ID::PUT_DISC;
+			msg.p1 = static_cast<unsigned int>(DISC::BLACK);
 			msg.p2 = cRow;
 			msg.p3 = cCol;
 
@@ -105,7 +105,8 @@ int main()
 			std::cout << "COL:";
 			std::cin >> cCol;
 
-			msg.p1 = static_cast<unsigned int>(DISC::WHITE);;
+			msg.enId = OTHELLO_MSG_ID::PUT_DISC;
+			msg.p1 = static_cast<unsigned int>(DISC::WHITE);
 			msg.p2 = cRow;
 			msg.p3 = cCol;
 
@@ -130,6 +131,42 @@ int main()
 			}
 
 		} while (1);
+
+		msg.enId = OTHELLO_MSG_ID::GAME_QUIT;
+		msg.p1 = 0;
+		msg.p2 = 0;
+		msg.p3 = 0;
+
+		CmnCom::ConvMsgToCbuf(&msg, cBuf);
+		pcComCom->SendMsg(cBuf, sizeof(cBuf));
+
+		while (bGameQuitWaiting)
+		{
+			NOP_FUNCTION;
+		}
+
+		bGameQuitWaiting = true;
+
+		OTHELLO_MSG msg;
+		msg.enId = OTHELLO_MSG_ID::GAME_START;
+		msg.p1 = BOARD_ROW_LEN;
+		msg.p2 = BOARD_COL_LEN;
+		msg.p3 = static_cast<unsigned int>(GAME_SETTING::HUMAN_HUMAN);
+		msg.p4 = 0;
+
+		char cBuf[sizeof(OTHELLO_MSG)];
+		CmnCom::ConvMsgToCbuf(&msg, cBuf);
+		pcComCom->SendMsg(cBuf, sizeof(cBuf));
+
+		while (bGameStartWaiting)
+		{
+			NOP_FUNCTION;
+		}
+
+		CmnCom::ShmData penShm;
+
+		pcComCom->ReadShm(&penShm);
+		PrintBoard(penShm.enBoard, BOARD_ROW_LEN, BOARD_COL_LEN);
 	}
 }
 
@@ -180,6 +217,10 @@ static void RcvMsg(const char* pcBuf, unsigned int unBufLen)
 	case OTHELLO_MSG_ID::GAME_START:
 		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_START);
 		bGameStartWaiting = false;
+		break;
+	case OTHELLO_MSG_ID::GAME_QUIT:
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_QUIT);
+		bGameQuitWaiting = false;
 		break;
 	case OTHELLO_MSG_ID::PUT_DISC:
 		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::PUT_DISC);

@@ -21,6 +21,13 @@ GameCom::GameCom(CallbackFuncs funcs)
 
 void GameCom::SetUiListener(GamePlayerHuman* pcHuman)
 {
+	if (NULL == pcHuman)
+	{
+		m_pcUiListenerBlack = NULL;
+		m_pcUiListenerWhite = NULL;
+		return;
+	}
+
 	if (DISC::BLACK == pcHuman->GetDiscCol())
 	{
 		m_pcUiListenerBlack = pcHuman;
@@ -60,14 +67,30 @@ void GameCom::RcvMsg(const char* pcBuf, unsigned int unBufLen)
 	switch (enMsg.enId)
 	{
 	case OTHELLO_MSG_ID::GAME_START:
-		if (NULL != m_callbacks.funcGameStart)
+		if (NULL == m_callbacks.funcGameStart)
 		{
-			BOARD_SIZE enBoardSize;
-			enBoardSize.ucRow = static_cast<unsigned char>(enMsg.p1);
-			enBoardSize.ucCol = static_cast<unsigned char>(enMsg.p2);
-			m_callbacks.funcGameStart(enBoardSize, static_cast<GAME_SETTING>(enMsg.p3));
+			WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_START, "CALLBACK SET ERROR!");
+			return;
 		}
+
+		BOARD_SIZE enBoardSize;
+		enBoardSize.ucRow = static_cast<unsigned char>(enMsg.p1);
+		enBoardSize.ucCol = static_cast<unsigned char>(enMsg.p2);
+		m_callbacks.funcGameStart(enBoardSize, static_cast<GAME_SETTING>(enMsg.p3));
+
 		break;
+
+	case OTHELLO_MSG_ID::GAME_QUIT:
+		if (NULL == m_callbacks.funcGameQuit)
+		{
+			WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_QUIT, "CALLBACK SET ERROR!");
+			return;
+		}
+
+		m_callbacks.funcGameQuit();
+
+		break;
+
 
 	case OTHELLO_MSG_ID::PUT_DISC:
 		DISC_MOVE enDiscMove;
@@ -77,10 +100,20 @@ void GameCom::RcvMsg(const char* pcBuf, unsigned int unBufLen)
 
 		if (DISC::BLACK == enDiscMove.enColor)
 		{
+			if (NULL == m_pcUiListenerBlack)
+			{
+				WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::PUT_DISC, "CALLBACK SET ERROR!");
+				return;
+			}
 			m_pcUiListenerBlack->ListenHumanInput(enDiscMove);
 		}
 		else if (DISC::WHITE == enDiscMove.enColor)
 		{
+			if (NULL == m_pcUiListenerWhite)
+			{
+				WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::PUT_DISC, "CALLBACK SET ERROR!");
+				return;
+			}
 			m_pcUiListenerWhite->ListenHumanInput(enDiscMove);
 		}
 		else

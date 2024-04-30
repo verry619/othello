@@ -116,7 +116,26 @@ void GameCtrl::StartGame_Internal(void)
 
 void GameCtrl::QuitGame_Internal(void)
 {
+	m_pcCom->SetUiListener(NULL);
+
+	if (nullptr != m_pcPlayerBlack)
+	{
+		delete m_pcPlayerBlack;
+	}
+
+	if (nullptr != m_pcPlayerWhite)
+	{
+		delete m_pcPlayerWhite;
+	}
+	
 	free(m_penBoard);
+
+	OTHELLO_MSG msg;
+	msg.enId = OTHELLO_MSG_ID::GAME_QUIT;
+
+	m_pcCom->SendMsg(OTHELLO_PROCESS_ID::GUI, msg);
+
+	m_enState = GAME_CTRL_STATE::IDLE;
 }
 
 void GameCtrl::PutDisc_Internal(DISC enDiscCol, unsigned char ucRow, unsigned char ucCol)
@@ -203,14 +222,28 @@ void GameCtrl::StartGame(BOARD_SIZE enBoardSize, GAME_SETTING enSetting)
 
 void GameCtrl::QuitGame(void)
 {
+	if (GAME_CTRL_STATE::IDLE != m_enState)
+	{
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_QUIT, "GAME CTRL STATE BUSY!");
+		return;
+	}
+
 	PostThreadMessage(m_unThreadId,
 		static_cast<DWORD>(OTHELLO_MSG_ID::GAME_QUIT),
 		0,
 		0);
+
+	m_enState = GAME_CTRL_STATE::WAITING;
 }
 
 void GameCtrl::PutDisc(DISC_MOVE enDiscMove)
 {
+	if (GAME_CTRL_STATE::IDLE != m_enState)
+	{
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::PUT_DISC, "GAME CTRL STATE BUSY!");
+		return;
+	}
+
 	WPARAM wParam = static_cast<WPARAM>(enDiscMove.enColor);
 	LPARAM lParam =
 		((static_cast<LPARAM>(enDiscMove.enPos.ucRow) << 8) & 0xff00) |
