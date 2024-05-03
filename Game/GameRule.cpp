@@ -18,6 +18,29 @@ void GameRule::InitializeBoard(BOARD_INFO enBoard)
 	enBoard.penDiscs[iCenterUL + 1 + enBoard.enSize.ucCol] = DISC::BLACK;
 }
 
+bool GameRule::CheckFlip(const DISC_MOVE enMove, BOARD_INFO enBoard)
+{
+	DISC* tmpDiscs;
+
+	unsigned int unBoardByte = sizeof(DISC) * enBoard.enSize.ucRow * enBoard.enSize.ucCol;
+	tmpDiscs = static_cast<DISC*>(malloc(unBoardByte));
+	if (NULL == tmpDiscs)
+	{
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::PUT_DISC, "HEAP MEMORY ERROR!");
+		free(tmpDiscs);
+		return false;
+	}
+	memcpy(tmpDiscs, enBoard.penDiscs, unBoardByte);
+
+	BOARD_INFO tmpBoard = { { enBoard.enSize.ucRow,enBoard.enSize.ucCol },tmpDiscs };
+
+	bool bRet = FlipDiscs(enMove, tmpBoard);
+
+	free(tmpDiscs);
+
+	return bRet;
+}
+
 bool GameRule::FlipDiscs(const DISC_MOVE enMove, BOARD_INFO enBoard)
 {
 	if ((enMove.enPos.ucRow > enBoard.enSize.ucRow) ||
@@ -31,7 +54,8 @@ bool GameRule::FlipDiscs(const DISC_MOVE enMove, BOARD_INFO enBoard)
 
 	if (DISC::NONE != enBoard.penDiscs[iMovePos])
 	{
-		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::PUT_DISC, "INVALID MOVE POS ERROR!");
+		OTHELLO_LOG_PARAM p = { enMove.enPos.ucRow,enMove.enPos.ucCol,0,0 };
+		WRITE_DEV_LOG(OTHELLO_LOG_ID::PUT_DISC, p, "INVALID MOVE POS ERROR!");
 		return false;
 	}
 
@@ -63,7 +87,8 @@ bool GameRule::FlipDiscs(const DISC_MOVE enMove, BOARD_INFO enBoard)
 
 	if (0 == unFlipTotal)
 	{
-		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::PUT_DISC, "INVALID MOVE POS ERROR!");
+		OTHELLO_LOG_PARAM p = { enMove.enPos.ucRow,enMove.enPos.ucCol,0,0 };
+		WRITE_DEV_LOG(OTHELLO_LOG_ID::PUT_DISC, p, "INVALID MOVE POS ERROR!");
 		free(tmpDiscs);
 		return false;
 	}

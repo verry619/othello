@@ -149,6 +149,7 @@
     <ClCompile Include="GameCom.cpp" />
     <ClCompile Include="GameCtrl.cpp" />
     <ClCompile Include="GamePlayer.cpp" />
+    <ClCompile Include="GamePlayerCpu.cpp" />
     <ClCompile Include="GamePlayerHuman.cpp" />
     <ClCompile Include="GameRule.cpp" />
   </ItemGroup>
@@ -156,6 +157,7 @@
     <ClInclude Include="GameCom.h" />
     <ClInclude Include="GameCtrl.h" />
     <ClInclude Include="GamePlayer.h" />
+    <ClInclude Include="GamePlayerCpu.h" />
     <ClInclude Include="GamePlayerHuman.h" />
     <ClInclude Include="GameRule.h" />
   </ItemGroup>

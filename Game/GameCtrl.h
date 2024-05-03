@@ -2,7 +2,7 @@
 
 #include "Cmn.h"
 #include "GameCom.h"
-#include "GamePlayerHuman.h"
+#include "GamePlayer.h"
 
 enum class GAME_CTRL_STATE {
     IDLE,

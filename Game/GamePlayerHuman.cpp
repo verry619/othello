@@ -6,9 +6,9 @@ GamePlayerHuman::GamePlayerHuman(DISC enDiscCol, FuncPutDisc funcPutDisc)
 
 }
 
-void GamePlayerHuman::PlayNextTurn(const BOARD_INFO penBoardInfo)
+void GamePlayerHuman::PlayNextTurn(BOARD_INFO enBoardInfo)
 {
-	GamePlayer::PlayNextTurn(penBoardInfo);
+	GamePlayer::PlayNextTurn(enBoardInfo);
 }
 
 void GamePlayerHuman::ListenHumanInput(DISC_MOVE enDiscMove)

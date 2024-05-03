@@ -1,11 +1,16 @@
 #include "GamePlayer.h"
 
+#include <chrono>
+#include <thread>
+
 GamePlayer::GamePlayer(DISC enDiscCol, FuncPutDisc funcPutDisc)
 	:m_enMyDiscCol(enDiscCol),
 	m_enState(GAME_PLAYER_STATE::WAITING_TURN),
 	m_unThreadId(0),
-	m_funcPutDisc(funcPutDisc)
+	m_funcPutDisc(funcPutDisc),
+	m_enBoardInfo({0})
 {
+
 	(void)_beginthreadex(NULL, 0, &GamePlayer::executeLauncher, this, 0, &m_unThreadId);
 }
 
@@ -24,49 +29,33 @@ void GamePlayer::CallbackToClient(DISC_MOVE enDiscMove)
 	}
 }
 
+void GamePlayer::PlayMyTurn(BOARD_INFO enBoardInfo)
+{
+
+}
+
 void GamePlayer::ThreadProc(void)
 {
-	MSG msg;
-
 	while (1)
 	{
-		if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+		if (GAME_PLAYER_STATE::MY_TURN == m_enState)
 		{
-			OnRcvMsg(
-				static_cast<OTHELLO_MSG_ID>(msg.message),
-				static_cast<WORD>(msg.wParam),
-				static_cast<DWORD>(msg.lParam));
+			PlayMyTurn(m_enBoardInfo);
 		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	}
 
 	_endthreadex(0);
 	return;
 }
 
-void GamePlayer::OnRcvMsg(OTHELLO_MSG_ID msg, WORD param1, DWORD param2)
+void GamePlayer::PlayNextTurn(BOARD_INFO enBoardInfo)
 {
-	switch (msg)
+	if (GAME_PLAYER_STATE::WAITING_TURN == m_enState)
 	{
-	case OTHELLO_MSG_ID::GAME_START:
-		break;
-	case OTHELLO_MSG_ID::GAME_QUIT:
-		break;
-	case OTHELLO_MSG_ID::GAME_END:
-		break;
-	case OTHELLO_MSG_ID::PASS_TURN:
-		break;
-	case OTHELLO_MSG_ID::PUT_DISC:
-		break;
-	default:
-		break;
+		m_enBoardInfo = enBoardInfo;
+		m_enState = GAME_PLAYER_STATE::MY_TURN;
 	}
-
-	m_enState = GAME_PLAYER_STATE::WAITING_TURN;
-}
-
-void GamePlayer::PlayNextTurn(const BOARD_INFO penBoardInfo)
-{
-	m_enState = GAME_PLAYER_STATE::MY_TURN;
 }
 
 DISC GamePlayer::GetDiscCol(void)

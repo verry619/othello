@@ -39,11 +39,13 @@ int main()
 		NOP_FUNCTION;
 	}
 
+	GAME_SETTING enGameSetting = GAME_SETTING::CPU_HUMAN;
+
 	OTHELLO_MSG msg;
 	msg.enId = OTHELLO_MSG_ID::GAME_START;
 	msg.p1 = BOARD_ROW_LEN;
 	msg.p2 = BOARD_COL_LEN;
-	msg.p3 = static_cast<unsigned int>(GAME_SETTING::HUMAN_HUMAN);
+	msg.p3 = static_cast<unsigned int>(enGameSetting);
 	msg.p4 = 0;
 
 	char cBuf[sizeof(OTHELLO_MSG)];
@@ -66,72 +68,81 @@ int main()
 
 		do
 		{
-			std::cout << "BLACK:\nROW:";
-			std::cin >> cRow;
-			std::cout << "COL:";
-			std::cin >> cCol;
+			if ((GAME_SETTING::HUMAN_HUMAN == enGameSetting) ||
+				(GAME_SETTING::HUMAN_CPU == enGameSetting))
+			{
+				std::cout << "BLACK:\nROW:";
+				std::cin >> cRow;
+				std::cout << "COL:";
+				std::cin >> cCol;
 
-			msg.enId = OTHELLO_MSG_ID::PUT_DISC;
-			msg.p1 = static_cast<unsigned int>(DISC::BLACK);
-			msg.p2 = cRow;
-			msg.p3 = cCol;
+				msg.enId = OTHELLO_MSG_ID::PUT_DISC;
+				msg.p1 = static_cast<unsigned int>(DISC::BLACK);
+				msg.p2 = cRow;
+				msg.p3 = cCol;
 
-			CmnCom::ConvMsgToCbuf(&msg, cBuf);
+				CmnCom::ConvMsgToCbuf(&msg, cBuf);
 
-			bBlackWaiting = true;
-			bValidDisc = false;
-
-			pcComCom->SendMsg(cBuf, sizeof(cBuf));
+				pcComCom->SendMsg(cBuf, sizeof(cBuf));
+			}
 
 			while (bBlackWaiting)
 			{
 				NOP_FUNCTION;
 			}
+			bBlackWaiting = true;
 
 			pcComCom->ReadShm(&penShm);
 			PrintBoard(penShm.enBoard, BOARD_ROW_LEN, BOARD_COL_LEN);
 
 			if (bValidDisc)
 			{
+				bValidDisc = false;
 				break;
 			}
+			bValidDisc = false;
 
 		} while (1);
 
 		do
 		{
-			std::cout << "WHITE:\nROW:";
-			std::cin >> cRow;
-			std::cout << "COL:";
-			std::cin >> cCol;
+			if ((GAME_SETTING::HUMAN_HUMAN == enGameSetting) ||
+				(GAME_SETTING::CPU_HUMAN == enGameSetting))
+			{
+				std::cout << "WHITE:\nROW:";
+				std::cin >> cRow;
+				std::cout << "COL:";
+				std::cin >> cCol;
 
-			msg.enId = OTHELLO_MSG_ID::PUT_DISC;
-			msg.p1 = static_cast<unsigned int>(DISC::WHITE);
-			msg.p2 = cRow;
-			msg.p3 = cCol;
+				msg.enId = OTHELLO_MSG_ID::PUT_DISC;
+				msg.p1 = static_cast<unsigned int>(DISC::WHITE);
+				msg.p2 = cRow;
+				msg.p3 = cCol;
 
-			CmnCom::ConvMsgToCbuf(&msg, cBuf);
+				CmnCom::ConvMsgToCbuf(&msg, cBuf);
 
-			bBlackWaiting = true;
-			bValidDisc = false;
-
-			pcComCom->SendMsg(cBuf, sizeof(cBuf));
+				pcComCom->SendMsg(cBuf, sizeof(cBuf));
+			}
 
 			while (bBlackWaiting)
 			{
 				NOP_FUNCTION;
 			}
+			bBlackWaiting = true;
 
 			pcComCom->ReadShm(&penShm);
 			PrintBoard(penShm.enBoard, BOARD_ROW_LEN, BOARD_COL_LEN);
 
 			if (bValidDisc)
 			{
+				bValidDisc = false;
 				break;
 			}
+			bValidDisc = false;
 
 		} while (1);
 
+#if 0 /* GameQuit */
 		msg.enId = OTHELLO_MSG_ID::GAME_QUIT;
 		msg.p1 = 0;
 		msg.p2 = 0;
@@ -167,8 +178,9 @@ int main()
 
 		pcComCom->ReadShm(&penShm);
 		PrintBoard(penShm.enBoard, BOARD_ROW_LEN, BOARD_COL_LEN);
+#endif
+		}
 	}
-}
 
 static void PrintBoard(DISC* punBoard, int unRowMax, int unColMax)
 {

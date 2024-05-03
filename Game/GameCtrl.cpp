@@ -1,5 +1,7 @@
 #include "GameCtrl.h"
 #include "GameRule.h"
+#include "GamePlayerHuman.h"
+#include "GamePlayerCpu.h"
 
 #include "CmnLog.h"
 
@@ -90,18 +92,51 @@ void GameCtrl::StartGame_Internal(void)
 	GameRule::InitializeBoard(enBoard);
 	m_pcCom->UpdateBoard(enBoard);
 
-	if ((GAME_SETTING::HUMAN_HUMAN == m_enSetting) || (GAME_SETTING::HUMAN_CPU == m_enSetting))
+	switch (m_enSetting)
 	{
+	case GAME_SETTING::HUMAN_HUMAN:
 		m_pcPlayerBlack = new GamePlayerHuman(DISC::BLACK,
 			std::bind(&GameCtrl::PutDisc, this, std::placeholders::_1));
 		m_pcCom->SetUiListener(dynamic_cast<GamePlayerHuman*>(m_pcPlayerBlack));
-	}
 
-	if ((GAME_SETTING::HUMAN_HUMAN == m_enSetting) || (GAME_SETTING::CPU_HUMAN == m_enSetting))
-	{
 		m_pcPlayerWhite = new GamePlayerHuman(DISC::WHITE,
 			std::bind(&GameCtrl::PutDisc, this, std::placeholders::_1));
 		m_pcCom->SetUiListener(dynamic_cast<GamePlayerHuman*>(m_pcPlayerWhite));
+
+		break;
+
+	case GAME_SETTING::HUMAN_CPU:
+		m_pcPlayerBlack = new GamePlayerHuman(DISC::BLACK,
+			std::bind(&GameCtrl::PutDisc, this, std::placeholders::_1));
+		m_pcCom->SetUiListener(dynamic_cast<GamePlayerHuman*>(m_pcPlayerBlack));
+
+		m_pcPlayerWhite = new GamePlayerCpu(DISC::WHITE,
+			std::bind(&GameCtrl::PutDisc, this, std::placeholders::_1));
+
+		break;
+
+	case GAME_SETTING::CPU_HUMAN:
+		m_pcPlayerBlack = new GamePlayerCpu(DISC::BLACK,
+			std::bind(&GameCtrl::PutDisc, this, std::placeholders::_1));
+
+		m_pcPlayerWhite = new GamePlayerHuman(DISC::WHITE,
+			std::bind(&GameCtrl::PutDisc, this, std::placeholders::_1));
+		m_pcCom->SetUiListener(dynamic_cast<GamePlayerHuman*>(m_pcPlayerWhite));
+
+		break;
+
+	case GAME_SETTING::CPU_CPU:
+		m_pcPlayerBlack = new GamePlayerCpu(DISC::BLACK,
+			std::bind(&GameCtrl::PutDisc, this, std::placeholders::_1));
+
+		m_pcPlayerWhite = new GamePlayerCpu(DISC::WHITE,
+			std::bind(&GameCtrl::PutDisc, this, std::placeholders::_1));
+
+		break;
+
+	default:
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_START, "GAME SETTING ERROR!");
+		break;
 	}
 
 	m_pcPlayerBlack->PlayNextTurn(enBoard);
@@ -127,7 +162,7 @@ void GameCtrl::QuitGame_Internal(void)
 	{
 		delete m_pcPlayerWhite;
 	}
-	
+
 	free(m_penBoard);
 
 	OTHELLO_MSG msg;
