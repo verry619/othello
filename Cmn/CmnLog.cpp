@@ -37,7 +37,6 @@ CmnLog::CmnLog()
 	s << std::setw(2) << std::setfill('0') << tm_now_local.tm_min;
 	s << std::setw(2) << std::setfill('0') << tm_now_local.tm_sec;
 	m_filepath_dev = DEF_FILEPATH_LOG + std::string("/") + s.str() + "_" + DEF_FILENAME_DEVLOG;
-	m_filepath_game = DEF_FILEPATH_GAMELOG + std::string("/") + s.str() + "_" + DEF_FILENAME_GAMELOG;
 }
 
 void CmnLog::MyGetCurrentTime(time_t& tt_now, std::tm& tm_now_local, uint64_t& ms_now)
@@ -147,4 +146,29 @@ void CmnLog::WriteGameLog(const DISC_MOVE& enDiscMove, const BOARD_INFO& enBoard
 	f << s.str();
 
 	f.close();
+}
+
+void CmnLog::CreateNewDevLogFile(void)
+{
+	if (!(std::filesystem::exists(DEF_FILEPATH_LOG))) {
+		std::filesystem::create_directory(DEF_FILEPATH_LOG);
+	}
+	if (!(std::filesystem::exists(DEF_FILEPATH_GAMELOG))) {
+		std::filesystem::create_directory(DEF_FILEPATH_GAMELOG);
+	}
+
+	time_t tt_now;
+	std::tm tm_now_local;
+	uint64_t ms_now;
+
+	MyGetCurrentTime(tt_now, tm_now_local, ms_now);
+
+	std::stringstream s;
+	s << tm_now_local.tm_year + 1900;
+	s << std::setw(2) << std::setfill('0') << tm_now_local.tm_mon + 1;
+	s << std::setw(2) << std::setfill('0') << tm_now_local.tm_mday;
+	s << std::setw(2) << std::setfill('0') << tm_now_local.tm_hour;
+	s << std::setw(2) << std::setfill('0') << tm_now_local.tm_min;
+	s << std::setw(2) << std::setfill('0') << tm_now_local.tm_sec;
+	m_filepath_game = DEF_FILEPATH_GAMELOG + std::string("/") + s.str() + "_" + DEF_FILENAME_GAMELOG;
 }

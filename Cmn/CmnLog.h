@@ -76,4 +76,6 @@ public:
 		const std::string& strFile, const unsigned long& ulLine, const std::string& strFunc,
 		const std::string& strMsg);
 	void WriteGameLog(const DISC_MOVE& enDiscMove, const BOARD_INFO& enBoardInfo);
+
+	void CreateNewDevLogFile(void);
 };

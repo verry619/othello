@@ -86,6 +86,8 @@ void GameCtrl::StartGame_Internal(void)
 	m_pcCom->UpdateBoard(m_BoardInfo);
 	InitializePlayerSetting();
 
+	CmnLog::getInstance().CreateNewDevLogFile();
+
 	m_pcPlayerBlack->PlayNextTurn(m_BoardInfo);
 
 	SendMsgToGui(OTHELLO_MSG_ID::GAME_START, 0, 0, 0, 0);
