@@ -7,9 +7,7 @@
 
 GameCtrl::GameCtrl(void)
 	:m_enState(GAME_CTRL_STATE::IDLE),
-	m_unRowNum(0),
-	m_unColNum(0),
-	m_penBoard(nullptr),
+	m_BoardInfo({ {0,0},nullptr }),
 	m_enSetting(GAME_SETTING::HUMAN_HUMAN),
 	m_pcCom(nullptr),
 	m_pcPlayerBlack(nullptr),
@@ -76,21 +74,19 @@ void GameCtrl::OnRcvMsg(OTHELLO_MSG_ID msg, WORD param1, DWORD param2)
 
 void GameCtrl::StartGame_Internal(void)
 {
-	unsigned int unBoardSize = static_cast<unsigned int>(m_unRowNum) * static_cast<unsigned int>(m_unColNum);
-	m_penBoard = static_cast<DISC*>(malloc(sizeof(DISC) * unBoardSize));
-	if (NULL == m_penBoard)
+	unsigned int unBoardSize = static_cast<unsigned int>(m_BoardInfo.enSize.ucRow) * static_cast<unsigned int>(m_BoardInfo.enSize.ucCol);
+	m_BoardInfo.penDiscs = static_cast<DISC*>(malloc(sizeof(DISC) * unBoardSize));
+	if (nullptr == m_BoardInfo.penDiscs)
 	{
 		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_START, "BOARD INIT ERROR!");
 		return;
 	}
 
-	BOARD_INFO enBoard = { {m_unRowNum,m_unColNum},m_penBoard };
-
-	GameRule::InitializeBoard(enBoard);
-	m_pcCom->UpdateBoard(enBoard);
+	GameRule::InitializeBoard(m_BoardInfo);
+	m_pcCom->UpdateBoard(m_BoardInfo);
 	InitializePlayerSetting();
 
-	m_pcPlayerBlack->PlayNextTurn(enBoard);
+	m_pcPlayerBlack->PlayNextTurn(m_BoardInfo);
 
 	SendMsgToGui(OTHELLO_MSG_ID::GAME_START, 0, 0, 0, 0);
 
@@ -161,7 +157,7 @@ void GameCtrl::QuitGame_Internal(void)
 		delete m_pcPlayerWhite;
 	}
 
-	free(m_penBoard);
+	free(m_BoardInfo.penDiscs);
 
 	SendMsgToGui(OTHELLO_MSG_ID::GAME_QUIT, 0, 0, 0, 0);
 
@@ -171,26 +167,25 @@ void GameCtrl::QuitGame_Internal(void)
 void GameCtrl::PutDisc_Internal(DISC enDiscCol, unsigned char ucRow, unsigned char ucCol)
 {
 	DISC_MOVE enDiscMove = { enDiscCol,{ucRow,ucCol} };
-	BOARD_INFO enBoard = { {m_unRowNum,m_unColNum},m_penBoard };
 
-	if (!GameRule::FlipDiscs(enDiscMove, enBoard))
+	if (!GameRule::FlipDiscs(enDiscMove, m_BoardInfo))
 	{
 		/* Invalid position to put disc */
 		SendMsgToGui(OTHELLO_MSG_ID::PUT_DISC, O_FAILURE, 0, 0, 0);
 
-		ContinuePlayerTurn(enDiscCol, enBoard);
+		ContinuePlayerTurn(enDiscCol, m_BoardInfo);
 
 		m_enState = GAME_CTRL_STATE::IDLE;
 		return;
 	}
 
-	m_pcCom->UpdateBoard(enBoard);
+	m_pcCom->UpdateBoard(m_BoardInfo);
 
 	SendMsgToGui(OTHELLO_MSG_ID::PUT_DISC, O_SUCCESS, 0, 0, 0);
 
-	CmnLog::getInstance().WriteGameLog(enDiscMove, enBoard);
+	CmnLog::getInstance().WriteGameLog(enDiscMove, m_BoardInfo);
 
-	DecideNextTurn(enDiscCol, enBoard);
+	DecideNextTurn(enDiscCol, m_BoardInfo);
 
 	m_enState = GAME_CTRL_STATE::IDLE;
 	return;
@@ -275,8 +270,8 @@ void GameCtrl::StartGame(BOARD_SIZE enBoardSize, GAME_SETTING enSetting)
 		return;
 	}
 
-	m_unRowNum = enBoardSize.ucRow;
-	m_unColNum = enBoardSize.ucCol;
+	m_BoardInfo.enSize.ucRow = enBoardSize.ucRow;
+	m_BoardInfo.enSize.ucCol = enBoardSize.ucCol;
 	m_enSetting = enSetting;
 
 	PostThreadMessage(m_unThreadId,

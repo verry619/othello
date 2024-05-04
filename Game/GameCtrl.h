@@ -14,9 +14,7 @@ class GameCtrl
 
 private:
     GAME_CTRL_STATE m_enState;
-    unsigned char m_unRowNum;
-    unsigned char m_unColNum;
-    DISC* m_penBoard;
+    BOARD_INFO m_BoardInfo;
     GAME_SETTING m_enSetting;
     GameCom* m_pcCom;
     GamePlayer* m_pcPlayerBlack;
