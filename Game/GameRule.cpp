@@ -18,6 +18,26 @@ void GameRule::InitializeBoard(BOARD_INFO enBoard)
 	enBoard.penDiscs[iCenterUL + 1 + enBoard.enSize.ucCol] = DISC::BLACK;
 }
 
+bool GameRule::CanMoveStone(const DISC enDiscCol, BOARD_INFO enBoard)
+{
+	DISC_MOVE enDiscMove = { enDiscCol,{0,0} };
+
+	for (unsigned int row = 0;row < enBoard.enSize.ucRow;row++)
+	{
+		for (unsigned int col = 0;col < enBoard.enSize.ucCol;col++)
+		{
+			enDiscMove.enPos.ucRow = row;
+			enDiscMove.enPos.ucCol = col;
+			if (CheckFlip(enDiscMove, enBoard))
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
 bool GameRule::CheckFlip(const DISC_MOVE enMove, BOARD_INFO enBoard)
 {
 	DISC* tmpDiscs;

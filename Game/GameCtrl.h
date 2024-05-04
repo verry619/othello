@@ -14,8 +14,8 @@ class GameCtrl
 
 private:
     GAME_CTRL_STATE m_enState;
-    unsigned int m_unRowNum;
-    unsigned int m_unColNum;
+    unsigned char m_unRowNum;
+    unsigned char m_unColNum;
     DISC* m_penBoard;
     GAME_SETTING m_enSetting;
     GameCom* m_pcCom;
@@ -27,8 +27,12 @@ private:
     void ThreadProc(void);
     void OnRcvMsg(OTHELLO_MSG_ID msg, WORD param1, DWORD param2);
     void StartGame_Internal(void);
+    void InitializePlayerSetting(void);
     void QuitGame_Internal(void);
     void PutDisc_Internal(DISC enDiscCol, unsigned char ucRow, unsigned char ucCol);
+    void ContinuePlayerTurn(DISC enDiscCol, BOARD_INFO enBoard);
+    void DecideNextTurn(DISC enDiscCol, BOARD_INFO enBoard);
+    void SendMsgToGui(OTHELLO_MSG_ID enId, unsigned int p1, unsigned int p2, unsigned int p3, unsigned int p4);
 
 public:
     GameCtrl(void);

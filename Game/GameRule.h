@@ -9,6 +9,7 @@ private:
 
 public:
 	static void InitializeBoard(BOARD_INFO enBoard);
+	static bool CanMoveStone(const DISC enDiscCol, BOARD_INFO enBoard);
 	static bool CheckFlip(const DISC_MOVE enMove, BOARD_INFO enBoard);
 	static bool FlipDiscs(const DISC_MOVE enMove, BOARD_INFO enBoard);
 };

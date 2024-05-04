@@ -246,9 +246,11 @@ static void RcvMsg(const char* pcBuf, unsigned int unBufLen)
 			bValidDisc = false;
 		}
 		break;
-
-
-
+	case OTHELLO_MSG_ID::PASS_TURN:
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::PUT_DISC);
+		bBlackWaiting = false;
+		bValidDisc = true;
+		break;
 	default:
 		break;
 	}

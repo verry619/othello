@@ -84,14 +84,21 @@ void GameCtrl::StartGame_Internal(void)
 		return;
 	}
 
-	BOARD_INFO enBoard;
-	enBoard.penDiscs = m_penBoard;
-	enBoard.enSize.ucRow = m_unRowNum;
-	enBoard.enSize.ucCol = m_unColNum;
+	BOARD_INFO enBoard = { {m_unRowNum,m_unColNum},m_penBoard };
 
 	GameRule::InitializeBoard(enBoard);
 	m_pcCom->UpdateBoard(enBoard);
+	InitializePlayerSetting();
 
+	m_pcPlayerBlack->PlayNextTurn(enBoard);
+
+	SendMsgToGui(OTHELLO_MSG_ID::GAME_START, 0, 0, 0, 0);
+
+	m_enState = GAME_CTRL_STATE::IDLE;
+}
+
+void GameCtrl::InitializePlayerSetting(void)
+{
 	switch (m_enSetting)
 	{
 	case GAME_SETTING::HUMAN_HUMAN:
@@ -138,15 +145,6 @@ void GameCtrl::StartGame_Internal(void)
 		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_START, "GAME SETTING ERROR!");
 		break;
 	}
-
-	m_pcPlayerBlack->PlayNextTurn(enBoard);
-
-	OTHELLO_MSG msg;
-	msg.enId = OTHELLO_MSG_ID::GAME_START;
-
-	m_pcCom->SendMsg(OTHELLO_PROCESS_ID::GUI, msg);
-
-	m_enState = GAME_CTRL_STATE::IDLE;
 }
 
 void GameCtrl::QuitGame_Internal(void)
@@ -165,74 +163,108 @@ void GameCtrl::QuitGame_Internal(void)
 
 	free(m_penBoard);
 
-	OTHELLO_MSG msg;
-	msg.enId = OTHELLO_MSG_ID::GAME_QUIT;
-
-	m_pcCom->SendMsg(OTHELLO_PROCESS_ID::GUI, msg);
+	SendMsgToGui(OTHELLO_MSG_ID::GAME_QUIT, 0, 0, 0, 0);
 
 	m_enState = GAME_CTRL_STATE::IDLE;
 }
 
 void GameCtrl::PutDisc_Internal(DISC enDiscCol, unsigned char ucRow, unsigned char ucCol)
 {
-	DISC_MOVE enDiscMove;
-	BOARD_INFO enBoard;
+	DISC_MOVE enDiscMove = { enDiscCol,{ucRow,ucCol} };
+	BOARD_INFO enBoard = { {m_unRowNum,m_unColNum},m_penBoard };
 
-	enDiscMove.enColor = enDiscCol;
-	enDiscMove.enPos.ucRow = ucRow;
-	enDiscMove.enPos.ucCol = ucCol;
-
-	enBoard.penDiscs = m_penBoard;
-	enBoard.enSize.ucRow = m_unRowNum;
-	enBoard.enSize.ucCol = m_unColNum;
-
-	if (GameRule::FlipDiscs(enDiscMove, enBoard))
-	{
-		m_pcCom->UpdateBoard(enBoard);
-
-		if (DISC::BLACK == enDiscCol)
-		{
-			m_pcPlayerWhite->PlayNextTurn(enBoard);
-		}
-		else if (DISC::WHITE == enDiscCol)
-		{
-			m_pcPlayerBlack->PlayNextTurn(enBoard);
-		}
-		else
-		{
-			WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::PUT_DISC, "PARAM ERROR!");
-		}
-
-		OTHELLO_MSG msg;
-		msg.enId = OTHELLO_MSG_ID::PUT_DISC;
-		msg.p1 = O_SUCCESS;
-		m_pcCom->SendMsg(OTHELLO_PROCESS_ID::GUI, msg);
-	}
-	else
+	if (!GameRule::FlipDiscs(enDiscMove, enBoard))
 	{
 		/* Invalid position to put disc */
-		if (DISC::BLACK == enDiscCol)
-		{
-			m_pcPlayerBlack->PlayNextTurn(enBoard);
-		}
-		else if (DISC::WHITE == enDiscCol)
-		{
-			m_pcPlayerWhite->PlayNextTurn(enBoard);
-		}
-		else
-		{
-			WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::PUT_DISC, "PARAM ERROR!");
-		}
+		SendMsgToGui(OTHELLO_MSG_ID::PUT_DISC, O_FAILURE, 0, 0, 0);
 
-		OTHELLO_MSG msg;
-		msg.enId = OTHELLO_MSG_ID::PUT_DISC;
-		msg.p1 = O_FAILURE;
-		m_pcCom->SendMsg(OTHELLO_PROCESS_ID::GUI, msg);
+		ContinuePlayerTurn(enDiscCol, enBoard);
+
+		m_enState = GAME_CTRL_STATE::IDLE;
+		return;
 	}
+
+	m_pcCom->UpdateBoard(enBoard);
+
+	SendMsgToGui(OTHELLO_MSG_ID::PUT_DISC, O_SUCCESS, 0, 0, 0);
 
 	CmnLog::getInstance().WriteGameLog(enDiscMove, enBoard);
 
+	DecideNextTurn(enDiscCol, enBoard);
+
 	m_enState = GAME_CTRL_STATE::IDLE;
+	return;
+}
+
+void GameCtrl::ContinuePlayerTurn(DISC enDiscCol, BOARD_INFO enBoard)
+{
+	if (DISC::BLACK == enDiscCol)
+	{
+		m_pcPlayerBlack->PlayNextTurn(enBoard);
+	}
+	else if (DISC::WHITE == enDiscCol)
+	{
+		m_pcPlayerWhite->PlayNextTurn(enBoard);
+	}
+	else
+	{
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::PUT_DISC, "PARAM ERROR!");
+	}
+}
+
+void GameCtrl::DecideNextTurn(DISC enDiscCol, BOARD_INFO enBoard)
+{
+	if (DISC::BLACK == enDiscCol)
+	{
+		if (GameRule::CanMoveStone(DISC::WHITE, enBoard))
+		{
+			m_pcPlayerWhite->PlayNextTurn(enBoard);
+		}
+		else
+		{
+			if (GameRule::CanMoveStone(DISC::BLACK, enBoard))
+			{
+				SendMsgToGui(OTHELLO_MSG_ID::PASS_TURN, 0, 0, 0, 0);
+
+				m_pcPlayerBlack->PlayNextTurn(enBoard);
+			}
+			else
+			{
+				SendMsgToGui(OTHELLO_MSG_ID::GAME_END, 0, 0, 0, 0);
+			}
+		}
+
+	}
+	else if (DISC::WHITE == enDiscCol)
+	{
+		if (GameRule::CanMoveStone(DISC::BLACK, enBoard))
+		{
+			m_pcPlayerBlack->PlayNextTurn(enBoard);
+		}
+		else
+		{
+			if (GameRule::CanMoveStone(DISC::WHITE, enBoard))
+			{
+				SendMsgToGui(OTHELLO_MSG_ID::PASS_TURN, 0, 0, 0, 0);
+
+				m_pcPlayerWhite->PlayNextTurn(enBoard);
+			}
+			else
+			{
+				SendMsgToGui(OTHELLO_MSG_ID::GAME_END, 0, 0, 0, 0);
+			}
+		}
+	}
+	else
+	{
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::PUT_DISC, "PARAM ERROR!");
+	}
+}
+
+void GameCtrl::SendMsgToGui(OTHELLO_MSG_ID enId, unsigned int p1, unsigned int p2, unsigned int p3, unsigned int p4)
+{
+	OTHELLO_MSG msg = { enId,p1, p2, p3, p4 };
+	m_pcCom->SendMsg(OTHELLO_PROCESS_ID::GUI, msg);
 }
 
 void GameCtrl::StartGame(BOARD_SIZE enBoardSize, GAME_SETTING enSetting)
