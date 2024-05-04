@@ -87,3 +87,5 @@ typedef struct DISC_MOVE_
 	DISC enColor;
 	DISC_POS enPos;
 }DISC_MOVE;
+
+DISC CmnCountDiscs(BOARD_INFO enBoardInfo, unsigned int& unCountB, unsigned int& unCountW);

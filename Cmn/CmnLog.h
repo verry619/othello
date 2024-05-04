@@ -15,16 +15,19 @@ enum class OTHELLO_LOG_ID {
 	GAME_END,
 	PUT_DISC,
 	PASS_TURN,
+	GAME_RESULT,
 	ID_NUM
 };
 
 static const std::map<OTHELLO_LOG_ID, std::string> s_MapLogIdToStr =
 {
+	{OTHELLO_LOG_ID::NONE,			std::string("NONE")},
 	{OTHELLO_LOG_ID::GAME_START,	std::string("GAME_START")},
 	{OTHELLO_LOG_ID::GAME_QUIT,		std::string("GAME_QUIT")},
 	{OTHELLO_LOG_ID::GAME_END,		std::string("GAME_END")},
 	{OTHELLO_LOG_ID::PUT_DISC,		std::string("PUT_DISC")},
 	{OTHELLO_LOG_ID::PASS_TURN,		std::string("PASS_TURN")},
+	{OTHELLO_LOG_ID::GAME_RESULT,	std::string("GAME_RESULT")},
 	{OTHELLO_LOG_ID::ID_NUM,		std::string("ID_NUM")},
 };
 

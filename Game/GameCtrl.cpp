@@ -78,7 +78,7 @@ void GameCtrl::StartGame_Internal(void)
 	m_BoardInfo.penDiscs = static_cast<DISC*>(malloc(sizeof(DISC) * unBoardSize));
 	if (nullptr == m_BoardInfo.penDiscs)
 	{
-		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_START, "BOARD INIT ERROR!");
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::NONE, "BOARD INIT ERROR!");
 		return;
 	}
 
@@ -87,6 +87,9 @@ void GameCtrl::StartGame_Internal(void)
 	InitializePlayerSetting();
 
 	CmnLog::getInstance().CreateNewDevLogFile();
+
+	OTHELLO_LOG_PARAM p = { static_cast<unsigned int>(m_enSetting),0,0,0 };
+	WRITE_DEV_LOG(OTHELLO_LOG_ID::GAME_START, p);
 
 	m_pcPlayerBlack->PlayNextTurn(m_BoardInfo);
 
@@ -140,7 +143,7 @@ void GameCtrl::InitializePlayerSetting(void)
 		break;
 
 	default:
-		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_START, "GAME SETTING ERROR!");
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::NONE, "GAME SETTING ERROR!");
 		break;
 	}
 }
@@ -160,6 +163,8 @@ void GameCtrl::QuitGame_Internal(void)
 	}
 
 	free(m_BoardInfo.penDiscs);
+
+	WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_QUIT);
 
 	SendMsgToGui(OTHELLO_MSG_ID::GAME_QUIT, 0, 0, 0, 0);
 
@@ -183,9 +188,17 @@ void GameCtrl::PutDisc_Internal(DISC enDiscCol, unsigned char ucRow, unsigned ch
 
 	m_pcCom->UpdateBoard(m_BoardInfo);
 
-	SendMsgToGui(OTHELLO_MSG_ID::PUT_DISC, O_SUCCESS, 0, 0, 0);
-
 	CmnLog::getInstance().WriteGameLog(enDiscMove, m_BoardInfo);
+
+	OTHELLO_LOG_PARAM p = {
+		static_cast<unsigned int>(enDiscMove.enColor),
+		enDiscMove.enPos.ucRow,
+		enDiscMove.enPos.ucCol,
+		0
+	};
+	WRITE_DEV_LOG(OTHELLO_LOG_ID::PUT_DISC, p);
+
+	SendMsgToGui(OTHELLO_MSG_ID::PUT_DISC, O_SUCCESS, 0, 0, 0);
 
 	DecideNextTurn(enDiscCol, m_BoardInfo);
 
@@ -205,7 +218,7 @@ void GameCtrl::ContinuePlayerTurn(DISC enDiscCol, BOARD_INFO enBoard)
 	}
 	else
 	{
-		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::PUT_DISC, "PARAM ERROR!");
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::NONE, "PARAM ERROR!");
 	}
 }
 
@@ -221,12 +234,17 @@ void GameCtrl::DecideNextTurn(DISC enDiscCol, BOARD_INFO enBoard)
 		{
 			if (GameRule::CanMoveStone(DISC::BLACK, enBoard))
 			{
+				OTHELLO_LOG_PARAM p = { static_cast<unsigned int>(enDiscCol),0,0,0 };
+				WRITE_DEV_LOG(OTHELLO_LOG_ID::PASS_TURN, p);
+
 				SendMsgToGui(OTHELLO_MSG_ID::PASS_TURN, 0, 0, 0, 0);
 
 				m_pcPlayerBlack->PlayNextTurn(enBoard);
 			}
 			else
 			{
+				WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_END);
+
 				SendMsgToGui(OTHELLO_MSG_ID::GAME_END, 0, 0, 0, 0);
 			}
 		}
@@ -242,19 +260,24 @@ void GameCtrl::DecideNextTurn(DISC enDiscCol, BOARD_INFO enBoard)
 		{
 			if (GameRule::CanMoveStone(DISC::WHITE, enBoard))
 			{
+				OTHELLO_LOG_PARAM p = { static_cast<unsigned int>(enDiscCol),0,0,0 };
+				WRITE_DEV_LOG(OTHELLO_LOG_ID::PASS_TURN, p);
+
 				SendMsgToGui(OTHELLO_MSG_ID::PASS_TURN, 0, 0, 0, 0);
 
 				m_pcPlayerWhite->PlayNextTurn(enBoard);
 			}
 			else
 			{
+				WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_END);
+
 				SendMsgToGui(OTHELLO_MSG_ID::GAME_END, 0, 0, 0, 0);
 			}
 		}
 	}
 	else
 	{
-		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::PUT_DISC, "PARAM ERROR!");
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::NONE, "PARAM ERROR!");
 	}
 }
 
@@ -268,7 +291,7 @@ void GameCtrl::StartGame(BOARD_SIZE enBoardSize, GAME_SETTING enSetting)
 {
 	if (GAME_CTRL_STATE::IDLE != m_enState)
 	{
-		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_START, "GAME CTRL STATE BUSY!");
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::NONE, "GAME CTRL STATE BUSY!");
 		return;
 	}
 
@@ -288,7 +311,7 @@ void GameCtrl::QuitGame(void)
 {
 	if (GAME_CTRL_STATE::IDLE != m_enState)
 	{
-		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_QUIT, "GAME CTRL STATE BUSY!");
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::NONE, "GAME CTRL STATE BUSY!");
 		return;
 	}
 
@@ -304,7 +327,7 @@ void GameCtrl::PutDisc(DISC_MOVE enDiscMove)
 {
 	if (GAME_CTRL_STATE::IDLE != m_enState)
 	{
-		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::PUT_DISC, "GAME CTRL STATE BUSY!");
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::NONE, "GAME CTRL STATE BUSY!");
 		return;
 	}
 

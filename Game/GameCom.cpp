@@ -38,7 +38,7 @@ void GameCom::SetUiListener(GamePlayerHuman* pcHuman)
 	}
 	else
 	{
-		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_START, "PARAM ERROR!");
+		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::NONE, "PARAM ERROR!");
 		return;
 	}
 
@@ -69,7 +69,7 @@ void GameCom::RcvMsg(const char* pcBuf, unsigned int unBufLen)
 	case OTHELLO_MSG_ID::GAME_START:
 		if (NULL == m_callbacks.funcGameStart)
 		{
-			WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_START, "CALLBACK SET ERROR!");
+			WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::NONE, "CALLBACK SET ERROR!");
 			return;
 		}
 
@@ -83,7 +83,7 @@ void GameCom::RcvMsg(const char* pcBuf, unsigned int unBufLen)
 	case OTHELLO_MSG_ID::GAME_QUIT:
 		if (NULL == m_callbacks.funcGameQuit)
 		{
-			WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_QUIT, "CALLBACK SET ERROR!");
+			WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::NONE, "CALLBACK SET ERROR!");
 			return;
 		}
 
@@ -102,7 +102,7 @@ void GameCom::RcvMsg(const char* pcBuf, unsigned int unBufLen)
 		{
 			if (NULL == m_pcUiListenerBlack)
 			{
-				WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::PUT_DISC, "CALLBACK SET ERROR!");
+				WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::NONE, "CALLBACK SET ERROR!");
 				return;
 			}
 			m_pcUiListenerBlack->ListenHumanInput(enDiscMove);
@@ -111,14 +111,14 @@ void GameCom::RcvMsg(const char* pcBuf, unsigned int unBufLen)
 		{
 			if (NULL == m_pcUiListenerWhite)
 			{
-				WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::PUT_DISC, "CALLBACK SET ERROR!");
+				WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::NONE, "CALLBACK SET ERROR!");
 				return;
 			}
 			m_pcUiListenerWhite->ListenHumanInput(enDiscMove);
 		}
 		else
 		{
-			WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::PUT_DISC, "PARAM ERROR!");
+			WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::NONE, "PARAM ERROR!");
 		}
 
 		break;

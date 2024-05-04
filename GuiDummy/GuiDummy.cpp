@@ -153,6 +153,31 @@ int main()
 
 		if (bGameEnd)
 		{
+			BOARD_INFO enBoardInfo;
+			pcComCom->ReadShm(&penShm);
+			enBoardInfo.enSize = penShm.enBoardSize;
+			enBoardInfo.penDiscs = penShm.enBoard;
+
+			unsigned int unCountBlack = 0;
+			unsigned int unCountWhite = 0;
+
+			DISC enWinner = CmnCountDiscs(enBoardInfo, unCountBlack, unCountWhite);
+
+			OTHELLO_LOG_PARAM p = { 0,0,0,0 };
+			if (DISC::BLACK == enWinner)
+			{
+				p.p1 = static_cast<unsigned int>(GAME_RESULT::BLACK_WIN);
+			}
+			else if (DISC::WHITE == enWinner)
+			{
+				p.p1 = static_cast<unsigned int>(GAME_RESULT::WHITE_WIN);
+			}
+			else
+			{
+				p.p1 = static_cast<unsigned int>(GAME_RESULT::DRAW);
+			}
+			WRITE_DEV_LOG(OTHELLO_LOG_ID::GAME_RESULT, p);
+
 			bGameEnd = false;
 
 			msg.enId = OTHELLO_MSG_ID::GAME_START;
@@ -229,6 +254,11 @@ static void RcvMsg(const char* pcBuf, unsigned int unBufLen)
 		break;
 	case OTHELLO_MSG_ID::GAME_QUIT:
 		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_QUIT);
+		{
+			OTHELLO_LOG_PARAM p = { static_cast<unsigned int>(GAME_RESULT::NO_CONTEST),0,0,0 };
+			WRITE_DEV_LOG(OTHELLO_LOG_ID::GAME_RESULT, p);
+		}
+		
 		bGameQuitWaiting = false;
 		break;
 	case OTHELLO_MSG_ID::GAME_END:
