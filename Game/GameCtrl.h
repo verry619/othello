@@ -27,6 +27,7 @@ private:
     void StartGame_Internal(void);
     void InitializePlayerSetting(void);
     void QuitGame_Internal(void);
+    void GameFinalize(void);
     void PutDisc_Internal(DISC enDiscCol, unsigned char ucRow, unsigned char ucCol);
     void ContinuePlayerTurn(DISC enDiscCol, BOARD_INFO enBoard);
     void DecideNextTurn(DISC enDiscCol, BOARD_INFO enBoard);

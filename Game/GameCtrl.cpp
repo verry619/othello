@@ -150,6 +150,17 @@ void GameCtrl::InitializePlayerSetting(void)
 
 void GameCtrl::QuitGame_Internal(void)
 {
+	GameFinalize();
+
+	WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_QUIT);
+
+	SendMsgToGui(OTHELLO_MSG_ID::GAME_QUIT, 0, 0, 0, 0);
+
+	m_enState = GAME_CTRL_STATE::IDLE;
+}
+
+void GameCtrl::GameFinalize(void)
+{
 	m_pcCom->SetUiListener(NULL);
 
 	if (nullptr != m_pcPlayerBlack)
@@ -163,12 +174,6 @@ void GameCtrl::QuitGame_Internal(void)
 	}
 
 	free(m_BoardInfo.penDiscs);
-
-	WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_QUIT);
-
-	SendMsgToGui(OTHELLO_MSG_ID::GAME_QUIT, 0, 0, 0, 0);
-
-	m_enState = GAME_CTRL_STATE::IDLE;
 }
 
 void GameCtrl::PutDisc_Internal(DISC enDiscCol, unsigned char ucRow, unsigned char ucCol)
@@ -246,6 +251,8 @@ void GameCtrl::DecideNextTurn(DISC enDiscCol, BOARD_INFO enBoard)
 				WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_END);
 
 				SendMsgToGui(OTHELLO_MSG_ID::GAME_END, 0, 0, 0, 0);
+
+				GameFinalize();
 			}
 		}
 
@@ -272,6 +279,8 @@ void GameCtrl::DecideNextTurn(DISC enDiscCol, BOARD_INFO enBoard)
 				WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_END);
 
 				SendMsgToGui(OTHELLO_MSG_ID::GAME_END, 0, 0, 0, 0);
+
+				GameFinalize();
 			}
 		}
 	}

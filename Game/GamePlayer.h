@@ -22,6 +22,8 @@ private:
 	unsigned int m_unThreadId;
 	FuncPutDisc m_funcPutDisc;
 	BOARD_INFO m_enBoardInfo;
+	bool bThreadKill = false;
+	bool bThreadKillComp = false;
 
 	static unsigned int __stdcall executeLauncher(void* args);
 	void ThreadProc(void);
@@ -29,6 +31,7 @@ private:
 
 public:
 	GamePlayer(DISC enDiscCol, FuncPutDisc funcPutDisc);
+	~GamePlayer(void);
 	virtual void PlayNextTurn(BOARD_INFO enBoardInfo);
 	DISC GetDiscCol(void);
 };

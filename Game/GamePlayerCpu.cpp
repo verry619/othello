@@ -13,6 +13,11 @@ GamePlayerCpu::GamePlayerCpu(DISC enDiscCol, FuncPutDisc funcPutDisc)
 	srand((unsigned)time(NULL));
 }
 
+GamePlayerCpu::~GamePlayerCpu(void)
+{
+	GamePlayer::~GamePlayer();
+}
+
 void GamePlayerCpu::PlayMyTurn(BOARD_INFO enBoardInfo)
 {
 	std::vector<unsigned char> v(enBoardInfo.enSize.ucRow * enBoardInfo.enSize.ucCol);

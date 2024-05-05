@@ -14,6 +14,11 @@ GamePlayer::GamePlayer(DISC enDiscCol, FuncPutDisc funcPutDisc)
 	(void)_beginthreadex(NULL, 0, &GamePlayer::executeLauncher, this, 0, &m_unThreadId);
 }
 
+GamePlayer::~GamePlayer(void)
+{
+	bThreadKill = true;
+}
+
 unsigned int __stdcall GamePlayer::executeLauncher(void* args)
 {
 	reinterpret_cast<GamePlayer*>(args)->ThreadProc();
@@ -36,16 +41,17 @@ void GamePlayer::PlayMyTurn(BOARD_INFO enBoardInfo)
 
 void GamePlayer::ThreadProc(void)
 {
-	while (1)
+	while (!bThreadKill)
 	{
 		if (GAME_PLAYER_STATE::MY_TURN == m_enState)
 		{
 			PlayMyTurn(m_enBoardInfo);
 		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		std::this_thread::sleep_for(std::chrono::milliseconds(200));
 	}
 
 	_endthreadex(0);
+
 	return;
 }
 

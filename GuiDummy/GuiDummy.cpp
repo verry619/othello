@@ -180,6 +180,8 @@ int main()
 
 			bGameEnd = false;
 
+			std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
 			msg.enId = OTHELLO_MSG_ID::GAME_START;
 			msg.p1 = BOARD_ROW_LEN;
 			msg.p2 = BOARD_COL_LEN;

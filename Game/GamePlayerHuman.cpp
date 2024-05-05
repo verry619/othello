@@ -6,6 +6,11 @@ GamePlayerHuman::GamePlayerHuman(DISC enDiscCol, FuncPutDisc funcPutDisc)
 
 }
 
+GamePlayerHuman::~GamePlayerHuman(void)
+{
+	GamePlayer::~GamePlayer();
+}
+
 void GamePlayerHuman::PlayNextTurn(BOARD_INFO enBoardInfo)
 {
 	GamePlayer::PlayNextTurn(enBoardInfo);
