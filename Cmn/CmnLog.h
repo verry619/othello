@@ -49,11 +49,11 @@ typedef struct OTHELLO_LOG_PARAM_ {
 class CmnLog final
 {
 private:
-	std::string m_filepath_dev;
-	std::string m_filepath_game;
+	char* m_filepath_dev;
+	char* m_filepath_game;
 
 	CmnLog();
-	~CmnLog() = default;
+	~CmnLog();
 
 	void MyGetCurrentTime(time_t& tt_now, std::tm& tm_now_local, uint64_t& ms_now);
 

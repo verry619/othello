@@ -36,7 +36,18 @@ CmnLog::CmnLog()
 	s << std::setw(2) << std::setfill('0') << tm_now_local.tm_hour;
 	s << std::setw(2) << std::setfill('0') << tm_now_local.tm_min;
 	s << std::setw(2) << std::setfill('0') << tm_now_local.tm_sec;
-	m_filepath_dev = DEF_FILEPATH_LOG + '/' + s.str() + '_' + DEF_FILENAME_DEVLOG;
+
+	std::string strTmp = DEF_FILEPATH_LOG;
+	strTmp += '/' + s.str() + '_' + DEF_FILENAME_DEVLOG + '\0';
+
+	m_filepath_dev = new char[strTmp.size()];
+	strTmp.copy(m_filepath_dev, strTmp.size());
+}
+
+CmnLog::~CmnLog()
+{
+	delete[] m_filepath_dev;
+	delete[] m_filepath_game;
 }
 
 void CmnLog::MyGetCurrentTime(time_t& tt_now, std::tm& tm_now_local, uint64_t& ms_now)
@@ -172,5 +183,10 @@ void CmnLog::CreateNewDevLogFile(void)
 	s << std::setw(2) << std::setfill('0') << tm_now_local.tm_hour;
 	s << std::setw(2) << std::setfill('0') << tm_now_local.tm_min;
 	s << std::setw(2) << std::setfill('0') << tm_now_local.tm_sec;
-	m_filepath_game = DEF_FILEPATH_GAMELOG + '/' + s.str() + '_' + DEF_FILENAME_GAMELOG;
+
+	std::string strTmp = DEF_FILEPATH_GAMELOG;
+	strTmp += '/' + s.str() + '_' + DEF_FILENAME_GAMELOG + '\0';;
+
+	m_filepath_game = new char[strTmp.size()];
+	strTmp.copy(m_filepath_game, strTmp.size());
 }
