@@ -45,6 +45,10 @@ void GamePlayer::ThreadProc(void)
 	{
 		if (GAME_PLAYER_STATE::MY_TURN == m_enState)
 		{
+			if (nullptr == m_enBoardInfo.penDiscs)
+			{
+				break;
+			}
 			PlayMyTurn(m_enBoardInfo);
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(200));

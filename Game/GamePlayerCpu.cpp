@@ -2,15 +2,17 @@
 #include "GameRule.h"
 
 #include <cstdlib>
-#include <ctime>
+#include <chrono>
 #include <vector>
 #include <numeric>
 #include <algorithm>
+#include <iostream>
+#include <random>
+
 
 GamePlayerCpu::GamePlayerCpu(DISC enDiscCol, FuncPutDisc funcPutDisc)
 	:GamePlayer(enDiscCol, funcPutDisc)
 {
-	srand((unsigned)time(NULL));
 }
 
 GamePlayerCpu::~GamePlayerCpu(void)
@@ -22,7 +24,11 @@ void GamePlayerCpu::PlayMyTurn(BOARD_INFO enBoardInfo)
 {
 	std::vector<unsigned char> v(enBoardInfo.enSize.ucRow * enBoardInfo.enSize.ucCol);
 	std::iota(v.begin(), v.end(), 0);
-	std::random_shuffle(v.begin(), v.end());
+
+	unsigned seed = std::chrono::system_clock::now()
+		.time_since_epoch()
+		.count();
+	std::shuffle(std::begin(v), std::end(v), std::default_random_engine(seed));
 
 	DISC_MOVE enDiscMove = { GamePlayer::GetDiscCol(),{0,0} };
 
