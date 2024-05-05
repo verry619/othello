@@ -36,7 +36,7 @@ CmnLog::CmnLog()
 	s << std::setw(2) << std::setfill('0') << tm_now_local.tm_hour;
 	s << std::setw(2) << std::setfill('0') << tm_now_local.tm_min;
 	s << std::setw(2) << std::setfill('0') << tm_now_local.tm_sec;
-	m_filepath_dev = DEF_FILEPATH_LOG + std::string("/") + s.str() + "_" + DEF_FILENAME_DEVLOG;
+	m_filepath_dev = DEF_FILEPATH_LOG + '/' + s.str() + '_' + DEF_FILENAME_DEVLOG;
 }
 
 void CmnLog::MyGetCurrentTime(time_t& tt_now, std::tm& tm_now_local, uint64_t& ms_now)
@@ -56,27 +56,29 @@ void CmnLog::MyGetCurrentTime(time_t& tt_now, std::tm& tm_now_local, uint64_t& m
 }
 
 void CmnLog::WriteDevLog(const OTHELLO_LOG_ID enId,
-	const std::string& strFile, const unsigned long& ulLine, const std::string& strFunc)
+	const char* strFile, const unsigned long& ulLine, const char* strFunc)
 {
 	OTHELLO_LOG_PARAM p = { 0 };
-	WriteDevLog(enId, p, strFile, ulLine, strFunc, "");
+	const char* dummy = "";
+	WriteDevLog(enId, p, strFile, ulLine, strFunc, dummy);
 }
 void CmnLog::WriteDevLog(const OTHELLO_LOG_ID enId,
-	const std::string& strFile, const unsigned long& ulLine, const std::string& strFunc,
-	const std::string& strMsg)
+	const char* strFile, const unsigned long& ulLine, const char* strFunc,
+	const char* strMsg)
 {
 	OTHELLO_LOG_PARAM p = { 0 };
 	WriteDevLog(enId, p, strFile, ulLine, strFunc, strMsg);
 }
 void CmnLog::WriteDevLog(const OTHELLO_LOG_ID enId, const OTHELLO_LOG_PARAM enParam,
-	const std::string& strFile, const unsigned long& ulLine, const std::string& strFunc)
+	const char* strFile, const unsigned long& ulLine, const char* strFunc)
 {
-	WriteDevLog(enId, enParam, strFile, ulLine, strFunc, "");
+	const char* dummy = "";
+	WriteDevLog(enId, enParam, strFile, ulLine, strFunc, dummy);
 }
 
 void CmnLog::WriteDevLog(const OTHELLO_LOG_ID enId, const OTHELLO_LOG_PARAM enParam,
-	const std::string& strFile, const unsigned long& ulLine, const std::string& strFunc,
-	const std::string& strMsg)
+	const char* strFile, const unsigned long& ulLine, const char* strFunc,
+	const char* strMsg)
 {
 	time_t tt_now;
 	std::tm tm_now_local;
@@ -170,5 +172,5 @@ void CmnLog::CreateNewDevLogFile(void)
 	s << std::setw(2) << std::setfill('0') << tm_now_local.tm_hour;
 	s << std::setw(2) << std::setfill('0') << tm_now_local.tm_min;
 	s << std::setw(2) << std::setfill('0') << tm_now_local.tm_sec;
-	m_filepath_game = DEF_FILEPATH_GAMELOG + std::string("/") + s.str() + "_" + DEF_FILENAME_GAMELOG;
+	m_filepath_game = DEF_FILEPATH_GAMELOG + '/' + s.str() + '_' + DEF_FILENAME_GAMELOG;
 }

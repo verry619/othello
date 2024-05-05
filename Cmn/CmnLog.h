@@ -19,16 +19,16 @@ enum class OTHELLO_LOG_ID {
 	ID_NUM
 };
 
-static const std::map<OTHELLO_LOG_ID, std::string> s_MapLogIdToStr =
+static const std::map<OTHELLO_LOG_ID, const char*> s_MapLogIdToStr =
 {
-	{OTHELLO_LOG_ID::NONE,			std::string("NONE")},
-	{OTHELLO_LOG_ID::GAME_START,	std::string("GAME_START")},
-	{OTHELLO_LOG_ID::GAME_QUIT,		std::string("GAME_QUIT")},
-	{OTHELLO_LOG_ID::GAME_END,		std::string("GAME_END")},
-	{OTHELLO_LOG_ID::PUT_DISC,		std::string("PUT_DISC")},
-	{OTHELLO_LOG_ID::PASS_TURN,		std::string("PASS_TURN")},
-	{OTHELLO_LOG_ID::GAME_RESULT,	std::string("GAME_RESULT")},
-	{OTHELLO_LOG_ID::ID_NUM,		std::string("ID_NUM")},
+	{OTHELLO_LOG_ID::NONE,			"NONE"},
+	{OTHELLO_LOG_ID::GAME_START,	"GAME_START"},
+	{OTHELLO_LOG_ID::GAME_QUIT,		"GAME_QUIT"},
+	{OTHELLO_LOG_ID::GAME_END,		"GAME_END"},
+	{OTHELLO_LOG_ID::PUT_DISC,		"PUT_DISC"},
+	{OTHELLO_LOG_ID::PASS_TURN,		"PASS_TURN"},
+	{OTHELLO_LOG_ID::GAME_RESULT,	"GAME_RESULT"},
+	{OTHELLO_LOG_ID::ID_NUM,		"ID_NUM"},
 };
 
 static const std::map<DISC, char> s_MapDiscToChar =
@@ -69,15 +69,15 @@ public:
 	}
 
 	void WriteDevLog(const OTHELLO_LOG_ID enId,
-		const std::string& strFile, const unsigned long& ulLine, const std::string& strFunc);
+		const char* strFile, const unsigned long& ulLine, const char* strFunc);
 	void WriteDevLog(const OTHELLO_LOG_ID enId,
-		const std::string& strFile, const unsigned long& ulLine, const std::string& strFunc,
-		const std::string& strMsg);
+		const char* strFile, const unsigned long& ulLine, const char* strFunc,
+		const char* strMsg);
 	void WriteDevLog(const OTHELLO_LOG_ID enId, const OTHELLO_LOG_PARAM enParam,
-		const std::string& strFile, const unsigned long& ulLine, const std::string& strFunc);
+		const char* strFile, const unsigned long& ulLine, const char* strFunc);
 	void WriteDevLog(const OTHELLO_LOG_ID enId, const OTHELLO_LOG_PARAM enParam,
-		const std::string& strFile, const unsigned long& ulLine, const std::string& strFunc,
-		const std::string& strMsg);
+		const char* strFile, const unsigned long& ulLine, const char* strFunc,
+		const char* strMsg);
 	void WriteGameLog(const DISC_MOVE& enDiscMove, const BOARD_INFO& enBoardInfo);
 
 	void CreateNewDevLogFile(void);
