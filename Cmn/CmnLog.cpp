@@ -120,8 +120,8 @@ void CmnLog::WriteGameLog(const DISC_MOVE& enDiscMove, const BOARD_INFO& enBoard
 {
 	std::stringstream s;
 	s << s_MapDiscToChar.at(enDiscMove.enColor) << "," <<
-		static_cast<unsigned int>(enDiscMove.enPos.ucRow) << "," <<
-		static_cast<unsigned int>(enDiscMove.enPos.ucCol) <<
+		static_cast<unsigned short>(enDiscMove.enPos.ucRow) << "," <<
+		static_cast<unsigned short>(enDiscMove.enPos.ucCol) <<
 		std::endl;
 
 	const unsigned char COL_MAX = enBoardInfo.enSize.ucCol;

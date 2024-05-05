@@ -58,10 +58,10 @@ enum class OTHELLO_MSG_ID : unsigned short
 typedef struct OTHELLO_MSG_
 {
 	OTHELLO_MSG_ID enId;
-	unsigned int p1;
-	unsigned int p2;
-	unsigned int p3;
-	unsigned int p4;
+	unsigned short p1;
+	unsigned short p2;
+	unsigned short p3;
+	unsigned short p4;
 }OTHELLO_MSG;
 
 typedef struct BOARD_SIZE_
@@ -88,4 +88,4 @@ typedef struct DISC_MOVE_
 	DISC_POS enPos;
 }DISC_MOVE;
 
-DISC CmnCountDiscs(BOARD_INFO enBoardInfo, unsigned int& unCountB, unsigned int& unCountW);
+DISC CmnCountDiscs(BOARD_INFO enBoardInfo, unsigned short& unCountB, unsigned short& unCountW);

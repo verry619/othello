@@ -42,7 +42,7 @@ public:
 		BOARD_SIZE enBoardSize;
 		DISC enBoard[DEF_ROW_MAX * DEF_COL_MAX];
 		DISC_MOVE enHist[DEF_HIST_MAX];
-		unsigned int idHistCurrent;
+		unsigned short idHistCurrent;
 	}ShmData;
 
 	static BOOL Initialize(CallbackFunc clbFunc_rcvMsg);

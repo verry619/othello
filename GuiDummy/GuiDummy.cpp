@@ -14,7 +14,7 @@
 #define BOARD_ROW_LEN 6
 #define BOARD_COL_LEN 6
 
-static void PrintBoard(DISC* punBoard, int unRowMax, int unColMax);
+static void PrintBoard(DISC* punBoard, unsigned short unRowMax, unsigned short unColMax);
 static void RcvMsg(const char* pcBuf, unsigned int unBufLen);
 
 static bool bComStartWaiting = true;
@@ -45,7 +45,7 @@ int main()
 	msg.enId = OTHELLO_MSG_ID::GAME_START;
 	msg.p1 = BOARD_ROW_LEN;
 	msg.p2 = BOARD_COL_LEN;
-	msg.p3 = static_cast<unsigned int>(enGameSetting);
+	msg.p3 = static_cast<unsigned short>(enGameSetting);
 	msg.p4 = 0;
 
 	char cBuf[sizeof(OTHELLO_MSG)];
@@ -65,7 +65,7 @@ int main()
 
 	while (1)
 	{
-		unsigned int cRow, cCol;
+		unsigned short cRow, cCol;
 
 		do
 		{
@@ -78,7 +78,7 @@ int main()
 				std::cin >> cCol;
 
 				msg.enId = OTHELLO_MSG_ID::PUT_DISC;
-				msg.p1 = static_cast<unsigned int>(DISC::BLACK);
+				msg.p1 = static_cast<unsigned short>(DISC::BLACK);
 				msg.p2 = cRow;
 				msg.p3 = cCol;
 
@@ -120,7 +120,7 @@ int main()
 				std::cin >> cCol;
 
 				msg.enId = OTHELLO_MSG_ID::PUT_DISC;
-				msg.p1 = static_cast<unsigned int>(DISC::WHITE);
+				msg.p1 = static_cast<unsigned short>(DISC::WHITE);
 				msg.p2 = cRow;
 				msg.p3 = cCol;
 
@@ -158,23 +158,23 @@ int main()
 			enBoardInfo.enSize = penShm.enBoardSize;
 			enBoardInfo.penDiscs = penShm.enBoard;
 
-			unsigned int unCountBlack = 0;
-			unsigned int unCountWhite = 0;
+			unsigned short unCountBlack = 0;
+			unsigned short unCountWhite = 0;
 
 			DISC enWinner = CmnCountDiscs(enBoardInfo, unCountBlack, unCountWhite);
 
 			OTHELLO_LOG_PARAM p = { 0,0,0,0 };
 			if (DISC::BLACK == enWinner)
 			{
-				p.p1 = static_cast<unsigned int>(GAME_RESULT::BLACK_WIN);
+				p.p1 = static_cast<unsigned short>(GAME_RESULT::BLACK_WIN);
 			}
 			else if (DISC::WHITE == enWinner)
 			{
-				p.p1 = static_cast<unsigned int>(GAME_RESULT::WHITE_WIN);
+				p.p1 = static_cast<unsigned short>(GAME_RESULT::WHITE_WIN);
 			}
 			else
 			{
-				p.p1 = static_cast<unsigned int>(GAME_RESULT::DRAW);
+				p.p1 = static_cast<unsigned short>(GAME_RESULT::DRAW);
 			}
 			WRITE_DEV_LOG(OTHELLO_LOG_ID::GAME_RESULT, p);
 
@@ -185,7 +185,7 @@ int main()
 			msg.enId = OTHELLO_MSG_ID::GAME_START;
 			msg.p1 = BOARD_ROW_LEN;
 			msg.p2 = BOARD_COL_LEN;
-			msg.p3 = static_cast<unsigned int>(enGameSetting);
+			msg.p3 = static_cast<unsigned short>(enGameSetting);
 			msg.p4 = 0;
 
 			char cBuf[sizeof(OTHELLO_MSG)];
@@ -206,7 +206,7 @@ int main()
 	}
 }
 
-static void PrintBoard(DISC* punBoard, int unRowMax, int unColMax)
+static void PrintBoard(DISC* punBoard, unsigned short unRowMax, unsigned short unColMax)
 {
 	std::cout << "###################\n";
 	std::cout << "  ";
@@ -228,7 +228,7 @@ static void PrintBoard(DISC* punBoard, int unRowMax, int unColMax)
 		std::cout << row << "|";
 		for (int col = 0;col < unColMax;col++)
 		{
-			std::cout << static_cast<unsigned int>(punBoard[row * unColMax + col]) << " ";
+			std::cout << static_cast<unsigned short>(punBoard[row * unColMax + col]) << " ";
 		}
 		std::cout << "\n";
 	}
@@ -257,7 +257,7 @@ static void RcvMsg(const char* pcBuf, unsigned int unBufLen)
 	case OTHELLO_MSG_ID::GAME_QUIT:
 		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_QUIT);
 		{
-			OTHELLO_LOG_PARAM p = { static_cast<unsigned int>(GAME_RESULT::NO_CONTEST),0,0,0 };
+			OTHELLO_LOG_PARAM p = { static_cast<unsigned short>(GAME_RESULT::NO_CONTEST),0,0,0 };
 			WRITE_DEV_LOG(OTHELLO_LOG_ID::GAME_RESULT, p);
 		}
 		

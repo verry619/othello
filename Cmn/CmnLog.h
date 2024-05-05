@@ -40,10 +40,10 @@ static const std::map<DISC, char> s_MapDiscToChar =
 };
 
 typedef struct OTHELLO_LOG_PARAM_ {
-	unsigned int p1;
-	unsigned int p2;
-	unsigned int p3;
-	unsigned int p4;
+	unsigned short p1;
+	unsigned short p2;
+	unsigned short p3;
+	unsigned short p4;
 }OTHELLO_LOG_PARAM;
 
 class CmnLog final

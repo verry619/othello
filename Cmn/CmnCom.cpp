@@ -232,7 +232,7 @@ void CmnCom::NotifyComStartComp(SOCKET_ROLE enRole)
 
 	OTHELLO_MSG msg;
 	msg.enId = OTHELLO_MSG_ID::COM_START;
-	msg.p1 = static_cast<unsigned int>(enRole);
+	msg.p1 = static_cast<unsigned short>(enRole);
 
 	char cBuf[sizeof(OTHELLO_MSG)];
 	CmnCom::ConvMsgToCbuf(&msg, cBuf);
@@ -323,24 +323,24 @@ void CmnCom::ConvMsgToCbuf(const OTHELLO_MSG* enMsg, char* pcBuf)
 
 void CmnCom::ConvCbufToMsg(const char* pcBuf, OTHELLO_MSG* enMsg)
 {
-	unsigned int unTmp =
-		(static_cast<unsigned int>(pcBuf[0]) & 0x00ff) |
-		((static_cast<unsigned int>(pcBuf[1]) << 8) & 0xff00);
+	unsigned short unTmp =
+		(static_cast<unsigned short>(pcBuf[0]) & 0x00ff) |
+		((static_cast<unsigned short>(pcBuf[1]) << 8) & 0xff00);
 	enMsg->enId = static_cast<OTHELLO_MSG_ID>(unTmp);
 
-	unTmp = (static_cast<unsigned int>(pcBuf[2]) & 0x00ff) |
-		((static_cast<unsigned int>(pcBuf[3]) << 8) & 0xff00);
-	enMsg->p1 = static_cast<unsigned int>(unTmp);
+	unTmp = (static_cast<unsigned short>(pcBuf[2]) & 0x00ff) |
+		((static_cast<unsigned short>(pcBuf[3]) << 8) & 0xff00);
+	enMsg->p1 = static_cast<unsigned short>(unTmp);
 
-	unTmp = (static_cast<unsigned int>(pcBuf[4]) & 0x00ff) |
-		((static_cast<unsigned int>(pcBuf[5]) << 8) & 0xff00);
-	enMsg->p2 = static_cast<unsigned int>(unTmp);
+	unTmp = (static_cast<unsigned short>(pcBuf[4]) & 0x00ff) |
+		((static_cast<unsigned short>(pcBuf[5]) << 8) & 0xff00);
+	enMsg->p2 = static_cast<unsigned short>(unTmp);
 
-	unTmp = (static_cast<unsigned int>(pcBuf[6]) & 0x00ff) |
-		((static_cast<unsigned int>(pcBuf[7]) << 8) & 0xff00);
-	enMsg->p3 = static_cast<unsigned int>(unTmp);
+	unTmp = (static_cast<unsigned short>(pcBuf[6]) & 0x00ff) |
+		((static_cast<unsigned short>(pcBuf[7]) << 8) & 0xff00);
+	enMsg->p3 = static_cast<unsigned short>(unTmp);
 
-	unTmp = (static_cast<unsigned int>(pcBuf[8]) & 0x00ff) |
-		((static_cast<unsigned int>(pcBuf[9]) << 8) & 0xff00);
-	enMsg->p4 = static_cast<unsigned int>(unTmp);
+	unTmp = (static_cast<unsigned short>(pcBuf[8]) & 0x00ff) |
+		((static_cast<unsigned short>(pcBuf[9]) << 8) & 0xff00);
+	enMsg->p4 = static_cast<unsigned short>(unTmp);
 }

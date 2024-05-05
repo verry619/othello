@@ -31,7 +31,7 @@ private:
     void PutDisc_Internal(DISC enDiscCol, unsigned char ucRow, unsigned char ucCol);
     void ContinuePlayerTurn(DISC enDiscCol, BOARD_INFO enBoard);
     void DecideNextTurn(DISC enDiscCol, BOARD_INFO enBoard);
-    void SendMsgToGui(OTHELLO_MSG_ID enId, unsigned int p1, unsigned int p2, unsigned int p3, unsigned int p4);
+    void SendMsgToGui(OTHELLO_MSG_ID enId, unsigned short p1, unsigned short p2, unsigned short p3, unsigned short p4);
 
 public:
     GameCtrl(void);

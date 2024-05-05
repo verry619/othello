@@ -74,7 +74,7 @@ void GameCtrl::OnRcvMsg(OTHELLO_MSG_ID msg, WORD param1, DWORD param2)
 
 void GameCtrl::StartGame_Internal(void)
 {
-	unsigned int unBoardSize = static_cast<unsigned int>(m_BoardInfo.enSize.ucRow) * static_cast<unsigned int>(m_BoardInfo.enSize.ucCol);
+	unsigned short unBoardSize = static_cast<unsigned short>(m_BoardInfo.enSize.ucRow) * static_cast<unsigned short>(m_BoardInfo.enSize.ucCol);
 	m_BoardInfo.penDiscs = static_cast<DISC*>(malloc(sizeof(DISC) * unBoardSize));
 	if (nullptr == m_BoardInfo.penDiscs)
 	{
@@ -88,7 +88,7 @@ void GameCtrl::StartGame_Internal(void)
 
 	CmnLog::getInstance().CreateNewDevLogFile();
 
-	OTHELLO_LOG_PARAM p = { static_cast<unsigned int>(m_enSetting),0,0,0 };
+	OTHELLO_LOG_PARAM p = { static_cast<unsigned short>(m_enSetting),0,0,0 };
 	WRITE_DEV_LOG(OTHELLO_LOG_ID::GAME_START, p);
 
 	m_pcPlayerBlack->PlayNextTurn(m_BoardInfo);
@@ -196,7 +196,7 @@ void GameCtrl::PutDisc_Internal(DISC enDiscCol, unsigned char ucRow, unsigned ch
 	CmnLog::getInstance().WriteGameLog(enDiscMove, m_BoardInfo);
 
 	OTHELLO_LOG_PARAM p = {
-		static_cast<unsigned int>(enDiscMove.enColor),
+		static_cast<unsigned short>(enDiscMove.enColor),
 		enDiscMove.enPos.ucRow,
 		enDiscMove.enPos.ucCol,
 		0
@@ -239,7 +239,7 @@ void GameCtrl::DecideNextTurn(DISC enDiscCol, BOARD_INFO enBoard)
 		{
 			if (GameRule::CanMoveStone(DISC::BLACK, enBoard))
 			{
-				OTHELLO_LOG_PARAM p = { static_cast<unsigned int>(enDiscCol),0,0,0 };
+				OTHELLO_LOG_PARAM p = { static_cast<unsigned short>(enDiscCol),0,0,0 };
 				WRITE_DEV_LOG(OTHELLO_LOG_ID::PASS_TURN, p);
 
 				SendMsgToGui(OTHELLO_MSG_ID::PASS_TURN, 0, 0, 0, 0);
@@ -267,7 +267,7 @@ void GameCtrl::DecideNextTurn(DISC enDiscCol, BOARD_INFO enBoard)
 		{
 			if (GameRule::CanMoveStone(DISC::WHITE, enBoard))
 			{
-				OTHELLO_LOG_PARAM p = { static_cast<unsigned int>(enDiscCol),0,0,0 };
+				OTHELLO_LOG_PARAM p = { static_cast<unsigned short>(enDiscCol),0,0,0 };
 				WRITE_DEV_LOG(OTHELLO_LOG_ID::PASS_TURN, p);
 
 				SendMsgToGui(OTHELLO_MSG_ID::PASS_TURN, 0, 0, 0, 0);
@@ -290,7 +290,7 @@ void GameCtrl::DecideNextTurn(DISC enDiscCol, BOARD_INFO enBoard)
 	}
 }
 
-void GameCtrl::SendMsgToGui(OTHELLO_MSG_ID enId, unsigned int p1, unsigned int p2, unsigned int p3, unsigned int p4)
+void GameCtrl::SendMsgToGui(OTHELLO_MSG_ID enId, unsigned short p1, unsigned short p2, unsigned short p3, unsigned short p4)
 {
 	OTHELLO_MSG msg = { enId,p1, p2, p3, p4 };
 	m_pcCom->SendMsg(OTHELLO_PROCESS_ID::GUI, msg);

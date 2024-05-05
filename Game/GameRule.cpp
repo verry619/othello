@@ -6,7 +6,7 @@
 
 void GameRule::InitializeBoard(BOARD_INFO enBoard)
 {
-	memset(enBoard.penDiscs, static_cast<int>(DISC::NONE), sizeof(DISC) * enBoard.enSize.ucRow * enBoard.enSize.ucCol);
+	memset(enBoard.penDiscs, static_cast<unsigned char>(DISC::NONE), sizeof(DISC) * enBoard.enSize.ucRow * enBoard.enSize.ucCol);
 
 	unsigned char iCenterUL =
 		(enBoard.enSize.ucRow / 2 - 1) * enBoard.enSize.ucCol +
@@ -22,9 +22,9 @@ bool GameRule::CanMoveStone(const DISC enDiscCol, BOARD_INFO enBoard)
 {
 	DISC_MOVE enDiscMove = { enDiscCol,{0,0} };
 
-	for (unsigned int row = 0;row < enBoard.enSize.ucRow;row++)
+	for (unsigned char row = 0;row < enBoard.enSize.ucRow;row++)
 	{
-		for (unsigned int col = 0;col < enBoard.enSize.ucCol;col++)
+		for (unsigned char col = 0;col < enBoard.enSize.ucCol;col++)
 		{
 			enDiscMove.enPos.ucRow = row;
 			enDiscMove.enPos.ucCol = col;
@@ -42,7 +42,7 @@ bool GameRule::CheckFlip(const DISC_MOVE enMove, BOARD_INFO enBoard)
 {
 	DISC* tmpDiscs;
 
-	unsigned int unBoardByte = sizeof(DISC) * enBoard.enSize.ucRow * enBoard.enSize.ucCol;
+	unsigned short unBoardByte = sizeof(DISC) * enBoard.enSize.ucRow * enBoard.enSize.ucCol;
 	tmpDiscs = static_cast<DISC*>(malloc(unBoardByte));
 	if (NULL == tmpDiscs)
 	{
@@ -70,15 +70,15 @@ bool GameRule::FlipDiscs(const DISC_MOVE enMove, BOARD_INFO enBoard)
 		return false;
 	}
 
-	unsigned int iMovePos = enBoard.enSize.ucCol * enMove.enPos.ucRow + enMove.enPos.ucCol;
+	unsigned short iMovePos = enBoard.enSize.ucCol * enMove.enPos.ucRow + enMove.enPos.ucCol;
 
 	if (DISC::NONE != enBoard.penDiscs[iMovePos])
 	{
 		return false;
 	}
 
-	unsigned int unFlipTotal = 0;
-	unsigned int unBoardByte = sizeof(DISC) * enBoard.enSize.ucRow * enBoard.enSize.ucCol;
+	unsigned short unFlipTotal = 0;
+	unsigned short unBoardByte = sizeof(DISC) * enBoard.enSize.ucRow * enBoard.enSize.ucCol;
 	DISC* tmpDiscs;
 
 	tmpDiscs = static_cast<DISC*>(malloc(unBoardByte));
@@ -121,7 +121,7 @@ unsigned char GameRule::FlipDisc_OneDirection(const DISC_MOVE enMove, BOARD_INFO
 	unsigned char ucFlipTotal = 0;
 	unsigned char ucTmpRow = enMove.enPos.ucRow + ofsRow;
 	unsigned char ucTmpCol = enMove.enPos.ucCol + ofsCol;
-	unsigned int iTmpPos = enBoard->enSize.ucCol * ucTmpRow + ucTmpCol;
+	unsigned short iTmpPos = enBoard->enSize.ucCol * ucTmpRow + ucTmpCol;
 
 	while (1)
 	{

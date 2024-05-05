@@ -6,7 +6,7 @@
 
 #include "Cmn.h"
 
-DISC CmnCountDiscs(BOARD_INFO enBoardInfo, unsigned int& unCountB, unsigned int& unCountW)
+DISC CmnCountDiscs(BOARD_INFO enBoardInfo, unsigned short& unCountB, unsigned short& unCountW)
 {
 	unCountB = 0;
 	unCountW = 0;
@@ -15,7 +15,7 @@ DISC CmnCountDiscs(BOARD_INFO enBoardInfo, unsigned int& unCountB, unsigned int&
 	{
 		for (unsigned char col = 0;col < enBoardInfo.enSize.ucCol;col++)
 		{
-			unsigned int iPos = enBoardInfo.enSize.ucCol * row + col;
+			unsigned short iPos = enBoardInfo.enSize.ucCol * row + col;
 			if (DISC::BLACK == enBoardInfo.penDiscs[iPos])
 			{
 				unCountB++;
