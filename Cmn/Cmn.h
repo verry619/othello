@@ -94,8 +94,8 @@ private:
 public:
 	BoardInfo(unsigned char ucRow, unsigned char ucCol);
 	BoardInfo(BOARD_SIZE enSize);
-	BoardInfo(unsigned char ucRow, unsigned char ucCol, DISC* penBoard);
-	BoardInfo(BOARD_SIZE enSize, DISC* penBoard);
+	BoardInfo(unsigned char ucRow, unsigned char ucCol, const DISC* penBoard);
+	BoardInfo(BOARD_SIZE enSize, const DISC* penBoard);
 	~BoardInfo(void);
 	unsigned short GetSizeArray(void) const;
 	unsigned short GetSizeByte(void) const;

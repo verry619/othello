@@ -36,120 +36,90 @@ const DISC BOARD_BW_HALF[ROW_MAX][COL_MAX] =
 	{DISC::BLACK,DISC::WHITE,DISC::BLACK,DISC::WHITE,DISC::BLACK,DISC::WHITE},
 };
 
-static const std::map<EN_BOARD_FOR_TEST, DISC const> g_mapBoardForTest =
-{
-	{EN_BOARD_FOR_TEST::ALL_NONE,	BOARD_ALL_NONE[0][0]	},
-	{EN_BOARD_FOR_TEST::ALL_BLACK,	BOARD_ALL_BLACK[0][0]	},
-	{EN_BOARD_FOR_TEST::ALL_WHITE,	BOARD_ALL_WHITE[0][0]	},
-	{EN_BOARD_FOR_TEST::INIT,		BOARD_INIT[0][0]		},
-	{EN_BOARD_FOR_TEST::BW_HALF,	BOARD_BW_HALF[0][0]	},
-};
-
-void InitializeBoardTest_dataset(BOARD_INFO& stBoardInfo_Tested, EN_BOARD_FOR_TEST enIdx, BOARD_INFO& stBoardInfo_Expected)
-{
-	/* tested data */
-	stBoardInfo_Tested.enSize = { ROW_MAX,COL_MAX };
-	memcpy(stBoardInfo_Tested.penDiscs,
-		&g_mapBoardForTest.at(enIdx),
-		sizeof(DISC) * ROW_MAX * COL_MAX);
-
-	/* expected data */
-	stBoardInfo_Expected.enSize = { ROW_MAX,COL_MAX };
-	memcpy(stBoardInfo_Expected.penDiscs,
-		&BOARD_INIT[0][0],
-		sizeof(DISC) * ROW_MAX * COL_MAX);
-}
-
-TEST(GameRuleTest, InitializeBoardTest001) {
+TEST(BoardInfoTest, InitializeBoardTest001) {
 	/* data initializing */
+	BoardInfo* pcBoard = new BoardInfo(ROW_MAX, COL_MAX, &BOARD_ALL_NONE[0][0]);
 	DISC enBoard_Tested[ROW_MAX][COL_MAX];
-	BOARD_INFO stBoardInfo_Tested = { 0,0,&enBoard_Tested[0][0] };
-	DISC enBoard_Expected[ROW_MAX][COL_MAX];
-	BOARD_INFO stBoardInfo_Expected = { 0,0,&enBoard_Expected[0][0] };
-
-	InitializeBoardTest_dataset(stBoardInfo_Tested, EN_BOARD_FOR_TEST::ALL_NONE, stBoardInfo_Expected);
 
 	/* testing */
-	GameRule::InitializeBoard(stBoardInfo_Tested);
-	EXPECT_EQ(stBoardInfo_Expected.enSize.ucRow, stBoardInfo_Tested.enSize.ucRow);
-	EXPECT_EQ(stBoardInfo_Expected.enSize.ucCol, stBoardInfo_Tested.enSize.ucCol);
-	EXPECT_EQ(0, memcmp(stBoardInfo_Expected.penDiscs, stBoardInfo_Tested.penDiscs, sizeof(DISC) * ROW_MAX * COL_MAX));
+	pcBoard->CopyBoardTo(enBoard_Tested);
+	EXPECT_EQ(0, memcmp(BOARD_ALL_NONE, enBoard_Tested, sizeof(DISC) * ROW_MAX * COL_MAX));
+
+	pcBoard->Initialize();
+	pcBoard->CopyBoardTo(enBoard_Tested);
+	EXPECT_EQ(0, memcmp(BOARD_INIT, enBoard_Tested, sizeof(DISC) * ROW_MAX * COL_MAX));
 }
 
-TEST(GameRuleTest, InitializeBoardTest002) {
+TEST(BoardInfoTest, InitializeBoardTest002) {
 	/* data initializing */
+	BoardInfo* pcBoard = new BoardInfo(ROW_MAX, COL_MAX, &BOARD_ALL_BLACK[0][0]);
 	DISC enBoard_Tested[ROW_MAX][COL_MAX];
-	BOARD_INFO stBoardInfo_Tested = { 0,0,&enBoard_Tested[0][0] };
-	DISC enBoard_Expected[ROW_MAX][COL_MAX];
-	BOARD_INFO stBoardInfo_Expected = { 0,0,&enBoard_Expected[0][0] };
-
-	InitializeBoardTest_dataset(stBoardInfo_Tested, EN_BOARD_FOR_TEST::ALL_BLACK, stBoardInfo_Expected);
 
 	/* testing */
-	GameRule::InitializeBoard(stBoardInfo_Tested);
-	EXPECT_EQ(stBoardInfo_Expected.enSize.ucRow, stBoardInfo_Tested.enSize.ucRow);
-	EXPECT_EQ(stBoardInfo_Expected.enSize.ucCol, stBoardInfo_Tested.enSize.ucCol);
-	EXPECT_EQ(0, memcmp(stBoardInfo_Expected.penDiscs, stBoardInfo_Tested.penDiscs, sizeof(DISC) * ROW_MAX * COL_MAX));
+	pcBoard->CopyBoardTo(enBoard_Tested);
+	EXPECT_EQ(0, memcmp(BOARD_ALL_BLACK, enBoard_Tested, sizeof(DISC) * ROW_MAX * COL_MAX));
+
+	pcBoard->Initialize();
+	pcBoard->CopyBoardTo(enBoard_Tested);
+	EXPECT_EQ(0, memcmp(BOARD_INIT, enBoard_Tested, sizeof(DISC) * ROW_MAX * COL_MAX));
 }
 
-TEST(GameRuleTest, InitializeBoardTest003) {
+TEST(BoardInfoTest, InitializeBoardTest003) {
 	/* data initializing */
+	BoardInfo* pcBoard = new BoardInfo(ROW_MAX, COL_MAX, &BOARD_ALL_WHITE[0][0]);
 	DISC enBoard_Tested[ROW_MAX][COL_MAX];
-	BOARD_INFO stBoardInfo_Tested = { 0,0,&enBoard_Tested[0][0] };
-	DISC enBoard_Expected[ROW_MAX][COL_MAX];
-	BOARD_INFO stBoardInfo_Expected = { 0,0,&enBoard_Expected[0][0] };
-
-	InitializeBoardTest_dataset(stBoardInfo_Tested, EN_BOARD_FOR_TEST::ALL_WHITE, stBoardInfo_Expected);
 
 	/* testing */
-	GameRule::InitializeBoard(stBoardInfo_Tested);
-	EXPECT_EQ(stBoardInfo_Expected.enSize.ucRow, stBoardInfo_Tested.enSize.ucRow);
-	EXPECT_EQ(stBoardInfo_Expected.enSize.ucCol, stBoardInfo_Tested.enSize.ucCol);
-	EXPECT_EQ(0, memcmp(stBoardInfo_Expected.penDiscs, stBoardInfo_Tested.penDiscs, sizeof(DISC) * ROW_MAX * COL_MAX));
+	pcBoard->CopyBoardTo(enBoard_Tested);
+	EXPECT_EQ(0, memcmp(BOARD_ALL_WHITE, enBoard_Tested, sizeof(DISC) * ROW_MAX * COL_MAX));
+
+	pcBoard->Initialize();
+	pcBoard->CopyBoardTo(enBoard_Tested);
+	EXPECT_EQ(0, memcmp(BOARD_INIT, enBoard_Tested, sizeof(DISC) * ROW_MAX * COL_MAX));
 }
 
-TEST(GameRuleTest, InitializeBoardTest004) {
+TEST(BoardInfoTest, InitializeBoardTest004) {
 	/* data initializing */
+	BoardInfo* pcBoard = new BoardInfo(ROW_MAX, COL_MAX, &BOARD_INIT[0][0]);
 	DISC enBoard_Tested[ROW_MAX][COL_MAX];
-	BOARD_INFO stBoardInfo_Tested = { 0,0,&enBoard_Tested[0][0] };
-	DISC enBoard_Expected[ROW_MAX][COL_MAX];
-	BOARD_INFO stBoardInfo_Expected = { 0,0,&enBoard_Expected[0][0] };
-
-	InitializeBoardTest_dataset(stBoardInfo_Tested, EN_BOARD_FOR_TEST::INIT, stBoardInfo_Expected);
 
 	/* testing */
-	GameRule::InitializeBoard(stBoardInfo_Tested);
-	EXPECT_EQ(stBoardInfo_Expected.enSize.ucRow, stBoardInfo_Tested.enSize.ucRow);
-	EXPECT_EQ(stBoardInfo_Expected.enSize.ucCol, stBoardInfo_Tested.enSize.ucCol);
-	EXPECT_EQ(0, memcmp(stBoardInfo_Expected.penDiscs, stBoardInfo_Tested.penDiscs, sizeof(DISC) * ROW_MAX * COL_MAX));
+	pcBoard->CopyBoardTo(enBoard_Tested);
+	EXPECT_EQ(0, memcmp(BOARD_INIT, enBoard_Tested, sizeof(DISC) * ROW_MAX * COL_MAX));
+
+	pcBoard->Initialize();
+	pcBoard->CopyBoardTo(enBoard_Tested);
+	EXPECT_EQ(0, memcmp(BOARD_INIT, enBoard_Tested, sizeof(DISC) * ROW_MAX * COL_MAX));
 }
 
-TEST(GameRuleTest, InitializeBoardTest005) {
+TEST(BoardInfoTest, InitializeBoardTest005) {
 	/* data initializing */
+	BoardInfo* pcBoard = new BoardInfo(ROW_MAX, COL_MAX, &BOARD_BW_HALF[0][0]);
 	DISC enBoard_Tested[ROW_MAX][COL_MAX];
-	BOARD_INFO stBoardInfo_Tested = { 0,0,&enBoard_Tested[0][0] };
-	DISC enBoard_Expected[ROW_MAX][COL_MAX];
-	BOARD_INFO stBoardInfo_Expected = { 0,0,&enBoard_Expected[0][0] };
-
-	InitializeBoardTest_dataset(stBoardInfo_Tested, EN_BOARD_FOR_TEST::BW_HALF, stBoardInfo_Expected);
 
 	/* testing */
-	GameRule::InitializeBoard(stBoardInfo_Tested);
-	EXPECT_EQ(stBoardInfo_Expected.enSize.ucRow, stBoardInfo_Tested.enSize.ucRow);
-	EXPECT_EQ(stBoardInfo_Expected.enSize.ucCol, stBoardInfo_Tested.enSize.ucCol);
-	EXPECT_EQ(0, memcmp(stBoardInfo_Expected.penDiscs, stBoardInfo_Tested.penDiscs, sizeof(DISC) * ROW_MAX * COL_MAX));
+	pcBoard->CopyBoardTo(enBoard_Tested);
+	EXPECT_EQ(0, memcmp(BOARD_BW_HALF, enBoard_Tested, sizeof(DISC) * ROW_MAX * COL_MAX));
+
+	pcBoard->Initialize();
+	pcBoard->CopyBoardTo(enBoard_Tested);
+	EXPECT_EQ(0, memcmp(BOARD_INIT, enBoard_Tested, sizeof(DISC) * ROW_MAX * COL_MAX));
 }
 
-void FlipDiscsTest_sub(const DISC_MOVE enDiscMove, DISC* const enBoard_Tested, DISC* const enBoard_Expected, const bool bRet_Expected)
+void FlipDiscsTest_sub(const DISC_MOVE enDiscMove, DISC* const enBoard_Init, DISC* const enBoard_Expected, const bool bRet_Expected)
 {
 	/* data initializing */
-	BOARD_INFO stBoardInfo_Tested = { ROW_MAX,COL_MAX,enBoard_Tested };
-	BOARD_INFO stBoardInfo_Expected = { ROW_MAX,COL_MAX,enBoard_Expected };
+	BoardInfo* pcBoard = new BoardInfo(ROW_MAX, COL_MAX, enBoard_Init);
+	DISC enBoard_Tested[ROW_MAX][COL_MAX];
 
 	/* testing */
-	bool bRet = GameRule::FlipDiscs(enDiscMove, stBoardInfo_Tested);
+	pcBoard->CopyBoardTo(enBoard_Tested);
+	EXPECT_EQ(0, memcmp(enBoard_Init, enBoard_Tested, sizeof(DISC) * ROW_MAX * COL_MAX));
+
+	bool bRet = GameRule::FlipDiscs(enDiscMove, pcBoard);
+	pcBoard->CopyBoardTo(enBoard_Tested);
 	EXPECT_EQ(bRet_Expected, bRet);
-	EXPECT_EQ(0, memcmp(stBoardInfo_Expected.penDiscs, stBoardInfo_Tested.penDiscs, sizeof(DISC) * ROW_MAX * COL_MAX));
+	EXPECT_EQ(0, memcmp(enBoard_Expected, enBoard_Tested, sizeof(DISC) * ROW_MAX * COL_MAX));
 }
 
 TEST(GameRuleTest, FlipDiscsTest001) {
