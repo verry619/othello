@@ -15,20 +15,19 @@ BoardInfo::BoardInfo(unsigned char ucRow, unsigned char ucCol)
 	m_penBoard = new DISC[ucRow * ucCol];
 }
 
-BoardInfo::BoardInfo(BOARD_SIZE enSize)
+BoardInfo::BoardInfo(BOARD_SIZE enSize) :BoardInfo(enSize.ucRow, enSize.ucCol)
 {
-	BoardInfo(enSize.ucRow, enSize.ucCol);
+
 }
 
-BoardInfo::BoardInfo(unsigned char ucRow, unsigned char ucCol, DISC* penBoard)
+BoardInfo::BoardInfo(unsigned char ucRow, unsigned char ucCol, DISC* penBoard) : BoardInfo(ucRow, ucCol)
 {
-	BoardInfo(ucRow, ucCol);
 	memcpy(m_penBoard, penBoard, GetSizeByte());
 }
 
-BoardInfo::BoardInfo(BOARD_SIZE enSize, DISC* penBoard)
+BoardInfo::BoardInfo(BOARD_SIZE enSize, DISC* penBoard) : BoardInfo(enSize.ucRow, enSize.ucCol, penBoard)
 {
-	BoardInfo(enSize.ucRow, enSize.ucCol, penBoard);
+
 }
 
 BoardInfo::~BoardInfo(void)
