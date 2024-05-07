@@ -45,5 +45,14 @@
     <Image Include="Gui.ico">
       <Filter>リソース ファイル</Filter>
     </Image>
+    <Image Include="resource\CellNone.bmp">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="resource\CellBlack.bmp">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="resource\CellWhite.bmp">
+      <Filter>リソース ファイル</Filter>
+    </Image>
   </ItemGroup>
 </Project>

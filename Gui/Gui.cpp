@@ -3,6 +3,7 @@
 
 #include "framework.h"
 #include "Gui.h"
+#include <windowsx.h>
 
 #define MAX_LOADSTRING 100
 
@@ -105,6 +106,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
       return FALSE;
    }
 
+
+
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
 
@@ -146,10 +149,67 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: HDC を使用する描画コードをここに追加してください...
+
+            HBITMAP	hBmpN, hBmpB, hBmpW;
+            BITMAP bmpN, bmpB, bmpW;
+            HDC hmdcN, hmdcB, hmdcW;
+
+            //ビットマップの読み込み
+            hBmpN = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_CELL_NONE));
+            hBmpB = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_CELL_BLACK));
+            hBmpW = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_CELL_WHITE));
+
+            //ビットマップ情報の取得
+            GetObject(hBmpN, sizeof(BITMAP), &bmpN);
+            GetObject(hBmpB, sizeof(BITMAP), &bmpB);
+            GetObject(hBmpW, sizeof(BITMAP), &bmpW);
+
+            //メモリデバイスコンテキストの取得
+            hmdcN = CreateCompatibleDC(hdc);
+            hmdcB = CreateCompatibleDC(hdc);
+            hmdcW = CreateCompatibleDC(hdc);
+
+            //メモリデバイスコンテキストにビットマップハンドルをセット
+            SelectObject(hmdcN, hBmpN);
+            SelectObject(hmdcB, hBmpB);
+            SelectObject(hmdcW, hBmpW);
+
+            //メモリデバイスコンテキストから
+            //デバイスコンテキストにデータを転送
+            
+            int x = 0;
+            int y = 0;
+
+            BitBlt(
+                hdc, x, y, bmpN.bmWidth, bmpN.bmHeight,
+                hmdcN, 0, 0, SRCCOPY);
+            x += bmpN.bmWidth;
+            y += bmpN.bmHeight;
+
+            BitBlt(
+                hdc, x, y, bmpB.bmWidth, bmpB.bmHeight,
+                hmdcB, 0, 0, SRCCOPY);
+            x += bmpB.bmWidth;
+            y += bmpB.bmHeight;
+
+            BitBlt(
+                hdc, x, y, bmpW.bmWidth, bmpW.bmHeight,
+                hmdcW, 0, 0, SRCCOPY);
+            x += bmpW.bmWidth;
+            y += bmpW.bmHeight;
+            
+
             EndPaint(hWnd, &ps);
         }
         break;
+    case WM_LBUTTONUP: //マウス左クリック
+    {
+        //lParamからマウス座標を取り出す
+        int x = GET_X_LPARAM(lParam);
+        int y = GET_Y_LPARAM(lParam);
+
+        break;
+    }
     case WM_DESTROY:
         PostQuitMessage(0);
         break;

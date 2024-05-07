@@ -155,6 +155,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Gui.ico" />
+    <Image Include="resource\CellBlack.bmp" />
+    <Image Include="resource\CellNone.bmp" />
+    <Image Include="resource\CellWhite.bmp" />
     <Image Include="small.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
