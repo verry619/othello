@@ -27,6 +27,6 @@ public:
     void SetUiListener(GamePlayerHuman* pcHuman);
     void SendMsg(OTHELLO_PROCESS_ID enDst, OTHELLO_MSG enMsg);
     void RcvMsg(const char* pcBuf, unsigned int unBufLen);
-    void UpdateBoard(BOARD_INFO enBoardInfo);
+    void UpdateBoard(const BoardInfo* const penBoardInfo);
 };
 

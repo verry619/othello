@@ -21,18 +21,18 @@ private:
 	GAME_PLAYER_STATE m_enState;
 	unsigned int m_unThreadId;
 	FuncPutDisc m_funcPutDisc;
-	BOARD_INFO m_enBoardInfo;
+	const BoardInfo* m_pcBoardInfo;
 	bool bThreadKill = false;
 	bool bThreadKillComp = false;
 
 	static unsigned int __stdcall executeLauncher(void* args);
 	void ThreadProc(void);
-	virtual void PlayMyTurn(BOARD_INFO enBoardInfo);
+	virtual void PlayMyTurn(const BoardInfo* pcBoardInfo);
 
 public:
 	GamePlayer(DISC enDiscCol, FuncPutDisc funcPutDisc);
 	~GamePlayer(void);
-	virtual void PlayNextTurn(BOARD_INFO enBoardInfo);
+	virtual void PlayNextTurn(const BoardInfo* pcBoardInfo);
 	DISC GetDiscCol(void);
 };
 

@@ -128,7 +128,7 @@ void GameCom::RcvMsg(const char* pcBuf, unsigned int unBufLen)
 	}
 }
 
-void GameCom::UpdateBoard(BOARD_INFO enBoardInfo)
+void GameCom::UpdateBoard(const BoardInfo* const penBoardInfo)
 {
 	CmnCom::ShmData* penShm;
 	penShm = (CmnCom::ShmData*)malloc(sizeof(CmnCom::ShmData));
@@ -140,8 +140,7 @@ void GameCom::UpdateBoard(BOARD_INFO enBoardInfo)
 	}
 
 	CmnCom::ReadShm(penShm);
-	memcpy(penShm->enBoard, enBoardInfo.penDiscs,
-		sizeof(DISC) * enBoardInfo.enSize.ucRow * enBoardInfo.enSize.ucCol);
+	penBoardInfo->CopyBoardTo(penShm->enBoard);
 	CmnCom::WriteShm(penShm);
 
 	free(penShm);

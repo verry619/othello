@@ -5,12 +5,12 @@
 class GameRule
 {
 private:
-	static unsigned char FlipDisc_OneDirection(const DISC_MOVE enMove, BOARD_INFO* enBoard, const signed char ofsRow, const signed char ofsCol);
+	static unsigned char FlipDisc_OneDirection(const DISC_MOVE enMove, BoardInfo* pcBoard,
+		const signed char ofsRow, const signed char ofsCol, bool withoutFlip = false);
 
 public:
-	static void InitializeBoard(BOARD_INFO enBoard);
-	static bool CanMoveStone(const DISC enDiscCol, BOARD_INFO enBoard);
-	static bool CheckFlip(const DISC_MOVE enMove, BOARD_INFO enBoard);
-	static bool FlipDiscs(const DISC_MOVE enMove, BOARD_INFO enBoard);
+	static bool CanMoveStone(const DISC enDiscCol, const BoardInfo* pcBoard);
+	static bool CheckFlip(const DISC_MOVE enMove, const BoardInfo* pcBoard);
+	static bool FlipDiscs(const DISC_MOVE enMove, BoardInfo* pcBoard, bool withoutFlip = false);
 };
 

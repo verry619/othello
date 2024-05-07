@@ -6,10 +6,10 @@ class GamePlayerCpu :
     public GamePlayer
 {
 private:
-    void PlayMyTurn(BOARD_INFO enBoardInfo) override;
+    void PlayMyTurn(const BoardInfo* pcBoardInfo) override;
 public:
     GamePlayerCpu(DISC enDiscCol, FuncPutDisc funcPutDisc);
     ~GamePlayerCpu(void);
-    void PlayNextTurn(BOARD_INFO enBoardInfo) override;
+    void PlayNextTurn(const BoardInfo* pcBoardInfo) override;
 };
 

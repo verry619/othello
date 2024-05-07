@@ -8,7 +8,7 @@ GamePlayer::GamePlayer(DISC enDiscCol, FuncPutDisc funcPutDisc)
 	m_enState(GAME_PLAYER_STATE::WAITING_TURN),
 	m_unThreadId(0),
 	m_funcPutDisc(funcPutDisc),
-	m_enBoardInfo({0})
+	m_pcBoardInfo(nullptr)
 {
 
 	(void)_beginthreadex(NULL, 0, &GamePlayer::executeLauncher, this, 0, &m_unThreadId);
@@ -34,7 +34,7 @@ void GamePlayer::CallbackToClient(DISC_MOVE enDiscMove)
 	}
 }
 
-void GamePlayer::PlayMyTurn(BOARD_INFO enBoardInfo)
+void GamePlayer::PlayMyTurn(const BoardInfo* enBoardInfo)
 {
 
 }
@@ -45,11 +45,11 @@ void GamePlayer::ThreadProc(void)
 	{
 		if (GAME_PLAYER_STATE::MY_TURN == m_enState)
 		{
-			if (nullptr == m_enBoardInfo.penDiscs)
+			if (nullptr == m_pcBoardInfo)
 			{
 				break;
 			}
-			PlayMyTurn(m_enBoardInfo);
+			PlayMyTurn(m_pcBoardInfo);
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(200));
 	}
@@ -59,11 +59,11 @@ void GamePlayer::ThreadProc(void)
 	return;
 }
 
-void GamePlayer::PlayNextTurn(BOARD_INFO enBoardInfo)
+void GamePlayer::PlayNextTurn(const BoardInfo* pcBoardInfo)
 {
 	if (GAME_PLAYER_STATE::WAITING_TURN == m_enState)
 	{
-		m_enBoardInfo = enBoardInfo;
+		m_pcBoardInfo = pcBoardInfo;
 		m_enState = GAME_PLAYER_STATE::MY_TURN;
 	}
 }

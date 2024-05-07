@@ -20,22 +20,29 @@ GamePlayerCpu::~GamePlayerCpu(void)
 	GamePlayer::~GamePlayer();
 }
 
-void GamePlayerCpu::PlayMyTurn(BOARD_INFO enBoardInfo)
+void GamePlayerCpu::PlayMyTurn(const BoardInfo* pcBoardInfo)
 {
-	std::vector<unsigned char> v(enBoardInfo.enSize.ucRow * enBoardInfo.enSize.ucCol);
-	std::iota(v.begin(), v.end(), 0);
+	std::vector<DISC_POS> v;
+	DISC_POS enPosTmp = pcBoardInfo->GetFirstPos();
+
+	do
+	{
+		v.push_back(enPosTmp);
+		enPosTmp = pcBoardInfo->GetNextPos(enPosTmp);
+	} while (
+		(enPosTmp.ucRow != pcBoardInfo->GetFirstPos().ucRow) ||
+		(enPosTmp.ucCol != pcBoardInfo->GetFirstPos().ucCol)
+		);
 
 	unsigned int seed = static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count());
 	std::shuffle(std::begin(v), std::end(v), std::default_random_engine(seed));
 
 	DISC_MOVE enDiscMove = { GamePlayer::GetDiscCol(),{0,0} };
 
-	for (const auto& idx : v)
+	for (const auto& pos : v)
 	{
-		enDiscMove.enPos.ucRow = idx / enBoardInfo.enSize.ucCol;
-		enDiscMove.enPos.ucCol = idx % enBoardInfo.enSize.ucCol;
-
-		if (GameRule::CheckFlip(enDiscMove, enBoardInfo))
+		enDiscMove.enPos = pos;
+		if (GameRule::CheckFlip(enDiscMove, pcBoardInfo))
 		{
 			break;
 		}
@@ -45,7 +52,7 @@ void GamePlayerCpu::PlayMyTurn(BOARD_INFO enBoardInfo)
 	GamePlayer::CallbackToClient(enDiscMove);
 }
 
-void GamePlayerCpu::PlayNextTurn(BOARD_INFO enBoardInfo)
+void GamePlayerCpu::PlayNextTurn(const BoardInfo* pcBoardInfo)
 {
-	GamePlayer::PlayNextTurn(enBoardInfo);
+	GamePlayer::PlayNextTurn(pcBoardInfo);
 }

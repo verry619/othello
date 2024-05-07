@@ -153,15 +153,17 @@ int main()
 
 		if (bGameEnd)
 		{
-			BOARD_INFO enBoardInfo;
 			pcComCom->ReadShm(&penShm);
-			enBoardInfo.enSize = penShm.enBoardSize;
-			enBoardInfo.penDiscs = penShm.enBoard;
+
+			BoardInfo* pcBoard;
+			pcBoard = new BoardInfo(BOARD_ROW_LEN, BOARD_COL_LEN, penShm.enBoard);
 
 			unsigned short unCountBlack = 0;
 			unsigned short unCountWhite = 0;
 
-			DISC enWinner = CmnCountDiscs(enBoardInfo, unCountBlack, unCountWhite);
+			DISC enWinner = pcBoard->CountDiscs(unCountBlack, unCountWhite);
+
+			delete pcBoard;
 
 			OTHELLO_LOG_PARAM p = { 0,0,0,0 };
 			if (DISC::BLACK == enWinner)
@@ -197,8 +199,6 @@ int main()
 				NOP_FUNCTION;
 			}
 			bGameStartWaiting = true;
-
-			CmnCom::ShmData penShm;
 
 			pcComCom->ReadShm(&penShm);
 			PrintBoard(penShm.enBoard, BOARD_ROW_LEN, BOARD_COL_LEN);

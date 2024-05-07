@@ -78,7 +78,7 @@ public:
 	void WriteDevLog(const OTHELLO_LOG_ID enId, const OTHELLO_LOG_PARAM enParam,
 		const char* strFile, const unsigned long& ulLine, const char* strFunc,
 		const char* strMsg);
-	void WriteGameLog(const DISC_MOVE& enDiscMove, const BOARD_INFO& enBoardInfo);
+	void WriteGameLog(const DISC_MOVE& enDiscMove, const BoardInfo* pcBoardInfo);
 
 	void CreateNewDevLogFile(void);
 };

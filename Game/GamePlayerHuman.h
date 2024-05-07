@@ -8,7 +8,7 @@ class GamePlayerHuman :
 public:
 	GamePlayerHuman(DISC enDiscCol, FuncPutDisc funcPutDisc);
 	~GamePlayerHuman(void);
-	void PlayNextTurn(BOARD_INFO enBoardInfo) override;
+	void PlayNextTurn(const BoardInfo* pcBoardInfo) override;
 
 	void ListenHumanInput(DISC_MOVE enDiscMove);
 };

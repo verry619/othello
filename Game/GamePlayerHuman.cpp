@@ -11,9 +11,9 @@ GamePlayerHuman::~GamePlayerHuman(void)
 	GamePlayer::~GamePlayer();
 }
 
-void GamePlayerHuman::PlayNextTurn(BOARD_INFO enBoardInfo)
+void GamePlayerHuman::PlayNextTurn(const BoardInfo* pcBoardInfo)
 {
-	GamePlayer::PlayNextTurn(enBoardInfo);
+	GamePlayer::PlayNextTurn(pcBoardInfo);
 }
 
 void GamePlayerHuman::ListenHumanInput(DISC_MOVE enDiscMove)

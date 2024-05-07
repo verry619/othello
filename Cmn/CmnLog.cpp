@@ -127,7 +127,7 @@ void CmnLog::WriteDevLog(const OTHELLO_LOG_ID enId, const OTHELLO_LOG_PARAM enPa
 	f.close();
 }
 
-void CmnLog::WriteGameLog(const DISC_MOVE& enDiscMove, const BOARD_INFO& enBoardInfo)
+void CmnLog::WriteGameLog(const DISC_MOVE& enDiscMove, const BoardInfo* pcBoardInfo)
 {
 	std::stringstream s;
 	s << s_MapDiscToChar.at(enDiscMove.enColor) << "," <<
@@ -135,16 +135,23 @@ void CmnLog::WriteGameLog(const DISC_MOVE& enDiscMove, const BOARD_INFO& enBoard
 		static_cast<unsigned short>(enDiscMove.enPos.ucCol) <<
 		std::endl;
 
-	const unsigned char COL_MAX = enBoardInfo.enSize.ucCol;
-
-	for (unsigned char row = 0;row < enBoardInfo.enSize.ucRow;row++)
+	DISC_POS enPos = pcBoardInfo->GetFirstPos();
+	do
 	{
-		for (unsigned char col = 0;col < enBoardInfo.enSize.ucCol;col++)
+		unsigned char tmpRow = enPos.ucRow;
+
+		s << s_MapDiscToChar.at(pcBoardInfo->GetDiscCol(enPos));
+
+		enPos = pcBoardInfo->GetNextPos(enPos);
+		if (enPos.ucRow > tmpRow)
 		{
-			s << s_MapDiscToChar.at(enBoardInfo.penDiscs[row * COL_MAX + col]);
+			s << std::endl;
 		}
-		s << std::endl;
-	}
+	}while (
+		(enPos.ucRow != pcBoardInfo->GetFirstPos().ucRow) ||
+		(enPos.ucCol != pcBoardInfo->GetFirstPos().ucCol)
+		);
+	s << std::endl;
 
 	std::cout << s.str();
 
