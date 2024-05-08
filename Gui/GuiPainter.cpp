@@ -3,10 +3,6 @@
 
 #include <windowsx.h>
 
-#define BOARD_LEFTTOP_POS_X 100
-#define BOARD_LEFTTOP_POS_Y 50
-#define BOARD_WIDTH 400
-#define BOARD_HEIGHT 400
 
 void GuiPainter::DrawBoard(HWND hWnd, HINSTANCE hInst, unsigned char ucRow, unsigned char ucCol, DISC* penBoard)
 {
@@ -19,24 +15,14 @@ void GuiPainter::DrawBoard(HWND hWnd, HINSTANCE hInst, unsigned char ucRow, unsi
 	{
 		for (unsigned char c = 0;c < ucCol;c++)
 		{
-			DRAW_DST drawDst = ConvDiscPosToDrawDst(r, c, ucRow, ucCol);
+			DRAW_DST drawDst = GuiCalc::ConvDiscPosToDrawDst({ r, c }, ucRow, ucCol);
 			int resourceId = ConvDiscColToResourceId(pcBoardInfo->GetDiscCol(r, c));
 			DrawCell(hdc, hInst, drawDst, resourceId);
 		}
 	}
 
 	EndPaint(hWnd, &ps);
-}
-
-GuiPainter::DRAW_DST GuiPainter::ConvDiscPosToDrawDst(unsigned char row, unsigned char col, unsigned char rowMax, unsigned char colMax) const
-{
-	DRAW_DST enDrawDst;
-	enDrawDst.size.width = BOARD_WIDTH / rowMax;
-	enDrawDst.size.height = BOARD_HEIGHT / colMax;
-	enDrawDst.pos.x = BOARD_LEFTTOP_POS_X + enDrawDst.size.width * row;
-	enDrawDst.pos.y = BOARD_LEFTTOP_POS_Y + enDrawDst.size.height * col;
-
-	return enDrawDst;
+	UpdateWindow(hWnd);
 }
 
 int GuiPainter::ConvDiscColToResourceId(DISC enDiscCol) const

@@ -127,6 +127,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	static int x = 0;
+	static int y = 0;
+
 	switch (message)
 	{
 	case WM_COMMAND:
@@ -148,24 +151,27 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	break;
 	case WM_PAINT:
 	{
-		GuiPainter* pcPainter = new GuiPainter();
-		DISC enBoard[6][6] =
+		DISC enBoard[6][6] = { DISC::NONE };
+
+		DISC_POS enDiscPos;
+		if (GuiCalc::ConvDrawPosToDiscPos({ x, y }, enDiscPos, 6, 6))
 		{
-			{DISC::NONE,DISC::BLACK,DISC::WHITE,DISC::NONE,DISC::BLACK,DISC::WHITE},
-			{DISC::NONE,DISC::BLACK,DISC::WHITE,DISC::NONE,DISC::BLACK,DISC::WHITE},
-			{DISC::NONE,DISC::BLACK,DISC::WHITE,DISC::NONE,DISC::BLACK,DISC::WHITE},
-			{DISC::NONE,DISC::BLACK,DISC::WHITE,DISC::NONE,DISC::BLACK,DISC::WHITE},
-			{DISC::NONE,DISC::BLACK,DISC::WHITE,DISC::NONE,DISC::BLACK,DISC::WHITE},
-			{DISC::NONE,DISC::BLACK,DISC::WHITE,DISC::NONE,DISC::BLACK,DISC::WHITE}
-		};
+			enBoard[enDiscPos.ucRow][enDiscPos.ucCol] = DISC::BLACK;
+		}
+
+		GuiPainter* pcPainter = new GuiPainter();
 		pcPainter->DrawBoard(hWnd, hInst, 6, 6, &enBoard[0][0]);
+		delete pcPainter;
 	}
 	break;
 	case WM_LBUTTONUP: //マウス左クリック
 	{
 		//lParamからマウス座標を取り出す
-		int x = GET_X_LPARAM(lParam);
-		int y = GET_Y_LPARAM(lParam);
+		x = GET_X_LPARAM(lParam);
+		y = GET_Y_LPARAM(lParam);
+
+		InvalidateRect(hWnd, NULL, FALSE);
+		UpdateWindow(hWnd);
 
 		break;
 	}
