@@ -3,6 +3,7 @@
 
 #include "framework.h"
 #include "Gui.h"
+#include "GuiPainter.h"
 #include <windowsx.h>
 
 #define MAX_LOADSTRING 100
@@ -19,41 +20,41 @@ LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-                     _In_opt_ HINSTANCE hPrevInstance,
-                     _In_ LPWSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
+	_In_opt_ HINSTANCE hPrevInstance,
+	_In_ LPWSTR    lpCmdLine,
+	_In_ int       nCmdShow)
 {
-    UNREFERENCED_PARAMETER(hPrevInstance);
-    UNREFERENCED_PARAMETER(lpCmdLine);
+	UNREFERENCED_PARAMETER(hPrevInstance);
+	UNREFERENCED_PARAMETER(lpCmdLine);
 
-    // TODO: ここにコードを挿入してください。
+	// TODO: ここにコードを挿入してください。
 
-    // グローバル文字列を初期化する
-    LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_GUI, szWindowClass, MAX_LOADSTRING);
-    MyRegisterClass(hInstance);
+	// グローバル文字列を初期化する
+	LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
+	LoadStringW(hInstance, IDC_GUI, szWindowClass, MAX_LOADSTRING);
+	MyRegisterClass(hInstance);
 
-    // アプリケーション初期化の実行:
-    if (!InitInstance (hInstance, nCmdShow))
-    {
-        return FALSE;
-    }
+	// アプリケーション初期化の実行:
+	if (!InitInstance(hInstance, nCmdShow))
+	{
+		return FALSE;
+	}
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_GUI));
+	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_GUI));
 
-    MSG msg;
+	MSG msg;
 
-    // メイン メッセージ ループ:
-    while (GetMessage(&msg, nullptr, 0, 0))
-    {
-        if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
-        {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
-    }
+	// メイン メッセージ ループ:
+	while (GetMessage(&msg, nullptr, 0, 0))
+	{
+		if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+	}
 
-    return (int) msg.wParam;
+	return (int)msg.wParam;
 }
 
 
@@ -65,23 +66,23 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 //
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
-    WNDCLASSEXW wcex;
+	WNDCLASSEXW wcex;
 
-    wcex.cbSize = sizeof(WNDCLASSEX);
+	wcex.cbSize = sizeof(WNDCLASSEX);
 
-    wcex.style          = CS_HREDRAW | CS_VREDRAW;
-    wcex.lpfnWndProc    = WndProc;
-    wcex.cbClsExtra     = 0;
-    wcex.cbWndExtra     = 0;
-    wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_GUI));
-    wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_GUI);
-    wcex.lpszClassName  = szWindowClass;
-    wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+	wcex.style = CS_HREDRAW | CS_VREDRAW;
+	wcex.lpfnWndProc = WndProc;
+	wcex.cbClsExtra = 0;
+	wcex.cbWndExtra = 0;
+	wcex.hInstance = hInstance;
+	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_GUI));
+	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_GUI);
+	wcex.lpszClassName = szWindowClass;
+	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
-    return RegisterClassExW(&wcex);
+	return RegisterClassExW(&wcex);
 }
 
 //
@@ -96,22 +97,22 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
-   hInst = hInstance; // グローバル変数にインスタンス ハンドルを格納する
+	hInst = hInstance; // グローバル変数にインスタンス ハンドルを格納する
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+	HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
-   if (!hWnd)
-   {
-      return FALSE;
-   }
+	if (!hWnd)
+	{
+		return FALSE;
+	}
 
 
 
-   ShowWindow(hWnd, nCmdShow);
-   UpdateWindow(hWnd);
+	ShowWindow(hWnd, nCmdShow);
+	UpdateWindow(hWnd);
 
-   return TRUE;
+	return TRUE;
 }
 
 //
@@ -126,115 +127,73 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    switch (message)
-    {
-    case WM_COMMAND:
-        {
-            int wmId = LOWORD(wParam);
-            // 選択されたメニューの解析:
-            switch (wmId)
-            {
-            case IDM_ABOUT:
-                DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-                break;
-            case IDM_EXIT:
-                DestroyWindow(hWnd);
-                break;
-            default:
-                return DefWindowProc(hWnd, message, wParam, lParam);
-            }
-        }
-        break;
-    case WM_PAINT:
-        {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
+	switch (message)
+	{
+	case WM_COMMAND:
+	{
+		int wmId = LOWORD(wParam);
+		// 選択されたメニューの解析:
+		switch (wmId)
+		{
+		case IDM_ABOUT:
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
+			break;
+		case IDM_EXIT:
+			DestroyWindow(hWnd);
+			break;
+		default:
+			return DefWindowProc(hWnd, message, wParam, lParam);
+		}
+	}
+	break;
+	case WM_PAINT:
+	{
+		GuiPainter* pcPainter = new GuiPainter();
+		DISC enBoard[6][6] =
+		{
+			{DISC::NONE,DISC::BLACK,DISC::WHITE,DISC::NONE,DISC::BLACK,DISC::WHITE},
+			{DISC::NONE,DISC::BLACK,DISC::WHITE,DISC::NONE,DISC::BLACK,DISC::WHITE},
+			{DISC::NONE,DISC::BLACK,DISC::WHITE,DISC::NONE,DISC::BLACK,DISC::WHITE},
+			{DISC::NONE,DISC::BLACK,DISC::WHITE,DISC::NONE,DISC::BLACK,DISC::WHITE},
+			{DISC::NONE,DISC::BLACK,DISC::WHITE,DISC::NONE,DISC::BLACK,DISC::WHITE},
+			{DISC::NONE,DISC::BLACK,DISC::WHITE,DISC::NONE,DISC::BLACK,DISC::WHITE}
+		};
+		pcPainter->DrawBoard(hWnd, hInst, 6, 6, &enBoard[0][0]);
+	}
+	break;
+	case WM_LBUTTONUP: //マウス左クリック
+	{
+		//lParamからマウス座標を取り出す
+		int x = GET_X_LPARAM(lParam);
+		int y = GET_Y_LPARAM(lParam);
 
-            HBITMAP	hBmpN, hBmpB, hBmpW;
-            BITMAP bmpN, bmpB, bmpW;
-            HDC hmdcN, hmdcB, hmdcW;
-
-            //ビットマップの読み込み
-            hBmpN = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_CELL_NONE));
-            hBmpB = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_CELL_BLACK));
-            hBmpW = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_CELL_WHITE));
-
-            //ビットマップ情報の取得
-            GetObject(hBmpN, sizeof(BITMAP), &bmpN);
-            GetObject(hBmpB, sizeof(BITMAP), &bmpB);
-            GetObject(hBmpW, sizeof(BITMAP), &bmpW);
-
-            //メモリデバイスコンテキストの取得
-            hmdcN = CreateCompatibleDC(hdc);
-            hmdcB = CreateCompatibleDC(hdc);
-            hmdcW = CreateCompatibleDC(hdc);
-
-            //メモリデバイスコンテキストにビットマップハンドルをセット
-            SelectObject(hmdcN, hBmpN);
-            SelectObject(hmdcB, hBmpB);
-            SelectObject(hmdcW, hBmpW);
-
-            //メモリデバイスコンテキストから
-            //デバイスコンテキストにデータを転送
-            
-            int x = 0;
-            int y = 0;
-
-            BitBlt(
-                hdc, x, y, bmpN.bmWidth, bmpN.bmHeight,
-                hmdcN, 0, 0, SRCCOPY);
-            x += bmpN.bmWidth;
-            y += bmpN.bmHeight;
-
-            BitBlt(
-                hdc, x, y, bmpB.bmWidth, bmpB.bmHeight,
-                hmdcB, 0, 0, SRCCOPY);
-            x += bmpB.bmWidth;
-            y += bmpB.bmHeight;
-
-            BitBlt(
-                hdc, x, y, bmpW.bmWidth, bmpW.bmHeight,
-                hmdcW, 0, 0, SRCCOPY);
-            x += bmpW.bmWidth;
-            y += bmpW.bmHeight;
-            
-
-            EndPaint(hWnd, &ps);
-        }
-        break;
-    case WM_LBUTTONUP: //マウス左クリック
-    {
-        //lParamからマウス座標を取り出す
-        int x = GET_X_LPARAM(lParam);
-        int y = GET_Y_LPARAM(lParam);
-
-        break;
-    }
-    case WM_DESTROY:
-        PostQuitMessage(0);
-        break;
-    default:
-        return DefWindowProc(hWnd, message, wParam, lParam);
-    }
-    return 0;
+		break;
+	}
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		break;
+	default:
+		return DefWindowProc(hWnd, message, wParam, lParam);
+	}
+	return 0;
 }
 
 // バージョン情報ボックスのメッセージ ハンドラーです。
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    UNREFERENCED_PARAMETER(lParam);
-    switch (message)
-    {
-    case WM_INITDIALOG:
-        return (INT_PTR)TRUE;
+	UNREFERENCED_PARAMETER(lParam);
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		return (INT_PTR)TRUE;
 
-    case WM_COMMAND:
-        if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
-        {
-            EndDialog(hDlg, LOWORD(wParam));
-            return (INT_PTR)TRUE;
-        }
-        break;
-    }
-    return (INT_PTR)FALSE;
+	case WM_COMMAND:
+		if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
+		{
+			EndDialog(hDlg, LOWORD(wParam));
+			return (INT_PTR)TRUE;
+		}
+		break;
+	}
+	return (INT_PTR)FALSE;
 }
