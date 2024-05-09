@@ -2,7 +2,7 @@
 #include "CmnCom.h"
 #include "CmnLog.h"
 
-GameCom::GameCom(CallbackFuncs funcs)
+GameCom::GameCom(GameComCallbackFuncs funcs)
 	:m_pcUiListenerBlack(NULL),
 	m_pcUiListenerWhite(NULL),
 	m_callbacks(funcs)
@@ -136,6 +136,7 @@ void GameCom::UpdateBoard(const BoardInfo* const penBoardInfo)
 	if (NULL == penShm)
 	{
 		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::NONE, "SHM ERROR!");
+		free(penShm);
 		return;
 	}
 

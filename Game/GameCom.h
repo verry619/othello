@@ -4,7 +4,7 @@
 #include "CmnCom.h"
 #include "GamePlayerHuman.h"
 
-class CallbackFuncs
+class GameComCallbackFuncs
 {
     using FuncGameStart = std::function<void(BOARD_SIZE enBoardSize, GAME_SETTING enSetting)>;
     using FuncGameQuit = std::function<void(void)>;
@@ -20,10 +20,10 @@ class GameCom
 private:
     GamePlayerHuman* m_pcUiListenerBlack;
     GamePlayerHuman* m_pcUiListenerWhite;
-    CallbackFuncs m_callbacks;
+    GameComCallbackFuncs m_callbacks;
 
 public:
-    GameCom(CallbackFuncs funcs);
+    GameCom(GameComCallbackFuncs funcs);
     void SetUiListener(GamePlayerHuman* pcHuman);
     void SendMsg(OTHELLO_PROCESS_ID enDst, OTHELLO_MSG enMsg);
     void RcvMsg(const char* pcBuf, unsigned int unBufLen);

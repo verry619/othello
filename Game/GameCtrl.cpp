@@ -25,8 +25,8 @@ unsigned int __stdcall GameCtrl::executeLauncher(void* args)
 
 void GameCtrl::ThreadProc(void)
 {
-	CallbackFuncs* funcs;
-	funcs = new CallbackFuncs();
+	GameComCallbackFuncs* funcs;
+	funcs = new GameComCallbackFuncs();
 	funcs->funcGameStart = std::bind(&GameCtrl::StartGame, this, std::placeholders::_1, std::placeholders::_2);
 	funcs->funcGameQuit = std::bind(&GameCtrl::QuitGame, this);
 	funcs->funcPutDisc = std::bind(&GameCtrl::PutDisc, this, std::placeholders::_1);

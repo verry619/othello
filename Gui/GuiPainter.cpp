@@ -3,7 +3,6 @@
 
 #include <windowsx.h>
 
-
 void GuiPainter::DrawBoard(HWND hWnd, HINSTANCE hInst, unsigned char ucRow, unsigned char ucCol, DISC* penBoard)
 {
 	PAINTSTRUCT ps;
