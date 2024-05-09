@@ -284,6 +284,9 @@ static void GuiGameStartCompleted(HWND hWnd, bool bResult)
 		delete pcPainter;
 
 		delete penBoard;
+
+		InvalidateRect(hWnd, NULL, FALSE);
+		UpdateWindow(hWnd);
 	}
 	else
 	{
@@ -302,6 +305,9 @@ static void GuiPutDiscCompleted(HWND hWnd, bool bResult)
 		delete pcPainter;
 
 		delete penBoard;
+
+		InvalidateRect(hWnd, NULL, FALSE);
+		UpdateWindow(hWnd);
 	}
 	else
 	{
