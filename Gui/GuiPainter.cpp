@@ -29,9 +29,9 @@ int GuiPainter::ConvDiscColToResourceId(DISC enDiscCol) const
 	switch (enDiscCol)
 	{
 	case DISC::BLACK:
-		return IDB_CELL_BLACK;
+		return IDB_CELL_HIMA;
 	case DISC::WHITE:
-		return IDB_CELL_WHITE;
+		return IDB_CELL_MAME;
 	default:
 		return IDB_CELL_NONE;
 	}

@@ -162,6 +162,8 @@
   <ItemGroup>
     <Image Include="Gui.ico" />
     <Image Include="resource\CellBlack.bmp" />
+    <Image Include="resource\CellHima.bmp" />
+    <Image Include="resource\CellMame.bmp" />
     <Image Include="resource\CellNone.bmp" />
     <Image Include="resource\CellWhite.bmp" />
     <Image Include="small.ico" />

@@ -72,5 +72,11 @@
     <Image Include="resource\CellWhite.bmp">
       <Filter>リソース ファイル</Filter>
     </Image>
+    <Image Include="resource\CellHima.bmp">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="resource\CellMame.bmp">
+      <Filter>リソース ファイル</Filter>
+    </Image>
   </ItemGroup>
 </Project>
