@@ -21,7 +21,6 @@ void GuiPainter::DrawBoard(HWND hWnd, HINSTANCE hInst, unsigned char ucRow, unsi
 	}
 
 	EndPaint(hWnd, &ps);
-	UpdateWindow(hWnd);
 }
 
 int GuiPainter::ConvDiscColToResourceId(DISC enDiscCol) const
@@ -29,9 +28,9 @@ int GuiPainter::ConvDiscColToResourceId(DISC enDiscCol) const
 	switch (enDiscCol)
 	{
 	case DISC::BLACK:
-		return IDB_CELL_HIMA;
+		return IDB_CELL_BLACK;
 	case DISC::WHITE:
-		return IDB_CELL_MAME;
+		return IDB_CELL_WHITE;
 	default:
 		return IDB_CELL_NONE;
 	}

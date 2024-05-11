@@ -36,6 +36,9 @@
     <ClInclude Include="GuiCom.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="GuiMainWnd.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Gui.cpp">
@@ -48,6 +51,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="GuiCom.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="GuiMainWnd.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

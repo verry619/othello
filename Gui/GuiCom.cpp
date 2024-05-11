@@ -2,8 +2,7 @@
 #include "CmnLog.h"
 
 GuiCom::GuiCom(GuiComCallbackFuncs funcs)
-	:m_callbacks(funcs),
-	m_hWnd(nullptr)
+	:m_callbacks(funcs)
 {
 	if (!CmnCom::Initialize(std::bind(&GuiCom::RcvMsg, this, std::placeholders::_1, std::placeholders::_2)))
 	{
@@ -15,11 +14,6 @@ GuiCom::GuiCom(GuiComCallbackFuncs funcs)
 		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::NONE, "START COM ERROR!");
 		return;
 	}
-}
-
-void GuiCom::SetWndHundler(HWND hWnd)
-{
-	m_hWnd = hWnd;
 }
 
 void GuiCom::SendMsg(OTHELLO_PROCESS_ID enDst, OTHELLO_MSG enMsg)
@@ -53,7 +47,7 @@ void GuiCom::RcvMsg(const char* pcBuf, unsigned int unBufLen)
 		break;
 	case OTHELLO_MSG_ID::GAME_START:
 		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_START);
-		m_callbacks.funcGameStart(m_hWnd, true);
+		m_callbacks.funcGameStart(true);
 		break;
 	case OTHELLO_MSG_ID::GAME_QUIT:
 		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_QUIT);
@@ -70,7 +64,7 @@ void GuiCom::RcvMsg(const char* pcBuf, unsigned int unBufLen)
 		OTHELLO_LOG_PARAM p = { enMsg.p1,0,0,0 };
 		WRITE_DEV_LOG(OTHELLO_LOG_ID::PUT_DISC, p);
 
-		m_callbacks.funcPutDisc(m_hWnd, enMsg.p1);
+		m_callbacks.funcPutDisc(enMsg.p1);
 	}
 	break;
 	case OTHELLO_MSG_ID::PASS_TURN:

@@ -6,9 +6,9 @@
 class GuiComCallbackFuncs
 {
     using FuncComStart = std::function<void(bool bResult)>;
-    using FuncGameStart = std::function<void(HWND hWnd, bool bResult)>;
+    using FuncGameStart = std::function<void(bool bResult)>;
     using FuncGameQuit = std::function<void(void)>;
-    using FuncPutDisc = std::function<void(HWND hWnd, bool bResult)>;
+    using FuncPutDisc = std::function<void(bool bResult)>;
 public:
     FuncComStart funcComStart;
     FuncGameStart funcGameStart;
@@ -20,10 +20,8 @@ class GuiCom
 {
 private:
     GuiComCallbackFuncs m_callbacks;
-    HWND m_hWnd;
 public:
     GuiCom(GuiComCallbackFuncs funcs);
-    void SetWndHundler(HWND hWnd);
     void SendMsg(OTHELLO_PROCESS_ID enDst, OTHELLO_MSG enMsg);
     void RcvMsg(const char* pcBuf, unsigned int unBufLen);
     DISC* FetchCurrentBoard(void);
