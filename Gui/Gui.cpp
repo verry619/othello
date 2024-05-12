@@ -2,6 +2,7 @@
 //
 
 #include "Gui.h"
+#include "GuiFsm.h"
 #include "GuiCom.h"
 #include "GuiMainWnd.h"
 #include "CmnLog.h"
@@ -34,6 +35,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 {
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
+
+	GuiFsm* pcFsm = new GuiFsm();
+	pcFsm->DoAction(EN_GUI_ACTION_COM_START_COMMP);
 
 	hInst = hInstance; // グローバル変数にインスタンス ハンドルを格納する
 

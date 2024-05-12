@@ -146,8 +146,12 @@
     <ClInclude Include="Gui.h" />
     <ClInclude Include="GuiCalc.h" />
     <ClInclude Include="GuiCom.h" />
+    <ClInclude Include="GuiFsm.h" />
     <ClInclude Include="GuiMainWnd.h" />
     <ClInclude Include="GuiPainter.h" />
+    <ClInclude Include="GuiState.h" />
+    <ClInclude Include="GuiStateComComp.h" />
+    <ClInclude Include="GuiStateInit.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -155,8 +159,12 @@
     <ClCompile Include="Gui.cpp" />
     <ClCompile Include="GuiCalc.cpp" />
     <ClCompile Include="GuiCom.cpp" />
+    <ClCompile Include="GuiFsm.cpp" />
     <ClCompile Include="GuiMainWnd.cpp" />
     <ClCompile Include="GuiPainter.cpp" />
+    <ClCompile Include="GuiState.cpp" />
+    <ClCompile Include="GuiStateComComp.cpp" />
+    <ClCompile Include="GuiStateInit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Gui.rc" />
