@@ -4,6 +4,7 @@ class GuiStateInit :
 	public GuiState
 {
 public:
-	void ComStartComp(void) override;
-	void GameStart(void) override;
+	GuiStateInit(std::vector<std::vector<DISC>>& vv) :GuiState(vv) {};
+	void ComStartComp(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd) override;
+	void GameStart(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd) override;
 };

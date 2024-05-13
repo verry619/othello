@@ -1,5 +1,10 @@
 #pragma once
 
+#include "GuiCom.h"
+#include "GuiMainWnd.h"
+
+#include <vector>
+
 enum EN_GUI_STATE
 {
 	EN_GUI_STATE_INIT = 0,
@@ -13,8 +18,17 @@ enum EN_GUI_STATE
 
 class GuiState
 {
+protected:
+	void UpdateBoard(const DISC* penBoard);
+	void DrawBoard(GuiMainWnd*& pcMainWnd);
 public:
-	virtual void ComStartComp(void) {};
-	virtual void GameStart(void) {};
+	GuiState(std::vector<std::vector<DISC>>& vv);
+	std::vector<std::vector<DISC>>& m_discVV;
+	virtual void ComStartComp(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd) {};
+	virtual void GameStart(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd) {};
+	virtual void GameStartComp(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd) {};
+	virtual void PutDisc(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd, DISC_POS enDiscPos) {};
+	virtual void PutDiscComp(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd) {};
+	virtual void GameEndComp(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd) {};
 };
 

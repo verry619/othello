@@ -1,8 +1,11 @@
 #pragma once
 
 #include "GuiState.h"
+#include "GuiCom.h"
+#include "GuiMainWnd.h"
 
 #include <functional>
+#include <vector>
 
 enum EN_GUI_ACTION
 {
@@ -15,18 +18,34 @@ enum EN_GUI_ACTION
 	EN_GUI_ACTION_NUM
 };
 
+struct ST_ACT_MSG
+{
+	EN_GUI_ACTION enAction;
+	void* p1;
+	void* p2;
+	void* p3;
+	void* p4;
+};
+
 class GuiFsm
 {
 private:
 	EN_GUI_STATE m_currentState;
+	GuiCom* m_pcCom;
+	GuiMainWnd* m_pcMainWnd;
 	GuiState* m_stateList[EN_GUI_STATE_NUM];
-	std::function<void(void)> m_actionList[EN_GUI_ACTION_NUM];
+	std::function<void(ST_ACT_MSG)> m_actionList[EN_GUI_ACTION_NUM];
+	std::vector<std::vector<DISC>> m_discVV;
 
-	void ComStartComp(void);
-	void GameStart(void);
+	void ComStartComp(ST_ACT_MSG msg);
+	void GameStart(ST_ACT_MSG msg);
+	void GameStartComp(ST_ACT_MSG msg);
+	void PutDisc(ST_ACT_MSG msg);
+	void PutDiscComp(ST_ACT_MSG msg);
+	void GameEndComp(ST_ACT_MSG msg);
 
 public:
-	GuiFsm(void);
-	void DoAction(EN_GUI_ACTION enAction);
+	GuiFsm(GuiComCallbackFuncs& callback_com, GuiMainWndCallbackFuncs& callback_mainWnd, HINSTANCE hInst, int nCmdShow);
+	void DoAction(ST_ACT_MSG msg);
 };
 

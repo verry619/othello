@@ -3,9 +3,14 @@
 #include "resource.h"
 #include <windowsx.h>
 
-GuiMainWnd::GuiMainWnd(HINSTANCE hInstance, GuiMainWndCallbackFuncs callbacks)
+#define BOARD_ROW_LEN 6
+#define BOARD_COL_LEN 6
+
+GuiMainWnd::GuiMainWnd(HINSTANCE hInstance, int nCmdShow, GuiMainWndCallbackFuncs callbacks, std::vector<std::vector<DISC>>& vv)
 	:m_hInst(hInstance),
-	m_callbacks(callbacks)
+	m_nCmdShow(nCmdShow),
+	m_callbacks(callbacks),
+	m_discVV(vv)
 {
 	// グローバル文字列を初期化する
 	LoadStringW(hInstance, IDS_APP_TITLE, m_szTitle, MAX_LOADSTRING);
@@ -50,27 +55,51 @@ ATOM GuiMainWnd::MyRegisterClass(HINSTANCE hInstance)
 //        この関数で、グローバル変数でインスタンス ハンドルを保存し、
 //        メイン プログラム ウィンドウを作成および表示します。
 //
-BOOL GuiMainWnd::InitInstance(HINSTANCE hInstance, int nCmdShow)
+BOOL GuiMainWnd::InitInstance(void)
 {
 	m_hWnd = CreateWindowW(m_szWindowClass, m_szTitle, WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, this);
+		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, m_hInst, this);
 
 	if (!m_hWnd)
 	{
 		return FALSE;
 	}
 
-	ShowWindow(m_hWnd, nCmdShow);
+	ShowWindow(m_hWnd, m_nCmdShow);
 	UpdateWindow(m_hWnd);
 
 	return TRUE;
 }
 
-void GuiMainWnd::DrawBoard(unsigned char ucRow, unsigned char ucCol, DISC* penBoard)
+void GuiMainWnd::DrawBoard(DISC* penBoard)
 {
+	GuiPainter* pcPainter = new GuiPainter();
+	pcPainter->DrawBoard(m_hWnd, m_hInst, BOARD_ROW_LEN, BOARD_COL_LEN, penBoard);
+	delete pcPainter;
+
+	InvalidateRect(m_hWnd, NULL, FALSE);
+	UpdateWindow(m_hWnd);
+}
+
+void GuiMainWnd::DrawBoard(const std::vector<std::vector<DISC>>& vv)
+{
+	unsigned char ucRow = vv.size();
+	unsigned char ucCol = vv.at(0).size();
+
+	DISC* penBoard = new DISC[ucRow * ucCol];
+
+	for (unsigned char r = 0;r < ucRow;r++)
+	{
+		for (unsigned char c = 0;c < ucCol;c++)
+		{
+			penBoard[ucCol * r + c] = vv[r][c];
+		}
+	}
+
 	GuiPainter* pcPainter = new GuiPainter();
 	pcPainter->DrawBoard(m_hWnd, m_hInst, ucRow, ucCol, penBoard);
 	delete pcPainter;
+	delete penBoard;
 
 	InvalidateRect(m_hWnd, NULL, FALSE);
 	UpdateWindow(m_hWnd);
@@ -205,7 +234,7 @@ LRESULT CALLBACK GuiMainWnd::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 	}
 	break;
 	case WM_PAINT:
-		m_callbacks.m_callbackUpdateBoard();
+		DrawBoard(m_discVV);
 		break;
 	case WM_LBUTTONUP: //マウス左クリック
 	{

@@ -3,6 +3,7 @@
 #include "framework.h"
 #include "Cmn.h"
 #include <functional>
+#include <vector>
 
 constexpr int MAX_LOADSTRING = 100;
 
@@ -21,10 +22,12 @@ class GuiMainWnd
 {
 private:
 	HINSTANCE m_hInst;
+	int m_nCmdShow;
 	HWND m_hWnd;
 	WCHAR m_szTitle[MAX_LOADSTRING];                  // タイトル バーのテキスト
 	WCHAR m_szWindowClass[MAX_LOADSTRING];            // メイン ウィンドウ クラス名
 	GuiMainWndCallbackFuncs m_callbacks;
+	std::vector<std::vector<DISC>>& m_discVV;
 
 	ATOM MyRegisterClass(HINSTANCE hInstance);
 	static LRESULT CALLBACK CallbackLauncher_WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -35,9 +38,10 @@ private:
 	INT_PTR CALLBACK InvalidDiscPos(HWND, UINT, WPARAM, LPARAM);
 
 public:
-	GuiMainWnd(HINSTANCE hInstance, GuiMainWndCallbackFuncs callbacks);
-	BOOL InitInstance(HINSTANCE hInstance, int nCmdShow);
-	void DrawBoard(unsigned char ucRow, unsigned char ucCol, DISC* penBoard);
+	GuiMainWnd(HINSTANCE hInstance, int nCmdShow, GuiMainWndCallbackFuncs callbacks, std::vector<std::vector<DISC>>& vv);
+	BOOL InitInstance(void);
+	void DrawBoard(DISC* penBoard);
+	void DrawBoard(const std::vector<std::vector<DISC>>& vv);
 	void PopupDialog(void);
 };
 

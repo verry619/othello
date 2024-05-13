@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="ソース ファイル\State">
+      <UniqueIdentifier>{16dfc2fb-975c-4f32-aaf1-b5b32754840e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\State">
+      <UniqueIdentifier>{14800a6b-1618-4717-a553-caeed8bc5b7c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -42,14 +48,26 @@
     <ClInclude Include="GuiFsm.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="GuiState.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="GuiStateInit.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\State</Filter>
+    </ClInclude>
+    <ClInclude Include="GuiState.h">
+      <Filter>ヘッダー ファイル\State</Filter>
     </ClInclude>
     <ClInclude Include="GuiStateComComp.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\State</Filter>
+    </ClInclude>
+    <ClInclude Include="GuiStateStartWait.h">
+      <Filter>ヘッダー ファイル\State</Filter>
+    </ClInclude>
+    <ClInclude Include="GuiStateInGameIdle.h">
+      <Filter>ヘッダー ファイル\State</Filter>
+    </ClInclude>
+    <ClInclude Include="GuiStateInGameBusy.h">
+      <Filter>ヘッダー ファイル\State</Filter>
+    </ClInclude>
+    <ClInclude Include="GuiStateGameResult.h">
+      <Filter>ヘッダー ファイル\State</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -72,13 +90,25 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="GuiState.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="GuiStateInit.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\State</Filter>
     </ClCompile>
     <ClCompile Include="GuiStateComComp.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\State</Filter>
+    </ClCompile>
+    <ClCompile Include="GuiStateInit.cpp">
+      <Filter>ソース ファイル\State</Filter>
+    </ClCompile>
+    <ClCompile Include="GuiStateInGameIdle.cpp">
+      <Filter>ソース ファイル\State</Filter>
+    </ClCompile>
+    <ClCompile Include="GuiStateStartWait.cpp">
+      <Filter>ソース ファイル\State</Filter>
+    </ClCompile>
+    <ClCompile Include="GuiStateGameResult.cpp">
+      <Filter>ソース ファイル\State</Filter>
+    </ClCompile>
+    <ClCompile Include="GuiStateInGameBusy.cpp">
+      <Filter>ソース ファイル\State</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

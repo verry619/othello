@@ -151,7 +151,11 @@
     <ClInclude Include="GuiPainter.h" />
     <ClInclude Include="GuiState.h" />
     <ClInclude Include="GuiStateComComp.h" />
+    <ClInclude Include="GuiStateGameResult.h" />
+    <ClInclude Include="GuiStateInGameBusy.h" />
+    <ClInclude Include="GuiStateInGameIdle.h" />
     <ClInclude Include="GuiStateInit.h" />
+    <ClInclude Include="GuiStateStartWait.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -164,7 +168,11 @@
     <ClCompile Include="GuiPainter.cpp" />
     <ClCompile Include="GuiState.cpp" />
     <ClCompile Include="GuiStateComComp.cpp" />
+    <ClCompile Include="GuiStateGameResult.cpp" />
+    <ClCompile Include="GuiStateInGameBusy.cpp" />
+    <ClCompile Include="GuiStateInGameIdle.cpp" />
     <ClCompile Include="GuiStateInit.cpp" />
+    <ClCompile Include="GuiStateStartWait.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Gui.rc" />
