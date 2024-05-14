@@ -19,3 +19,13 @@ void GuiStateInGameIdle::PutDisc(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd, DISC_PO
 
 	pcCom->SendMsg(OTHELLO_PROCESS_ID::GAME, msg);
 }
+
+void GuiStateInGameIdle::PutDiscComp(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd, bool bRes)
+{
+	PutDiscComp_InGame(pcCom, pcMainWnd, bRes);
+}
+
+void GuiStateInGameIdle::GameStart(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd)
+{
+	GameStart_Sub(pcCom, pcMainWnd);
+}

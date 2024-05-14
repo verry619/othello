@@ -82,15 +82,7 @@ static void GuiGameStartCompleted(bool bResult)
 
 static void GuiPutDiscCompleted(bool bResult)
 {
-	if (bResult)
-	{
-		g_pcFsm->DoAction({ EN_GUI_ACTION_PUT_DISC_COMP,0,0,0,0 });
-	}
-	else
-	{
-		//g_pcMainWnd->PopupDialog();
-		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::NONE, "ERROR!!");
-	}
+	g_pcFsm->DoAction({ EN_GUI_ACTION_PUT_DISC_COMP,&bResult,0,0,0 });
 }
 
 void CALLBACK GameStartTrigger(void)

@@ -28,6 +28,7 @@ private:
 	WCHAR m_szWindowClass[MAX_LOADSTRING];            // メイン ウィンドウ クラス名
 	GuiMainWndCallbackFuncs m_callbacks;
 	std::vector<std::vector<DISC>>& m_discVV;
+	bool m_boardUpdate;
 
 	ATOM MyRegisterClass(HINSTANCE hInstance);
 	static LRESULT CALLBACK CallbackLauncher_WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -40,8 +41,8 @@ private:
 public:
 	GuiMainWnd(HINSTANCE hInstance, int nCmdShow, GuiMainWndCallbackFuncs callbacks, std::vector<std::vector<DISC>>& vv);
 	BOOL InitInstance(void);
-	void DrawBoard(DISC* penBoard);
 	void DrawBoard(const std::vector<std::vector<DISC>>& vv);
+	void DrawBoardForPaint(const std::vector<std::vector<DISC>>& vv);
 	void PopupDialog(void);
 };
 

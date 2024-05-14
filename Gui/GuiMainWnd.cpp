@@ -10,7 +10,8 @@ GuiMainWnd::GuiMainWnd(HINSTANCE hInstance, int nCmdShow, GuiMainWndCallbackFunc
 	:m_hInst(hInstance),
 	m_nCmdShow(nCmdShow),
 	m_callbacks(callbacks),
-	m_discVV(vv)
+	m_discVV(vv),
+	m_boardUpdate(true)
 {
 	// グローバル文字列を初期化する
 	LoadStringW(hInstance, IDS_APP_TITLE, m_szTitle, MAX_LOADSTRING);
@@ -71,18 +72,16 @@ BOOL GuiMainWnd::InitInstance(void)
 	return TRUE;
 }
 
-void GuiMainWnd::DrawBoard(DISC* penBoard)
+void GuiMainWnd::DrawBoard(const std::vector<std::vector<DISC>>& vv)
 {
-	GuiPainter* pcPainter = new GuiPainter();
-	pcPainter->DrawBoard(m_hWnd, m_hInst, BOARD_ROW_LEN, BOARD_COL_LEN, penBoard);
-	delete pcPainter;
-
-	InvalidateRect(m_hWnd, NULL, FALSE);
+	DrawBoardForPaint(vv);
 	UpdateWindow(m_hWnd);
 }
 
-void GuiMainWnd::DrawBoard(const std::vector<std::vector<DISC>>& vv)
+void GuiMainWnd::DrawBoardForPaint(const std::vector<std::vector<DISC>>& vv)
 {
+	m_boardUpdate = true;
+
 	unsigned char ucRow = vv.size();
 	unsigned char ucCol = vv.at(0).size();
 
@@ -96,13 +95,12 @@ void GuiMainWnd::DrawBoard(const std::vector<std::vector<DISC>>& vv)
 		}
 	}
 
+	InvalidateRect(m_hWnd, NULL, FALSE);
+
 	GuiPainter* pcPainter = new GuiPainter();
 	pcPainter->DrawBoard(m_hWnd, m_hInst, ucRow, ucCol, penBoard);
 	delete pcPainter;
 	delete penBoard;
-
-	InvalidateRect(m_hWnd, NULL, FALSE);
-	UpdateWindow(m_hWnd);
 }
 
 void GuiMainWnd::PopupDialog(void)
@@ -233,8 +231,15 @@ LRESULT CALLBACK GuiMainWnd::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 		}
 	}
 	break;
+	case WM_SIZE:
+		m_boardUpdate = true;
+		break;
 	case WM_PAINT:
-		DrawBoard(m_discVV);
+		if (m_boardUpdate)
+		{
+			DrawBoardForPaint(m_discVV);
+		}
+		m_boardUpdate = false;
 		break;
 	case WM_LBUTTONUP: //マウス左クリック
 	{

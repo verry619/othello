@@ -51,7 +51,7 @@ GuiFsm::GuiFsm(GuiComCallbackFuncs& callback_com, GuiMainWndCallbackFuncs& callb
 void GuiFsm::DoAction(ST_ACT_MSG msg)
 {
 	m_actionList[msg.enAction](msg);
-	m_currentState = GUI_STATE_ACTION_TABLE[m_currentState][msg.enAction];
+	m_currentState = GUI_STATE_ACTION_TABLE[msg.enAction][m_currentState];
 }
 
 void GuiFsm::ComStartComp(ST_ACT_MSG msg)
@@ -77,7 +77,7 @@ void GuiFsm::PutDisc(ST_ACT_MSG msg)
 
 void GuiFsm::PutDiscComp(ST_ACT_MSG msg)
 {
-	m_stateList[m_currentState]->PutDiscComp(m_pcCom, m_pcMainWnd);
+	m_stateList[m_currentState]->PutDiscComp(m_pcCom, m_pcMainWnd, *static_cast<bool*>(msg.p1));
 }
 
 void GuiFsm::GameEndComp(ST_ACT_MSG msg)

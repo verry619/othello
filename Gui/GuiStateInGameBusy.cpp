@@ -1,9 +1,16 @@
 #include "GuiStateInGameBusy.h"
 
-void GuiStateInGameBusy::PutDiscComp(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd)
+void GuiStateInGameBusy::PutDiscComp(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd, bool bRes)
 {
-	DISC* penBoard = pcCom->FetchCurrentBoard();
-	UpdateBoard(penBoard);
-	DrawBoard(pcMainWnd);
-	delete penBoard;
+	if (!bRes)
+	{
+		pcMainWnd->PopupDialog();
+	}
+
+	PutDiscComp_InGame(pcCom, pcMainWnd, bRes);
+}
+
+void GuiStateInGameBusy::GameStart(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd)
+{
+	GameStart_Sub(pcCom, pcMainWnd);
 }
