@@ -13,6 +13,8 @@ GuiMainWnd::GuiMainWnd(HINSTANCE hInstance, int nCmdShow, GuiMainWndCallbackFunc
 	m_discVV(vv),
 	m_boardUpdate(true)
 {
+	m_pcSettingDialog = new GuiSettingDialog();
+
 	// ÉOÉçÅ[ÉoÉãï∂éöóÒÇèâä˙âªÇ∑ÇÈ
 	LoadStringW(hInstance, IDS_APP_TITLE, m_szTitle, MAX_LOADSTRING);
 	LoadStringW(hInstance, IDC_GUI, m_szWindowClass, MAX_LOADSTRING);
@@ -82,8 +84,8 @@ void GuiMainWnd::DrawBoardForPaint(const std::vector<std::vector<DISC>>& vv)
 {
 	m_boardUpdate = true;
 
-	unsigned char ucRow = vv.size();
-	unsigned char ucCol = vv.at(0).size();
+	unsigned char ucRow = static_cast<unsigned char>(vv.size());
+	unsigned char ucCol = static_cast<unsigned char>(vv.at(0).size());
 
 	DISC* penBoard = new DISC[ucRow * ucCol];
 
@@ -100,44 +102,12 @@ void GuiMainWnd::DrawBoardForPaint(const std::vector<std::vector<DISC>>& vv)
 	GuiPainter* pcPainter = new GuiPainter();
 	pcPainter->DrawBoard(m_hWnd, m_hInst, ucRow, ucCol, penBoard);
 	delete pcPainter;
-	delete penBoard;
+	delete[] penBoard;
 }
 
 void GuiMainWnd::PopupDialog(void)
 {
 	DialogBox(m_hInst, MAKEINTRESOURCE(IDD_ERR_MSG_INVALID_MOVE), m_hWnd, CallbackLauncher_InvalidDiscPos);
-}
-
-LRESULT CALLBACK GuiMainWnd::CallbackLauncher_GameSetting(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-	GuiMainWnd* app;
-	if (message == WM_CREATE) {
-		app = (GuiMainWnd*)(((LPCREATESTRUCT)lParam)->lpCreateParams);
-		SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)app);
-	}
-	else {
-		app = (GuiMainWnd*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
-	}
-	return app->GameSetting(hWnd, message, wParam, lParam);
-}
-
-INT_PTR CALLBACK GuiMainWnd::GameSetting(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
-{
-	UNREFERENCED_PARAMETER(lParam);
-	switch (message)
-	{
-	case WM_INITDIALOG:
-		return (INT_PTR)TRUE;
-
-	case WM_COMMAND:
-		if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
-		{
-			EndDialog(hDlg, LOWORD(wParam));
-			return (INT_PTR)TRUE;
-		}
-		break;
-	}
-	return (INT_PTR)FALSE;
 }
 
 LRESULT CALLBACK GuiMainWnd::CallbackLauncher_InvalidDiscPos(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -221,7 +191,7 @@ LRESULT CALLBACK GuiMainWnd::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 			m_callbacks.m_callbackGameStart();
 			break;
 		case ID_GAME_SETTING:
-			DialogBox(m_hInst, MAKEINTRESOURCE(IDD_GAME_SETTING), m_hWnd, CallbackLauncher_GameSetting);
+			DialogBoxParam(m_hInst, MAKEINTRESOURCE(IDD_GAME_SETTING), m_hWnd, GuiSettingDialog::CallbackLauncher_GameSetting, reinterpret_cast<LPARAM>(static_cast<void*>(m_pcSettingDialog)));
 			break;
 		case IDM_EXIT:
 			DestroyWindow(m_hWnd);

@@ -149,6 +149,7 @@
     <ClInclude Include="GuiFsm.h" />
     <ClInclude Include="GuiMainWnd.h" />
     <ClInclude Include="GuiPainter.h" />
+    <ClInclude Include="GuiSettingDialog.h" />
     <ClInclude Include="GuiState.h" />
     <ClInclude Include="GuiStateComComp.h" />
     <ClInclude Include="GuiStateGameResult.h" />
@@ -166,6 +167,7 @@
     <ClCompile Include="GuiFsm.cpp" />
     <ClCompile Include="GuiMainWnd.cpp" />
     <ClCompile Include="GuiPainter.cpp" />
+    <ClCompile Include="GuiSettingDialog.cpp" />
     <ClCompile Include="GuiState.cpp" />
     <ClCompile Include="GuiStateComComp.cpp" />
     <ClCompile Include="GuiStateGameResult.cpp" />

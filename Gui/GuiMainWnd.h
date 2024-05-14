@@ -2,6 +2,7 @@
 
 #include "framework.h"
 #include "Cmn.h"
+#include "GuiSettingDialog.h"
 #include <functional>
 #include <vector>
 
@@ -30,11 +31,11 @@ private:
 	std::vector<std::vector<DISC>>& m_discVV;
 	bool m_boardUpdate;
 
+	GuiSettingDialog* m_pcSettingDialog;
+
 	ATOM MyRegisterClass(HINSTANCE hInstance);
 	static LRESULT CALLBACK CallbackLauncher_WndProc(HWND, UINT, WPARAM, LPARAM);
 	LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-	static INT_PTR CALLBACK CallbackLauncher_GameSetting(HWND, UINT, WPARAM, LPARAM);
-	INT_PTR CALLBACK GameSetting(HWND, UINT, WPARAM, LPARAM);
 	static INT_PTR CALLBACK CallbackLauncher_InvalidDiscPos(HWND, UINT, WPARAM, LPARAM);
 	INT_PTR CALLBACK InvalidDiscPos(HWND, UINT, WPARAM, LPARAM);
 

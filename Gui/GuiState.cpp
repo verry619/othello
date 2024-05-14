@@ -11,8 +11,8 @@ GuiState::GuiState(std::vector<std::vector<DISC>>& vv)
 
 void GuiState::UpdateBoard(const DISC* penBoard)
 {
-	unsigned char ucRow = m_discVV.size();
-	unsigned char ucCol = m_discVV.at(0).size();
+	unsigned char ucRow = static_cast<unsigned char>(m_discVV.size());
+	unsigned char ucCol = static_cast<unsigned char>(m_discVV.at(0).size());
 
 	for (unsigned char r = 0;r < ucRow;r++)
 	{
