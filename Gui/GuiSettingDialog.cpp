@@ -1,4 +1,6 @@
 #include "GuiSettingDialog.h"
+#include "resource.h"
+#include <windowsx.h>
 
 LRESULT CALLBACK GuiSettingDialog::CallbackLauncher_GameSetting(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -29,7 +31,8 @@ INT_PTR CALLBACK GuiSettingDialog::GameSetting(HWND hDlg, UINT message, WPARAM w
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		return (INT_PTR)TRUE;
+		InitItems(hDlg);
+		break;
 
 	case WM_COMMAND:
 		if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
@@ -40,4 +43,19 @@ INT_PTR CALLBACK GuiSettingDialog::GameSetting(HWND hDlg, UINT message, WPARAM w
 		break;
 	}
 	return (INT_PTR)FALSE;
+}
+
+void GuiSettingDialog::InitItems(HWND hDlg)
+{
+	HWND hCombo;
+
+	hCombo = GetDlgItem(hDlg, IDC_COMBO_BLACK);
+	SendMessage(hCombo, CB_INSERTSTRING, 0, (LPARAM)TEXT("HUMAN"));
+	SendMessage(hCombo, CB_INSERTSTRING, 1, (LPARAM)TEXT("CPU"));
+	SendMessage(hCombo, CB_SETCURSEL, 1, 0);
+
+	hCombo = GetDlgItem(hDlg, IDC_COMBO_WHITE);
+	SendMessage(hCombo, CB_INSERTSTRING, 0, (LPARAM)TEXT("HUMAN"));
+	SendMessage(hCombo, CB_INSERTSTRING, 1, (LPARAM)TEXT("CPU"));
+	SendMessage(hCombo, CB_SETCURSEL, 0, 0);
 }
