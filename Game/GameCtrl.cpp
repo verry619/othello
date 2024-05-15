@@ -183,7 +183,7 @@ void GameCtrl::PutDisc_Internal(DISC enDiscCol, unsigned char ucRow, unsigned ch
 	if (!GameRule::FlipDiscs(enDiscMove, m_pcBoardInfo))
 	{
 		/* Invalid position to put disc */
-		SendMsgToGui(OTHELLO_MSG_ID::PUT_DISC, O_FAILURE, 0, 0, 0);
+		SendMsgToGui(OTHELLO_MSG_ID::PUT_DISC, O_FAILURE, static_cast<unsigned short>(enDiscCol), 0, 0);
 
 		ContinuePlayerTurn(enDiscCol, m_pcBoardInfo);
 
@@ -203,7 +203,7 @@ void GameCtrl::PutDisc_Internal(DISC enDiscCol, unsigned char ucRow, unsigned ch
 	};
 	WRITE_DEV_LOG(OTHELLO_LOG_ID::PUT_DISC, p);
 
-	SendMsgToGui(OTHELLO_MSG_ID::PUT_DISC, O_SUCCESS, 0, 0, 0);
+	SendMsgToGui(OTHELLO_MSG_ID::PUT_DISC, O_SUCCESS, static_cast<unsigned short>(enDiscCol), 0, 0);
 
 	DecideNextTurn(enDiscCol, m_pcBoardInfo);
 

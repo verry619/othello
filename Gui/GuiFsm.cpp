@@ -77,7 +77,7 @@ void GuiFsm::PutDisc(ST_ACT_MSG msg)
 
 void GuiFsm::PutDiscComp(ST_ACT_MSG msg)
 {
-	m_stateList[m_currentState]->PutDiscComp(m_pcCom, m_pcMainWnd, *static_cast<bool*>(msg.p1));
+	m_stateList[m_currentState]->PutDiscComp(m_pcCom, m_pcMainWnd, *static_cast<bool*>(msg.p1), *static_cast<DISC*>(msg.p2));
 }
 
 void GuiFsm::GameEndComp(ST_ACT_MSG msg)

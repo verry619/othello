@@ -45,5 +45,6 @@ public:
 	void DrawBoard(const std::vector<std::vector<DISC>>& vv);
 	void DrawBoardForPaint(const std::vector<std::vector<DISC>>& vv);
 	void PopupDialog(void);
+	GAME_SETTING GetCurrentGameSetting(void);
 };
 

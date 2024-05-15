@@ -71,6 +71,8 @@ BOOL GuiMainWnd::InitInstance(void)
 	ShowWindow(m_hWnd, m_nCmdShow);
 	UpdateWindow(m_hWnd);
 
+	GuiSettingDialog::InitSetting();
+
 	return TRUE;
 }
 
@@ -232,4 +234,9 @@ LRESULT CALLBACK GuiMainWnd::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 		return DefWindowProc(m_hWnd, message, wParam, lParam);
 	}
 	return 0;
+}
+
+GAME_SETTING GuiMainWnd::GetCurrentGameSetting(void)
+{
+	return GuiSettingDialog::GetCurrentGameSetting();
 }

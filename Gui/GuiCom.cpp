@@ -61,10 +61,10 @@ void GuiCom::RcvMsg(const char* pcBuf, unsigned int unBufLen)
 		break;
 	case OTHELLO_MSG_ID::PUT_DISC:
 	{
-		OTHELLO_LOG_PARAM p = { enMsg.p1,0,0,0 };
+		OTHELLO_LOG_PARAM p = { enMsg.p1,enMsg.p2,0,0 };
 		WRITE_DEV_LOG(OTHELLO_LOG_ID::PUT_DISC, p);
 
-		m_callbacks.funcPutDisc(enMsg.p1);
+		m_callbacks.funcPutDisc(enMsg.p1, static_cast<DISC>(enMsg.p2));
 	}
 	break;
 	case OTHELLO_MSG_ID::PASS_TURN:

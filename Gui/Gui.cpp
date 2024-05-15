@@ -17,7 +17,7 @@ static void CALLBACK PutDiscTrigger(DISC_POS);
 
 static void GuiComStartCompleted(bool bResult);
 static void GuiGameStartCompleted(bool bResult);
-static void GuiPutDiscCompleted(bool bResult);
+static void GuiPutDiscCompleted(bool bResult, DISC enDiscCol);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
@@ -32,7 +32,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	GuiComCallbackFuncs funcs_GuiCom;
 	funcs_GuiCom.funcComStart = std::bind(GuiComStartCompleted, std::placeholders::_1);
 	funcs_GuiCom.funcGameStart = std::bind(GuiGameStartCompleted, std::placeholders::_1);
-	funcs_GuiCom.funcPutDisc = std::bind(GuiPutDiscCompleted, std::placeholders::_1);
+	funcs_GuiCom.funcPutDisc = std::bind(GuiPutDiscCompleted, std::placeholders::_1, std::placeholders::_2);
 
 	GuiMainWndCallbackFuncs funcs_MainWnd;
 	funcs_MainWnd.m_callbackGameStart = std::bind(GameStartTrigger);
@@ -80,9 +80,9 @@ static void GuiGameStartCompleted(bool bResult)
 	}
 }
 
-static void GuiPutDiscCompleted(bool bResult)
+static void GuiPutDiscCompleted(bool bResult, DISC enDiscCol)
 {
-	g_pcFsm->DoAction({ EN_GUI_ACTION_PUT_DISC_COMP,&bResult,0,0,0 });
+	g_pcFsm->DoAction({ EN_GUI_ACTION_PUT_DISC_COMP,&bResult,&enDiscCol,0,0 });
 }
 
 void CALLBACK GameStartTrigger(void)

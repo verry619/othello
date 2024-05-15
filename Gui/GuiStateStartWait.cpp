@@ -6,4 +6,6 @@ void GuiStateStartWait::GameStartComp(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd)
 	UpdateBoard(penBoard);
 	DrawBoard(pcMainWnd);
 	delete penBoard;
+
+	s_currentTurn = DISC::BLACK;
 }

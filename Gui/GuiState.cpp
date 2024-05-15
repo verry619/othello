@@ -3,6 +3,8 @@
 #define BOARD_ROW_LEN 6
 #define BOARD_COL_LEN 6
 
+DISC GuiState::s_currentTurn = DISC::BLACK;
+
 GuiState::GuiState(std::vector<std::vector<DISC>>& vv)
 	:m_discVV(vv)
 {
@@ -28,17 +30,29 @@ void GuiState::DrawBoard(GuiMainWnd*& pcMainWnd)
 	pcMainWnd->DrawBoard(m_discVV);
 }
 
-void GuiState::PutDiscComp_InGame(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd, bool bRes)
+void GuiState::PutDiscComp_InGame(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd, bool bRes, DISC enDiscCol)
 {
 	DISC* penBoard = pcCom->FetchCurrentBoard();
 	UpdateBoard(penBoard);
 	DrawBoard(pcMainWnd);
 	delete penBoard;
+
+	if (bRes)
+	{
+		if (DISC::BLACK == enDiscCol)
+		{
+			s_currentTurn = DISC::WHITE;
+		}
+		else if (DISC::WHITE == enDiscCol)
+		{
+			s_currentTurn = DISC::BLACK;
+		}
+	}
 }
 
 void GuiState::GameStart_Sub(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd)
 {
-	GAME_SETTING enGameSetting = GAME_SETTING::CPU_HUMAN;
+	GAME_SETTING enGameSetting = pcMainWnd->GetCurrentGameSetting();
 
 	OTHELLO_MSG msg;
 	msg.enId = OTHELLO_MSG_ID::GAME_START;
