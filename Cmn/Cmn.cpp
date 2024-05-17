@@ -30,6 +30,18 @@ BoardInfo::BoardInfo(BOARD_SIZE enSize, const DISC* penBoard) : BoardInfo(enSize
 
 }
 
+BoardInfo::BoardInfo(std::vector<std::vector<DISC>> vvBoard)
+	: BoardInfo(static_cast<unsigned char>(vvBoard.size()), static_cast<unsigned char>(vvBoard.at(0).size()))
+{
+	for (unsigned char r = 0;r < m_ucRow;r++)
+	{
+		for (unsigned char c = 0;c < m_ucCol;c++)
+		{
+			m_penBoard[m_ucCol * r + c] = vvBoard[r][c];
+		}
+	}
+}
+
 BoardInfo::~BoardInfo(void)
 {
 	delete[] m_penBoard;

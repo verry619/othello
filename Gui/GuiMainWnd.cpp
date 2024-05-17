@@ -2,9 +2,15 @@
 #include "GuiPainter.h"
 #include "resource.h"
 #include <windowsx.h>
+#include <string>
 
 #define BOARD_ROW_LEN 6
 #define BOARD_COL_LEN 6
+
+constexpr int TEXT_BLACK_POS_X = 0;
+constexpr int TEXT_BLACK_POS_Y = 0;
+constexpr int TEXT_WHITE_POS_X = 550;
+constexpr int TEXT_WHITE_POS_Y = 0;
 
 GuiMainWnd::GuiMainWnd(HINSTANCE hInstance, int nCmdShow, GuiMainWndCallbackFuncs callbacks, std::vector<std::vector<DISC>>& vv)
 	:m_hInst(hInstance),
@@ -211,6 +217,20 @@ LRESULT CALLBACK GuiMainWnd::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 		{
 			DrawBoardForPaint(m_discVV);
 		}
+		{
+			BoardInfo board = BoardInfo(m_discVV);
+			unsigned short usBlack = 0;
+			unsigned short usWhite = 0;
+			(void)board.CountDiscs(usBlack, usWhite);
+
+			HDC hdc = GetDC(hWnd);
+			TextOut(hdc, TEXT_BLACK_POS_X, TEXT_BLACK_POS_Y, TEXT("BLACK"), sizeof("BLACK"));
+			TextOut(hdc, TEXT_BLACK_POS_X, TEXT_BLACK_POS_Y + 50, std::to_wstring(usBlack).data(), sizeof("99"));
+			TextOut(hdc, TEXT_WHITE_POS_X, TEXT_WHITE_POS_Y, TEXT("WHITE"), sizeof("WHITE"));
+			TextOut(hdc, TEXT_WHITE_POS_X, TEXT_WHITE_POS_Y + 50, std::to_wstring(usWhite).data(), sizeof("99"));
+			ReleaseDC(hWnd, hdc);
+		}
+
 		m_boardUpdate = false;
 		break;
 	case WM_LBUTTONUP: //マウス左クリック

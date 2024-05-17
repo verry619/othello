@@ -3,6 +3,7 @@
 #define _WINSOCKAPI_
 #include <windows.h>
 #include <process.h> 
+#include <vector>
 
 #define DEF_ROW_MAX 16
 #define DEF_COL_MAX 16
@@ -96,6 +97,7 @@ public:
 	BoardInfo(BOARD_SIZE enSize);
 	BoardInfo(unsigned char ucRow, unsigned char ucCol, const DISC* penBoard);
 	BoardInfo(BOARD_SIZE enSize, const DISC* penBoard);
+	BoardInfo(std::vector<std::vector<DISC>> vvBoard);
 	~BoardInfo(void);
 	unsigned short GetSizeArray(void) const;
 	unsigned short GetSizeByte(void) const;
