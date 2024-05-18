@@ -62,4 +62,11 @@ void GuiState::GameStart_Sub(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd)
 
 	pcCom->UpdateBoardSize(m_ucGameRow, m_ucGameCol);
 	pcCom->SendMsg(OTHELLO_PROCESS_ID::GAME, msg);
+
+	pcMainWnd->DrawTextInfo(s_currentTurn, GuiMainWnd::EN_RESULT_VALID::INVALIDATE);
+}
+
+void GuiState::GameEnd_Sub(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd)
+{
+	pcMainWnd->DrawTextInfo(s_currentTurn, GuiMainWnd::EN_RESULT_VALID::VALIDATE);
 }

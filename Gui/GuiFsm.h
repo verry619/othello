@@ -15,7 +15,7 @@ enum EN_GUI_ACTION
 	EN_GUI_ACTION_PUT_DISC,
 	EN_GUI_ACTION_PUT_DISC_COMP,
 	EN_GUI_ACTION_PASS_TURN,
-	EN_GUI_ACTION_GAME_END_COMP,
+	EN_GUI_ACTION_GAME_END,
 	EN_GUI_ACTION_NUM
 };
 
@@ -44,7 +44,7 @@ private:
 	void PutDisc(ST_ACT_MSG msg);
 	void PutDiscComp(ST_ACT_MSG msg);
 	void PassTurn(ST_ACT_MSG msg);
-	void GameEndComp(ST_ACT_MSG msg);
+	void GameEnd(ST_ACT_MSG msg);
 
 public:
 	GuiFsm(GuiComCallbackFuncs& callback_com, GuiMainWndCallbackFuncs& callback_mainWnd, HINSTANCE hInst, int nCmdShow);

@@ -16,6 +16,8 @@ constexpr int TEXT_WHITE_TURN_POS_X = TEXT_WHITE_POS_X - 100;
 constexpr int TEXT_WHITE_TURN_POS_Y = TEXT_WHITE_POS_Y;
 constexpr int TEXT_WHITE_NUM_POS_X = TEXT_WHITE_POS_X;
 constexpr int TEXT_WHITE_NUM_POS_Y = TEXT_WHITE_POS_Y + 30;
+constexpr int TEXT_RESULT_POS_X = (TEXT_BLACK_POS_X + TEXT_WHITE_POS_X) / 2;
+constexpr int TEXT_RESULT_POS_Y = TEXT_BLACK_POS_Y;
 
 GuiMainWnd::GuiMainWnd(HINSTANCE hInstance, int nCmdShow, GuiMainWndCallbackFuncs callbacks, GuiBoardVV*& vv)
 	:m_hInst(hInstance),
@@ -245,16 +247,52 @@ GAME_SETTING GuiMainWnd::GetCurrentGameSetting(void)
 	return GuiSettingDialog::GetCurrentGameSetting();
 }
 
-void GuiMainWnd::DrawTextInfo(DISC enDisc)
+void GuiMainWnd::DrawTextInfo(DISC enTurn)
+{
+	DrawTextInfo(enTurn, EN_RESULT_VALID::KEEP);
+}
+
+void GuiMainWnd::DrawTextInfo(DISC enTurn, EN_RESULT_VALID bResultValid)
 {
 	static DISC s_enDisc = DISC::NONE;
+	static bool s_bResultValid = false;
+
+	if (EN_RESULT_VALID::VALIDATE == bResultValid)
+	{
+		s_bResultValid = true;
+	}
+	else if (EN_RESULT_VALID::INVALIDATE == bResultValid)
+	{
+		s_bResultValid = false;
+	}
 
 	BoardInfo board = BoardInfo(m_discVV->GetVV());
 	unsigned short usBlack = 0;
 	unsigned short usWhite = 0;
-	(void)board.CountDiscs(usBlack, usWhite);
+	DISC enWinner = board.CountDiscs(usBlack, usWhite);
 
 	HDC hdc = GetDC(m_hWnd);
+	if (s_bResultValid)
+	{
+		if (DISC::BLACK == enWinner)
+		{
+			TextOut(hdc, TEXT_RESULT_POS_X, TEXT_RESULT_POS_Y, TEXT("BLACK WIN"), 9);
+		}
+		else if (DISC::WHITE == enWinner)
+		{
+			TextOut(hdc, TEXT_RESULT_POS_X, TEXT_RESULT_POS_Y, TEXT("WHITE WIN"), 9);
+		}
+		else
+		{
+			TextOut(hdc, TEXT_RESULT_POS_X, TEXT_RESULT_POS_Y, TEXT("DRAW"), 4);
+		}
+		
+	}
+	else
+	{
+		TextOut(hdc, TEXT_RESULT_POS_X, TEXT_RESULT_POS_Y, TEXT("              "), 14); /* overwrite old text */
+	}
+
 	TextOut(hdc, TEXT_BLACK_POS_X, TEXT_BLACK_POS_Y, TEXT("BLACK"), 5);
 	TextOut(hdc, TEXT_BLACK_NUM_POS_X, TEXT_BLACK_NUM_POS_Y, TEXT("   "), 3); /* overwrite old text */
 	TextOut(hdc, TEXT_BLACK_NUM_POS_X, TEXT_BLACK_NUM_POS_Y, std::to_wstring(usBlack).data(), std::to_wstring(usBlack).length());
@@ -262,13 +300,13 @@ void GuiMainWnd::DrawTextInfo(DISC enDisc)
 	TextOut(hdc, TEXT_WHITE_NUM_POS_X, TEXT_WHITE_NUM_POS_Y, TEXT("   "), 3); /* overwrite old text */
 	TextOut(hdc, TEXT_WHITE_NUM_POS_X, TEXT_WHITE_NUM_POS_Y, std::to_wstring(usWhite).data(), std::to_wstring(usWhite).length());
 
-	if (DISC::BLACK == enDisc)
+	if (DISC::BLACK == enTurn)
 	{
 		s_enDisc = DISC::BLACK;
 		TextOut(hdc, TEXT_BLACK_TURN_POS_X, TEXT_BLACK_TURN_POS_Y, TEXT("<-"), 2);
 		TextOut(hdc, TEXT_WHITE_TURN_POS_X, TEXT_WHITE_TURN_POS_Y, TEXT("   "), 3); /* overwrite old text */
 	}
-	else if (DISC::WHITE == enDisc)
+	else if (DISC::WHITE == enTurn)
 	{
 		s_enDisc = DISC::WHITE;
 		TextOut(hdc, TEXT_BLACK_TURN_POS_X, TEXT_BLACK_TURN_POS_Y, TEXT("   "), 3); /* overwrite old text */

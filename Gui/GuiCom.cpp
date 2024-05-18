@@ -58,6 +58,7 @@ void GuiCom::RcvMsg(const char* pcBuf, unsigned int unBufLen)
 		break;
 	case OTHELLO_MSG_ID::GAME_END:
 		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::GAME_END);
+		m_callbacks.funcGameEnd();
 		break;
 	case OTHELLO_MSG_ID::PUT_DISC:
 	{

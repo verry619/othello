@@ -41,11 +41,19 @@ private:
 	INT_PTR CALLBACK InvalidDiscPos(HWND, UINT, WPARAM, LPARAM);
 
 public:
+	enum class EN_RESULT_VALID
+	{
+		KEEP = 0,
+		VALIDATE,
+		INVALIDATE
+	};
+
 	GuiMainWnd(HINSTANCE hInstance, int nCmdShow, GuiMainWndCallbackFuncs callbacks, GuiBoardVV*& vv);
 	BOOL InitInstance(void);
 	void DrawBoard(GuiBoardVV*& vv);
 	void DrawBoardForPaint(GuiBoardVV*& vv);
-	void DrawTextInfo(DISC enDisc);
+	void DrawTextInfo(DISC enTurn);
+	void DrawTextInfo(DISC enTurn, EN_RESULT_VALID bResultValid);
 	void PopupDialog(void);
 	GAME_SETTING GetCurrentGameSetting(void);
 };

@@ -31,3 +31,8 @@ void GuiStateInGameIdle::PassTurn(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd, DISC e
 {
 	ProceedNextTurn(pcCom, pcMainWnd, true, enDiscCol);
 }
+
+void GuiStateInGameIdle::GameEnd(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd)
+{
+	GameEnd_Sub(pcCom, pcMainWnd);
+}
