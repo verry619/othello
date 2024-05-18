@@ -30,7 +30,7 @@ void GuiState::DrawBoard(GuiMainWnd*& pcMainWnd)
 	pcMainWnd->DrawBoard(m_discVV);
 }
 
-void GuiState::PutDiscComp_InGame(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd, bool bRes, DISC enDiscCol)
+void GuiState::ProceedNextTurn(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd, bool bRes, DISC enDiscCol)
 {
 	DISC* penBoard = pcCom->FetchCurrentBoard();
 	UpdateBoard(penBoard);

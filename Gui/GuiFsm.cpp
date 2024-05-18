@@ -18,6 +18,7 @@ constexpr EN_GUI_STATE GUI_STATE_ACTION_TABLE[EN_GUI_ACTION_NUM][EN_GUI_STATE_NU
 	/* EN_GUI_ACTION_GAME_START_COMP */	{EN_GUI_STATE_INIT,		EN_GUI_STATE_COM_COMP,	EN_GUI_STATE_IN_GAME_IDLE,	EN_GUI_STATE_IN_GAME_IDLE,	EN_GUI_STATE_IN_GAME_BUSY,	EN_GUI_STATE_GAME_RESULT	},
 	/* EN_GUI_ACTION_PUT_DISC */		{EN_GUI_STATE_INIT,		EN_GUI_STATE_COM_COMP,	EN_GUI_STATE_START_WAIT,	EN_GUI_STATE_IN_GAME_BUSY,	EN_GUI_STATE_IN_GAME_BUSY,	EN_GUI_STATE_GAME_RESULT	},
 	/* EN_GUI_ACTION_PUT_DISC_COMP */	{EN_GUI_STATE_INIT,		EN_GUI_STATE_COM_COMP,	EN_GUI_STATE_START_WAIT,	EN_GUI_STATE_IN_GAME_IDLE,	EN_GUI_STATE_IN_GAME_IDLE,	EN_GUI_STATE_GAME_RESULT	},
+	/* EN_GUI_ACTION_PASS_TURN */   	{EN_GUI_STATE_INIT,		EN_GUI_STATE_COM_COMP,	EN_GUI_STATE_START_WAIT,	EN_GUI_STATE_IN_GAME_IDLE,	EN_GUI_STATE_IN_GAME_IDLE,	EN_GUI_STATE_GAME_RESULT	},
 	/* EN_GUI_ACTION_GAME_END_COMP */	{EN_GUI_STATE_INIT,		EN_GUI_STATE_COM_COMP,	EN_GUI_STATE_START_WAIT,	EN_GUI_STATE_GAME_RESULT,	EN_GUI_STATE_GAME_RESULT,	EN_GUI_STATE_GAME_RESULT	},
 };
 
@@ -32,6 +33,7 @@ GuiFsm::GuiFsm(GuiComCallbackFuncs& callback_com, GuiMainWndCallbackFuncs& callb
 	m_actionList[EN_GUI_ACTION_GAME_START_COMP] = std::bind(&GuiFsm::GameStartComp, this, std::placeholders::_1);
 	m_actionList[EN_GUI_ACTION_PUT_DISC] = std::bind(&GuiFsm::PutDisc, this, std::placeholders::_1);
 	m_actionList[EN_GUI_ACTION_PUT_DISC_COMP] = std::bind(&GuiFsm::PutDiscComp, this, std::placeholders::_1);
+	m_actionList[EN_GUI_ACTION_PASS_TURN] = std::bind(&GuiFsm::PassTurn, this, std::placeholders::_1);
 	m_actionList[EN_GUI_ACTION_GAME_END_COMP] = std::bind(&GuiFsm::GameEndComp, this, std::placeholders::_1);
 
 	m_stateList[EN_GUI_STATE_INIT] = new GuiStateInit(m_discVV);
@@ -63,7 +65,6 @@ void GuiFsm::GameStart(ST_ACT_MSG msg)
 	m_stateList[m_currentState]->GameStart(m_pcCom, m_pcMainWnd);
 }
 
-
 void GuiFsm::GameStartComp(ST_ACT_MSG msg)
 {
 	m_stateList[m_currentState]->GameStartComp(m_pcCom, m_pcMainWnd);
@@ -77,6 +78,11 @@ void GuiFsm::PutDisc(ST_ACT_MSG msg)
 void GuiFsm::PutDiscComp(ST_ACT_MSG msg)
 {
 	m_stateList[m_currentState]->PutDiscComp(m_pcCom, m_pcMainWnd, *static_cast<bool*>(msg.p1), *static_cast<DISC*>(msg.p2));
+}
+
+void GuiFsm::PassTurn(ST_ACT_MSG msg)
+{
+	m_stateList[m_currentState]->PassTurn(m_pcCom, m_pcMainWnd, *static_cast<DISC*>(msg.p1));
 }
 
 void GuiFsm::GameEndComp(ST_ACT_MSG msg)

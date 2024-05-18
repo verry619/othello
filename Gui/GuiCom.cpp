@@ -69,6 +69,8 @@ void GuiCom::RcvMsg(const char* pcBuf, unsigned int unBufLen)
 	break;
 	case OTHELLO_MSG_ID::PASS_TURN:
 		WRITE_DEV_LOG_NOPARAM(OTHELLO_LOG_ID::PASS_TURN);
+
+		m_callbacks.funcPassTurn(static_cast<DISC>(enMsg.p1));
 		break;
 	default:
 		break;

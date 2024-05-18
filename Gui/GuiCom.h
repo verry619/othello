@@ -7,13 +7,15 @@ class GuiComCallbackFuncs
 {
 	using FuncComStart = std::function<void(bool bResult)>;
 	using FuncGameStart = std::function<void(bool bResult)>;
-	using FuncGameQuit = std::function<void(void)>;
+	using FuncGameEnd = std::function<void(void)>;
 	using FuncPutDisc = std::function<void(bool bResult, DISC enDiscCol)>;
+	using FuncPassTurn = std::function<void(DISC enDiscCol)>;
 public:
 	FuncComStart funcComStart;
 	FuncGameStart funcGameStart;
-	FuncGameQuit funcGameQuit;
+	FuncGameEnd funcGameEnd;
 	FuncPutDisc funcPutDisc;
+	FuncPassTurn funcPassTurn;
 };
 
 class GuiCom

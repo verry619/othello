@@ -239,10 +239,10 @@ void GameCtrl::DecideNextTurn(DISC enDiscCol, const BoardInfo* pcBoard)
 		{
 			if (GameRule::CanMoveStone(DISC::BLACK, pcBoard))
 			{
-				OTHELLO_LOG_PARAM p = { static_cast<unsigned short>(enDiscCol),0,0,0 };
+				OTHELLO_LOG_PARAM p = { static_cast<unsigned short>(DISC::WHITE),0,0,0 };
 				WRITE_DEV_LOG(OTHELLO_LOG_ID::PASS_TURN, p);
 
-				SendMsgToGui(OTHELLO_MSG_ID::PASS_TURN, 0, 0, 0, 0);
+				SendMsgToGui(OTHELLO_MSG_ID::PASS_TURN, static_cast<unsigned short>(DISC::WHITE), 0, 0, 0);
 
 				m_pcPlayerBlack->PlayNextTurn(pcBoard);
 			}
@@ -265,10 +265,10 @@ void GameCtrl::DecideNextTurn(DISC enDiscCol, const BoardInfo* pcBoard)
 		{
 			if (GameRule::CanMoveStone(DISC::WHITE, pcBoard))
 			{
-				OTHELLO_LOG_PARAM p = { static_cast<unsigned short>(enDiscCol),0,0,0 };
+				OTHELLO_LOG_PARAM p = { static_cast<unsigned short>(DISC::BLACK),0,0,0 };
 				WRITE_DEV_LOG(OTHELLO_LOG_ID::PASS_TURN, p);
 
-				SendMsgToGui(OTHELLO_MSG_ID::PASS_TURN, 0, 0, 0, 0);
+				SendMsgToGui(OTHELLO_MSG_ID::PASS_TURN, static_cast<unsigned short>(DISC::BLACK), 0, 0, 0);
 
 				m_pcPlayerWhite->PlayNextTurn(pcBoard);
 			}

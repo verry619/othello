@@ -26,7 +26,7 @@ protected:
 	void UpdateBoard(const DISC* penBoard);
 	void DrawBoard(GuiMainWnd*& pcMainWnd);
 	void GameStart_Sub(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd);
-	void PutDiscComp_InGame(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd, bool bRes, DISC enDiscCol);
+	void ProceedNextTurn(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd, bool bRes, DISC enDiscCol);
 public:
 	GuiState(GuiBoardVV*& vv);
 	GuiBoardVV*& m_discVV;
@@ -35,6 +35,7 @@ public:
 	virtual void GameStartComp(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd) {};
 	virtual void PutDisc(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd, DISC_POS enDiscPos) {};
 	virtual void PutDiscComp(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd, bool bRes, DISC enDiscCol) {};
+	virtual void PassTurn(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd, DISC enDiscPos) {};
 	virtual void GameEndComp(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd) {};
 };
 
