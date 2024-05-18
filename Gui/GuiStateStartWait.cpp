@@ -8,4 +8,5 @@ void GuiStateStartWait::GameStartComp(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd)
 	delete penBoard;
 
 	s_currentTurn = DISC::BLACK;
+	pcMainWnd->DrawTextInfo(s_currentTurn);
 }

@@ -40,13 +40,12 @@ private:
 	static INT_PTR CALLBACK CallbackLauncher_InvalidDiscPos(HWND, UINT, WPARAM, LPARAM);
 	INT_PTR CALLBACK InvalidDiscPos(HWND, UINT, WPARAM, LPARAM);
 
-	void DrawTextInfo(void);
-
 public:
 	GuiMainWnd(HINSTANCE hInstance, int nCmdShow, GuiMainWndCallbackFuncs callbacks, GuiBoardVV*& vv);
 	BOOL InitInstance(void);
 	void DrawBoard(GuiBoardVV*& vv);
 	void DrawBoardForPaint(GuiBoardVV*& vv);
+	void DrawTextInfo(DISC enDisc);
 	void PopupDialog(void);
 	GAME_SETTING GetCurrentGameSetting(void);
 };

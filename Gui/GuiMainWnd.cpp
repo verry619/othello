@@ -6,10 +6,14 @@
 
 constexpr int TEXT_BLACK_POS_X = 0;
 constexpr int TEXT_BLACK_POS_Y = 0;
+constexpr int TEXT_BLACK_TURN_POS_X = TEXT_BLACK_POS_X + 100;
+constexpr int TEXT_BLACK_TURN_POS_Y = TEXT_BLACK_POS_Y;
 constexpr int TEXT_BLACK_NUM_POS_X = TEXT_BLACK_POS_X;
 constexpr int TEXT_BLACK_NUM_POS_Y = TEXT_BLACK_POS_Y + 30;
 constexpr int TEXT_WHITE_POS_X = 550;
 constexpr int TEXT_WHITE_POS_Y = 0;
+constexpr int TEXT_WHITE_TURN_POS_X = TEXT_WHITE_POS_X - 100;
+constexpr int TEXT_WHITE_TURN_POS_Y = TEXT_WHITE_POS_Y;
 constexpr int TEXT_WHITE_NUM_POS_X = TEXT_WHITE_POS_X;
 constexpr int TEXT_WHITE_NUM_POS_Y = TEXT_WHITE_POS_Y + 30;
 
@@ -210,7 +214,7 @@ LRESULT CALLBACK GuiMainWnd::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 	case WM_PAINT:
 	{
 		DrawBoardForPaint(m_discVV);
-		DrawTextInfo();
+		DrawTextInfo(DISC::NONE);
 	}
 	break;
 	case WM_LBUTTONUP: //マウス左クリック
@@ -241,8 +245,10 @@ GAME_SETTING GuiMainWnd::GetCurrentGameSetting(void)
 	return GuiSettingDialog::GetCurrentGameSetting();
 }
 
-void GuiMainWnd::DrawTextInfo(void)
+void GuiMainWnd::DrawTextInfo(DISC enDisc)
 {
+	static DISC s_enDisc = DISC::NONE;
+
 	BoardInfo board = BoardInfo(m_discVV->GetVV());
 	unsigned short usBlack = 0;
 	unsigned short usWhite = 0;
@@ -250,9 +256,24 @@ void GuiMainWnd::DrawTextInfo(void)
 
 	HDC hdc = GetDC(m_hWnd);
 	TextOut(hdc, TEXT_BLACK_POS_X, TEXT_BLACK_POS_Y, TEXT("BLACK"), 5);
+	TextOut(hdc, TEXT_BLACK_NUM_POS_X, TEXT_BLACK_NUM_POS_Y, TEXT("   "), 3); /* overwrite old text */
 	TextOut(hdc, TEXT_BLACK_NUM_POS_X, TEXT_BLACK_NUM_POS_Y, std::to_wstring(usBlack).data(), std::to_wstring(usBlack).length());
 	TextOut(hdc, TEXT_WHITE_POS_X, TEXT_WHITE_POS_Y, TEXT("WHITE"), 5);
+	TextOut(hdc, TEXT_WHITE_NUM_POS_X, TEXT_WHITE_NUM_POS_Y, TEXT("   "), 3); /* overwrite old text */
 	TextOut(hdc, TEXT_WHITE_NUM_POS_X, TEXT_WHITE_NUM_POS_Y, std::to_wstring(usWhite).data(), std::to_wstring(usWhite).length());
-	ReleaseDC(m_hWnd, hdc);
 
+	if (DISC::BLACK == enDisc)
+	{
+		s_enDisc = DISC::BLACK;
+		TextOut(hdc, TEXT_BLACK_TURN_POS_X, TEXT_BLACK_TURN_POS_Y, TEXT("<-"), 2);
+		TextOut(hdc, TEXT_WHITE_TURN_POS_X, TEXT_WHITE_TURN_POS_Y, TEXT("   "), 3); /* overwrite old text */
+	}
+	else if (DISC::WHITE == enDisc)
+	{
+		s_enDisc = DISC::WHITE;
+		TextOut(hdc, TEXT_BLACK_TURN_POS_X, TEXT_BLACK_TURN_POS_Y, TEXT("   "), 3); /* overwrite old text */
+		TextOut(hdc, TEXT_WHITE_TURN_POS_X, TEXT_WHITE_TURN_POS_Y, TEXT("->"), 2);
+	}
+
+	ReleaseDC(m_hWnd, hdc);
 }

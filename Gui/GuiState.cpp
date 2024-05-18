@@ -45,6 +45,7 @@ void GuiState::ProceedNextTurn(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd, bool bRes
 		{
 			s_currentTurn = DISC::BLACK;
 		}
+		pcMainWnd->DrawTextInfo(s_currentTurn);
 	}
 }
 
