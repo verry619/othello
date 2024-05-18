@@ -4,13 +4,14 @@
 #include <windowsx.h>
 #include <string>
 
-#define BOARD_ROW_LEN 6
-#define BOARD_COL_LEN 6
-
 constexpr int TEXT_BLACK_POS_X = 0;
 constexpr int TEXT_BLACK_POS_Y = 0;
+constexpr int TEXT_BLACK_NUM_POS_X = TEXT_BLACK_POS_X;
+constexpr int TEXT_BLACK_NUM_POS_Y = TEXT_BLACK_POS_Y + 30;
 constexpr int TEXT_WHITE_POS_X = 550;
 constexpr int TEXT_WHITE_POS_Y = 0;
+constexpr int TEXT_WHITE_NUM_POS_X = TEXT_WHITE_POS_X;
+constexpr int TEXT_WHITE_NUM_POS_Y = TEXT_WHITE_POS_Y + 30;
 
 GuiMainWnd::GuiMainWnd(HINSTANCE hInstance, int nCmdShow, GuiMainWndCallbackFuncs callbacks, GuiBoardVV*& vv)
 	:m_hInst(hInstance),
@@ -209,17 +210,7 @@ LRESULT CALLBACK GuiMainWnd::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 	case WM_PAINT:
 	{
 		DrawBoardForPaint(m_discVV);
-		BoardInfo board = BoardInfo(m_discVV->GetVV());
-		unsigned short usBlack = 0;
-		unsigned short usWhite = 0;
-		(void)board.CountDiscs(usBlack, usWhite);
-
-		HDC hdc = GetDC(hWnd);
-		TextOut(hdc, TEXT_BLACK_POS_X, TEXT_BLACK_POS_Y, TEXT("BLACK"), 5);
-		TextOut(hdc, TEXT_BLACK_POS_X, TEXT_BLACK_POS_Y + 50, std::to_wstring(usBlack).data(), std::to_wstring(usBlack).length());
-		TextOut(hdc, TEXT_WHITE_POS_X, TEXT_WHITE_POS_Y, TEXT("WHITE"), 5);
-		TextOut(hdc, TEXT_WHITE_POS_X, TEXT_WHITE_POS_Y + 50, std::to_wstring(usWhite).data(), std::to_wstring(usWhite).length());
-		ReleaseDC(hWnd, hdc);
+		DrawTextInfo();
 	}
 	break;
 	case WM_LBUTTONUP: //マウス左クリック
@@ -248,4 +239,20 @@ LRESULT CALLBACK GuiMainWnd::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 GAME_SETTING GuiMainWnd::GetCurrentGameSetting(void)
 {
 	return GuiSettingDialog::GetCurrentGameSetting();
+}
+
+void GuiMainWnd::DrawTextInfo(void)
+{
+	BoardInfo board = BoardInfo(m_discVV->GetVV());
+	unsigned short usBlack = 0;
+	unsigned short usWhite = 0;
+	(void)board.CountDiscs(usBlack, usWhite);
+
+	HDC hdc = GetDC(m_hWnd);
+	TextOut(hdc, TEXT_BLACK_POS_X, TEXT_BLACK_POS_Y, TEXT("BLACK"), 5);
+	TextOut(hdc, TEXT_BLACK_NUM_POS_X, TEXT_BLACK_NUM_POS_Y, std::to_wstring(usBlack).data(), std::to_wstring(usBlack).length());
+	TextOut(hdc, TEXT_WHITE_POS_X, TEXT_WHITE_POS_Y, TEXT("WHITE"), 5);
+	TextOut(hdc, TEXT_WHITE_NUM_POS_X, TEXT_WHITE_NUM_POS_Y, std::to_wstring(usWhite).data(), std::to_wstring(usWhite).length());
+	ReleaseDC(m_hWnd, hdc);
+
 }

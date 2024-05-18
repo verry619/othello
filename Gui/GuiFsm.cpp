@@ -7,8 +7,8 @@
 #include "GuiStateGameResult.h"
 #include "CmnLog.h"
 
-#define BOARD_ROW_LEN_DEFAULT 6
-#define BOARD_COL_LEN_DEFAULT 6
+constexpr int BOARD_ROW_LEN = 6;
+constexpr int BOARD_COL_LEN = 6;
 
 constexpr EN_GUI_STATE GUI_STATE_ACTION_TABLE[EN_GUI_ACTION_NUM][EN_GUI_STATE_NUM] =
 {
@@ -26,7 +26,7 @@ GuiFsm::GuiFsm(GuiComCallbackFuncs& callback_com, GuiMainWndCallbackFuncs& callb
 	:m_currentState(EN_GUI_STATE_INIT),
 	m_pcCom(new GuiCom(callback_com)),
 	m_pcMainWnd(new GuiMainWnd(hInst, nCmdShow, callback_mainWnd, m_discVV)),
-	m_discVV(new GuiBoardVV(BOARD_ROW_LEN_DEFAULT, BOARD_COL_LEN_DEFAULT))
+	m_discVV(new GuiBoardVV(BOARD_ROW_LEN, BOARD_COL_LEN))
 {
 	m_actionList[EN_GUI_ACTION_COM_START_COMMP] = std::bind(&GuiFsm::ComStartComp, this, std::placeholders::_1);
 	m_actionList[EN_GUI_ACTION_GAME_START] = std::bind(&GuiFsm::GameStart, this, std::placeholders::_1);

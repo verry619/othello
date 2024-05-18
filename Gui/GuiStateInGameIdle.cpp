@@ -1,12 +1,9 @@
 #include "GuiStateInGameIdle.h"
 
-#define BOARD_ROW_LEN 6
-#define BOARD_COL_LEN 6
-
 void GuiStateInGameIdle::PutDisc(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd, DISC_POS enDiscPos)
 {
 	DISC* penBoard = pcCom->FetchCurrentBoard();
-	penBoard[enDiscPos.ucRow * BOARD_COL_LEN + enDiscPos.ucCol] = s_currentTurn;
+	penBoard[enDiscPos.ucRow * m_ucGameCol + enDiscPos.ucCol] = s_currentTurn;
 	UpdateBoard(penBoard);
 	DrawBoard(pcMainWnd);
 	delete penBoard;
