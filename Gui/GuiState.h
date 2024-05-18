@@ -28,8 +28,8 @@ protected:
 	void GameStart_Sub(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd);
 	void PutDiscComp_InGame(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd, bool bRes, DISC enDiscCol);
 public:
-	GuiState(std::vector<std::vector<DISC>>& vv);
-	std::vector<std::vector<DISC>>& m_discVV;
+	GuiState(GuiBoardVV*& vv);
+	GuiBoardVV*& m_discVV;
 	virtual void ComStartComp(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd) {};
 	virtual void GameStart(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd) {};
 	virtual void GameStartComp(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd) {};

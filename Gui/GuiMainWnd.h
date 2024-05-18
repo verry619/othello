@@ -3,6 +3,8 @@
 #include "framework.h"
 #include "Cmn.h"
 #include "GuiSettingDialog.h"
+#include "GuiBoardVV.h"
+
 #include <functional>
 #include <vector>
 
@@ -28,8 +30,7 @@ private:
 	WCHAR m_szTitle[MAX_LOADSTRING];                  // タイトル バーのテキスト
 	WCHAR m_szWindowClass[MAX_LOADSTRING];            // メイン ウィンドウ クラス名
 	GuiMainWndCallbackFuncs m_callbacks;
-	std::vector<std::vector<DISC>>& m_discVV;
-	bool m_boardUpdate;
+	GuiBoardVV*& m_discVV;
 
 	GuiSettingDialog* m_pcSettingDialog;
 
@@ -40,10 +41,10 @@ private:
 	INT_PTR CALLBACK InvalidDiscPos(HWND, UINT, WPARAM, LPARAM);
 
 public:
-	GuiMainWnd(HINSTANCE hInstance, int nCmdShow, GuiMainWndCallbackFuncs callbacks, std::vector<std::vector<DISC>>& vv);
+	GuiMainWnd(HINSTANCE hInstance, int nCmdShow, GuiMainWndCallbackFuncs callbacks, GuiBoardVV*& vv);
 	BOOL InitInstance(void);
-	void DrawBoard(const std::vector<std::vector<DISC>>& vv);
-	void DrawBoardForPaint(const std::vector<std::vector<DISC>>& vv);
+	void DrawBoard(GuiBoardVV*& vv);
+	void DrawBoardForPaint(GuiBoardVV*& vv);
 	void PopupDialog(void);
 	GAME_SETTING GetCurrentGameSetting(void);
 };

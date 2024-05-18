@@ -5,7 +5,7 @@
 
 DISC GuiState::s_currentTurn = DISC::BLACK;
 
-GuiState::GuiState(std::vector<std::vector<DISC>>& vv)
+GuiState::GuiState(GuiBoardVV*& vv)
 	:m_discVV(vv)
 {
 
@@ -13,14 +13,14 @@ GuiState::GuiState(std::vector<std::vector<DISC>>& vv)
 
 void GuiState::UpdateBoard(const DISC* penBoard)
 {
-	unsigned char ucRow = static_cast<unsigned char>(m_discVV.size());
-	unsigned char ucCol = static_cast<unsigned char>(m_discVV.at(0).size());
+	unsigned char ucRow = m_discVV->GetRow();
+	unsigned char ucCol = m_discVV->GetCol();
 
 	for (unsigned char r = 0;r < ucRow;r++)
 	{
 		for (unsigned char c = 0;c < ucCol;c++)
 		{
-			m_discVV[r][c] = penBoard[ucCol * r + c];
+			m_discVV->SetDisc(r, c, penBoard[ucCol * r + c]);
 		}
 	}
 }

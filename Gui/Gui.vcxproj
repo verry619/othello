@@ -144,6 +144,7 @@
   <ItemGroup>
     <ClInclude Include="framework.h" />
     <ClInclude Include="Gui.h" />
+    <ClInclude Include="GuiBoardVV.h" />
     <ClInclude Include="GuiCalc.h" />
     <ClInclude Include="GuiCom.h" />
     <ClInclude Include="GuiFsm.h" />
@@ -162,6 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Gui.cpp" />
+    <ClCompile Include="GuiBoardVV.cpp" />
     <ClCompile Include="GuiCalc.cpp" />
     <ClCompile Include="GuiCom.cpp" />
     <ClCompile Include="GuiFsm.cpp" />

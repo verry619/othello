@@ -3,9 +3,9 @@
 #include "GuiState.h"
 #include "GuiCom.h"
 #include "GuiMainWnd.h"
+#include "GuiBoardVV.h"
 
 #include <functional>
-#include <vector>
 
 enum EN_GUI_ACTION
 {
@@ -35,7 +35,7 @@ private:
 	GuiMainWnd* m_pcMainWnd;
 	GuiState* m_stateList[EN_GUI_STATE_NUM];
 	std::function<void(ST_ACT_MSG)> m_actionList[EN_GUI_ACTION_NUM];
-	std::vector<std::vector<DISC>> m_discVV;
+	GuiBoardVV* m_discVV;
 
 	void ComStartComp(ST_ACT_MSG msg);
 	void GameStart(ST_ACT_MSG msg);

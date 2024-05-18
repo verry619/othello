@@ -72,6 +72,9 @@
     <ClInclude Include="GuiSettingDialog.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="GuiBoardVV.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Gui.cpp">
@@ -114,6 +117,9 @@
       <Filter>ソース ファイル\State</Filter>
     </ClCompile>
     <ClCompile Include="GuiSettingDialog.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="GuiBoardVV.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

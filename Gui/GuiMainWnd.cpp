@@ -12,12 +12,11 @@ constexpr int TEXT_BLACK_POS_Y = 0;
 constexpr int TEXT_WHITE_POS_X = 550;
 constexpr int TEXT_WHITE_POS_Y = 0;
 
-GuiMainWnd::GuiMainWnd(HINSTANCE hInstance, int nCmdShow, GuiMainWndCallbackFuncs callbacks, std::vector<std::vector<DISC>>& vv)
+GuiMainWnd::GuiMainWnd(HINSTANCE hInstance, int nCmdShow, GuiMainWndCallbackFuncs callbacks, GuiBoardVV*& vv)
 	:m_hInst(hInstance),
 	m_nCmdShow(nCmdShow),
 	m_callbacks(callbacks),
-	m_discVV(vv),
-	m_boardUpdate(true)
+	m_discVV(vv)
 {
 	m_pcSettingDialog = new GuiSettingDialog();
 
@@ -82,18 +81,16 @@ BOOL GuiMainWnd::InitInstance(void)
 	return TRUE;
 }
 
-void GuiMainWnd::DrawBoard(const std::vector<std::vector<DISC>>& vv)
+void GuiMainWnd::DrawBoard(GuiBoardVV*& vv)
 {
 	DrawBoardForPaint(vv);
 	UpdateWindow(m_hWnd);
 }
 
-void GuiMainWnd::DrawBoardForPaint(const std::vector<std::vector<DISC>>& vv)
+void GuiMainWnd::DrawBoardForPaint(GuiBoardVV*& vv)
 {
-	m_boardUpdate = true;
-
-	unsigned char ucRow = static_cast<unsigned char>(vv.size());
-	unsigned char ucCol = static_cast<unsigned char>(vv.at(0).size());
+	unsigned char ucRow = vv->GetRow();
+	unsigned char ucCol = vv->GetCol();
 
 	DISC* penBoard = new DISC[ucRow * ucCol];
 
@@ -101,7 +98,7 @@ void GuiMainWnd::DrawBoardForPaint(const std::vector<std::vector<DISC>>& vv)
 	{
 		for (unsigned char c = 0;c < ucCol;c++)
 		{
-			penBoard[ucCol * r + c] = vv[r][c];
+			penBoard[ucCol * r + c] = vv->GetDisc(r, c);
 		}
 	}
 
@@ -209,30 +206,22 @@ LRESULT CALLBACK GuiMainWnd::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 		}
 	}
 	break;
-	case WM_SIZE:
-		m_boardUpdate = true;
-		break;
 	case WM_PAINT:
-		if (m_boardUpdate)
-		{
-			DrawBoardForPaint(m_discVV);
-		}
-		{
-			BoardInfo board = BoardInfo(m_discVV);
-			unsigned short usBlack = 0;
-			unsigned short usWhite = 0;
-			(void)board.CountDiscs(usBlack, usWhite);
+	{
+		DrawBoardForPaint(m_discVV);
+		BoardInfo board = BoardInfo(m_discVV->GetVV());
+		unsigned short usBlack = 0;
+		unsigned short usWhite = 0;
+		(void)board.CountDiscs(usBlack, usWhite);
 
-			HDC hdc = GetDC(hWnd);
-			TextOut(hdc, TEXT_BLACK_POS_X, TEXT_BLACK_POS_Y, TEXT("BLACK"), sizeof("BLACK"));
-			TextOut(hdc, TEXT_BLACK_POS_X, TEXT_BLACK_POS_Y + 50, std::to_wstring(usBlack).data(), sizeof("99"));
-			TextOut(hdc, TEXT_WHITE_POS_X, TEXT_WHITE_POS_Y, TEXT("WHITE"), sizeof("WHITE"));
-			TextOut(hdc, TEXT_WHITE_POS_X, TEXT_WHITE_POS_Y + 50, std::to_wstring(usWhite).data(), sizeof("99"));
-			ReleaseDC(hWnd, hdc);
-		}
-
-		m_boardUpdate = false;
-		break;
+		HDC hdc = GetDC(hWnd);
+		TextOut(hdc, TEXT_BLACK_POS_X, TEXT_BLACK_POS_Y, TEXT("BLACK"), 5);
+		TextOut(hdc, TEXT_BLACK_POS_X, TEXT_BLACK_POS_Y + 50, std::to_wstring(usBlack).data(), std::to_wstring(usBlack).length());
+		TextOut(hdc, TEXT_WHITE_POS_X, TEXT_WHITE_POS_Y, TEXT("WHITE"), 5);
+		TextOut(hdc, TEXT_WHITE_POS_X, TEXT_WHITE_POS_Y + 50, std::to_wstring(usWhite).data(), std::to_wstring(usBlack).length());
+		ReleaseDC(hWnd, hdc);
+	}
+	break;
 	case WM_LBUTTONUP: //マウス左クリック
 	{
 		//lParamからマウス座標を取り出す

@@ -4,7 +4,7 @@ class GuiStateInGameBusy :
     public GuiState
 {
 public:
-    GuiStateInGameBusy(std::vector<std::vector<DISC>>& vv) :GuiState(vv) {};
+    GuiStateInGameBusy(GuiBoardVV*& vv) :GuiState(vv) {};
     void PutDiscComp(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd, bool bRes, DISC enDiscCol) override;
     void GameStart(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd) override;
 };

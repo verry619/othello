@@ -24,7 +24,8 @@ constexpr EN_GUI_STATE GUI_STATE_ACTION_TABLE[EN_GUI_ACTION_NUM][EN_GUI_STATE_NU
 GuiFsm::GuiFsm(GuiComCallbackFuncs& callback_com, GuiMainWndCallbackFuncs& callback_mainWnd, HINSTANCE hInst, int nCmdShow)
 	:m_currentState(EN_GUI_STATE_INIT),
 	m_pcCom(new GuiCom(callback_com)),
-	m_pcMainWnd(new GuiMainWnd(hInst, nCmdShow, callback_mainWnd, m_discVV))
+	m_pcMainWnd(new GuiMainWnd(hInst, nCmdShow, callback_mainWnd, m_discVV)),
+	m_discVV(new GuiBoardVV(BOARD_ROW_LEN_DEFAULT, BOARD_COL_LEN_DEFAULT))
 {
 	m_actionList[EN_GUI_ACTION_COM_START_COMMP] = std::bind(&GuiFsm::ComStartComp, this, std::placeholders::_1);
 	m_actionList[EN_GUI_ACTION_GAME_START] = std::bind(&GuiFsm::GameStart, this, std::placeholders::_1);
@@ -32,8 +33,6 @@ GuiFsm::GuiFsm(GuiComCallbackFuncs& callback_com, GuiMainWndCallbackFuncs& callb
 	m_actionList[EN_GUI_ACTION_PUT_DISC] = std::bind(&GuiFsm::PutDisc, this, std::placeholders::_1);
 	m_actionList[EN_GUI_ACTION_PUT_DISC_COMP] = std::bind(&GuiFsm::PutDiscComp, this, std::placeholders::_1);
 	m_actionList[EN_GUI_ACTION_GAME_END_COMP] = std::bind(&GuiFsm::GameEndComp, this, std::placeholders::_1);
-
-	m_discVV = std::vector<std::vector<DISC>>(BOARD_ROW_LEN_DEFAULT, std::vector<DISC>(BOARD_COL_LEN_DEFAULT, DISC::NONE));
 
 	m_stateList[EN_GUI_STATE_INIT] = new GuiStateInit(m_discVV);
 	m_stateList[EN_GUI_STATE_COM_COMP] = new GuiStateComComp(m_discVV);
