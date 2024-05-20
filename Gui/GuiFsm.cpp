@@ -7,8 +7,8 @@
 #include "GuiStateGameResult.h"
 #include "CmnLog.h"
 
-constexpr int BOARD_ROW_LEN = 6;
-constexpr int BOARD_COL_LEN = 6;
+constexpr int BOARD_ROW_LEN = 8;
+constexpr int BOARD_COL_LEN = 8;
 
 constexpr EN_GUI_STATE GUI_STATE_ACTION_TABLE[EN_GUI_ACTION_NUM][EN_GUI_STATE_NUM] =
 {
@@ -62,6 +62,10 @@ void GuiFsm::ComStartComp(ST_ACT_MSG msg)
 
 void GuiFsm::GameStart(ST_ACT_MSG msg)
 {
+	delete m_discVV;
+	BOARD_SIZE enBoardSize = m_stateList[EN_GUI_STATE_IN_GAME_IDLE]->UpdateBoardSize(m_pcMainWnd);
+	m_discVV = new GuiBoardVV(enBoardSize.ucRow, enBoardSize.ucCol);
+
 	m_stateList[m_currentState]->GameStart(m_pcCom, m_pcMainWnd);
 }
 

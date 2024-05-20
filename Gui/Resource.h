@@ -20,6 +20,10 @@
 #define IDB_CELL_MAME                   117
 #define IDC_COMBO_BLACK                 1001
 #define IDC_COMBO_WHITE                 1002
+#define IDC_RADIO_4X4                   1004
+#define IDC_RADIO_6X6                   1005
+#define IDC_RADIO_8X8                   1006
+#define IDC_SPLIT1                      1007
 #define ID_GAME_START                   32771
 #define ID_GAME_SETTING                 32772
 #define IDC_STATIC                      -1
@@ -31,7 +35,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        119
 #define _APS_NEXT_COMMAND_VALUE         32773
-#define _APS_NEXT_CONTROL_VALUE         1004
+#define _APS_NEXT_CONTROL_VALUE         1008
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif

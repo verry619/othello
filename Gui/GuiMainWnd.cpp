@@ -225,8 +225,11 @@ LRESULT CALLBACK GuiMainWnd::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 		x = GET_X_LPARAM(lParam);
 		y = GET_Y_LPARAM(lParam);
 
+		unsigned char ucRow = m_discVV->GetRow();
+		unsigned char ucCol = m_discVV->GetCol();
+
 		DISC_POS enDiscPos;
-		if (GuiCalc::ConvDrawPosToDiscPos({ x, y }, enDiscPos, 6, 6))
+		if (GuiCalc::ConvDrawPosToDiscPos({ x, y }, enDiscPos, ucRow, ucCol))
 		{
 			m_callbacks.m_callbackPutDisc(enDiscPos);
 		}
@@ -245,6 +248,11 @@ LRESULT CALLBACK GuiMainWnd::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 GAME_SETTING GuiMainWnd::GetCurrentGameSetting(void)
 {
 	return GuiSettingDialog::GetCurrentGameSetting();
+}
+
+BOARD_SIZE GuiMainWnd::GetCurrentBoardSize(void)
+{
+	return GuiSettingDialog::GetCurrentBoardSize();
 }
 
 void GuiMainWnd::DrawTextInfo(DISC enTurn)

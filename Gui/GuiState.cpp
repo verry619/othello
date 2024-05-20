@@ -9,6 +9,16 @@ GuiState::GuiState(GuiBoardVV*& vv)
 	m_ucGameCol = vv->GetCol();
 }
 
+BOARD_SIZE GuiState::UpdateBoardSize(GuiMainWnd*& pcMainWnd)
+{
+	BOARD_SIZE enBoardSize = pcMainWnd->GetCurrentBoardSize();
+
+	m_ucGameRow = enBoardSize.ucRow;
+	m_ucGameCol = enBoardSize.ucCol;
+
+	return { m_ucGameRow ,m_ucGameCol };
+}
+
 void GuiState::UpdateBoard(const DISC* penBoard)
 {
 	unsigned char ucRow = m_discVV->GetRow();

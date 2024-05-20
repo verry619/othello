@@ -56,5 +56,6 @@ public:
 	void DrawTextInfo(DISC enTurn, EN_RESULT_VALID bResultValid);
 	void PopupDialog(void);
 	GAME_SETTING GetCurrentGameSetting(void);
+	BOARD_SIZE GetCurrentBoardSize(void);
 };
 

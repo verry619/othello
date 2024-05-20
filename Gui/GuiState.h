@@ -31,6 +31,7 @@ protected:
 public:
 	GuiState(GuiBoardVV*& vv);
 	GuiBoardVV*& m_discVV;
+	BOARD_SIZE UpdateBoardSize(GuiMainWnd*& pcMainWnd);
 	virtual void ComStartComp(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd) {};
 	virtual void GameStart(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd) {};
 	virtual void GameStartComp(GuiCom*& pcCom, GuiMainWnd*& pcMainWnd) {};
